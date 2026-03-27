@@ -109,21 +109,29 @@
   .sidebar-header > button:hover { background: var(--s-hover) !important; opacity: 1 !important; }
 
   /* ══ SEARCH ══ */
-  .sidebar-container form,
-  .sidebar-container [class*="search"] { padding: 0 !important; margin: 0 !important; }
+  .sidebar-container form {
+    padding: 12px var(--sx) !important;
+    margin: 0 !important;
+    border-bottom: 1px solid var(--s-border) !important;
+    background: var(--s-bg) !important;
+  }
   .search-field {
-    margin: 10px var(--sx) !important;
+    margin: 0 !important;
+    width: 100% !important;
     background: var(--s-bg) !important;
     border: 1px solid var(--s-border) !important;
     border-radius: 10px !important;
     display: flex !important;
     align-items: center !important;
-    padding: 0 8px !important;
+    padding: 0 10px !important;
     height: 36px !important;
-    gap: 6px !important;
-    transition: border-color 0.15s !important;
+    gap: 8px !important;
+    transition: border-color 0.15s, box-shadow 0.15s !important;
   }
-  .search-field:focus-within { border-color: var(--s-border-strong) !important; }
+  .search-field:focus-within {
+    border-color: var(--s-border-strong) !important;
+    box-shadow: 0 0 0 2px var(--s-hover) !important;
+  }
 
   /* Search icon */
   .search-field > div:first-child {
@@ -167,21 +175,24 @@
     opacity: 0.55 !important;
   }
 
-  /* Filter button — no background */
+  /* Filter button — refined background */
   .search-field > div:last-child {
     flex-shrink: 0 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    background: none !important;
-    width: 24px !important;
-    height: 24px !important;
+    background: var(--s-icon-bg) !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 7px !important;
     color: var(--s-text-sec) !important;
     cursor: pointer !important;
-    opacity: 0.6 !important;
-    transition: opacity 0.15s !important;
+    opacity: 0.7 !important;
+    transition: opacity 0.15s, transform 0.1s !important;
+    margin-right: -2px !important;
   }
-  .search-field > div:last-child:hover { opacity: 1 !important; }
+  .search-field > div:last-child:hover { opacity: 1 !important; transform: scale(1.02); }
+  .search-field > div:last-child:active { transform: scale(0.96); }
   .search-field > div:last-child svg { width: 14px !important; height: 14px !important; }
 
   .sidebar-container label { display: none !important; }
@@ -230,8 +241,11 @@
 
   /* ══ COMPONENT ROWS (Level 2) ══ */
   [data-nodetype="component"] {
-    margin: 1px 0 !important;
-    border-radius: 0 !important;
+    margin: 2px 8px !important;
+    border-radius: 10px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
   }
   [data-nodetype="component"] > button {
     display: flex !important;
@@ -239,9 +253,9 @@
     justify-content: flex-start !important;
     gap: 10px !important;
     width: 100% !important;
-    padding: 5px var(--sx) !important;
+    padding: 5px 8px !important;
     min-height: 34px !important;
-    border-radius: 6px !important;
+    border-radius: 10px !important;
     font-family: 'AbadikanSans', sans-serif !important;
     font-size: 13px !important;
     font-weight: 500 !important;
@@ -472,7 +486,8 @@
     padding-left: var(--sx) !important;
     border: none !important;
     border-radius: 0 !important;
-    background: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
   }
   /* Vertical bar */
   [data-nodetype="story"]::before,
@@ -518,6 +533,64 @@
   /* ══ HIDE ACTION DOTS ══ */
   .sidebar-item > button ~ button,
   .sidebar-item > a ~ button { display: none !important; }
+  
+  /* ══ CONTROLS / ADDON PANEL ══ */
+  [role="tabpanel"], .sb-addon-panel {
+    background: var(--s-bg) !important;
+  }
+
+  /* Boolean Control (False/True Toggle Group) */
+  /* Selector targets the label wrapper that Storybook uses for boolean switches */
+  label:has(input[role="switch"]) {
+    display: inline-flex !important;
+    background: var(--s-icon-bg) !important;
+    border: 1px solid var(--s-border) !important;
+    border-radius: 30px !important;
+    padding: 3px !important;
+    gap: 0 !important;
+    overflow: hidden !important;
+    cursor: pointer !important;
+    vertical-align: middle !important;
+  }
+
+  label:has(input[role="switch"]) input[role="switch"] {
+    display: none !important;
+  }
+
+  label:has(input[role="switch"]) span {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 28px !important;
+    padding: 0 16px !important;
+    font-family: 'AbadikanSans', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: var(--s-text-sec) !important;
+    border-radius: 20px !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    background: transparent !important;
+  }
+
+  /* Highlight logic for Active State */
+  /* False active (input not checked) */
+  label:has(input[role="switch"]) input:not(:checked) ~ span:nth-of-type(1),
+  /* True active (input checked) */
+  label:has(input[role="switch"]) input:checked ~ span:nth-of-type(2) {
+    background: var(--s-text) !important;
+    color: var(--s-bg) !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12) !important;
+  }
+
+  label:has(input[role="switch"]):hover span:not(:active) {
+    color: var(--s-text) !important;
+  }
+  
+  /* Fix for the "black on dark" contrast issue seen in user screenshot */
+  label:has(input[role="switch"]) input:not(:checked) ~ span:nth-of-type(1) { color: var(--s-bg) !important; }
+  label:has(input[role="switch"]) input:checked ~ span:nth-of-type(2) { color: var(--s-bg) !important; }
 
   /* ══ TOOLBAR ══ */
   [role="toolbar"], #storybook-toolbar {
