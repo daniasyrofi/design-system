@@ -81,10 +81,10 @@ const arrowClasses: Record<Placement, string> = {
 
 const tooltipClasses = computed(() =>
   cn(
-    'absolute z-50 px-3 py-1.5',
-    'text-sm leading-snug text-[--color-text-inverse]',
+    'absolute z-50 px-2.5 py-1.5',
+    'text-xs leading-snug font-medium text-[--color-text-inverse]',
     'bg-[--color-neutral] rounded-[--radius-md]',
-    'shadow-[--shadow-md]',
+    'shadow-[--shadow-lg]',
     'pointer-events-none select-none whitespace-normal',
     placementClasses[props.placement],
   )

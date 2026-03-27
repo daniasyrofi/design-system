@@ -23,10 +23,30 @@ const groupedOptions = [
   { label: 'Chicken', value: 'chicken', group: 'Protein' },
 ]
 
+// ── Canvas decorator ──────────────────────────────────────────────────────────
+const canvas = () => ({
+  template: `
+    <div style="
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 32px;
+      background-color: #eceae4;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.11) 1px, transparent 1px);
+      background-size: 22px 22px;
+    ">
+      <story />
+    </div>
+  `,
+})
+
 const meta: Meta<typeof Select> = {
   title: 'Molecules/Select',
   component: Select,
   tags: ['autodocs'],
+  decorators: [canvas],
+  parameters: { layout: 'fullscreen' },
   argTypes: {
     size:       { control: 'select', options: ['sm', 'md', 'lg'] },
     multiple:   { control: 'boolean' },
@@ -54,14 +74,14 @@ export const Default: Story = {
       return { value, args, fruitOptions }
     },
     template: `
-      <div style="max-width:320px">
+      <div style="max-width:320px;">
         <Select
           v-bind="args"
           v-model="value"
           label="Favorite fruit"
           :options="fruitOptions"
         />
-        <p class="mt-2 text-xs text-[--color-text-tertiary]">Selected: {{ value || 'none' }}</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--color-text-tertiary);">Selected: {{ value || 'none' }}</p>
       </div>
     `,
   }),
@@ -75,7 +95,7 @@ export const Multiple: Story = {
       return { value, fruitOptions }
     },
     template: `
-      <div style="max-width:320px">
+      <div style="max-width:320px;">
         <Select
           v-model="value"
           label="Pick fruits"
@@ -83,7 +103,7 @@ export const Multiple: Story = {
           multiple
           placeholder="Choose fruits..."
         />
-        <p class="mt-2 text-xs text-[--color-text-tertiary]">Selected: {{ value.join(', ') || 'none' }}</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--color-text-tertiary);">Selected: {{ value.join(', ') || 'none' }}</p>
       </div>
     `,
   }),
@@ -97,7 +117,7 @@ export const Searchable: Story = {
       return { value, fruitOptions }
     },
     template: `
-      <div style="max-width:320px">
+      <div style="max-width:320px;">
         <Select
           v-model="value"
           label="Search and select"
@@ -111,6 +131,7 @@ export const Searchable: Story = {
 }
 
 export const WithGroups: Story = {
+  name: 'With Groups',
   render: () => ({
     components: { Select },
     setup() {
@@ -118,7 +139,7 @@ export const WithGroups: Story = {
       return { value, groupedOptions }
     },
     template: `
-      <div style="max-width:320px">
+      <div style="max-width:320px;">
         <Select
           v-model="value"
           label="Food category"
@@ -139,7 +160,7 @@ export const Clearable: Story = {
       return { value, fruitOptions }
     },
     template: `
-      <div style="max-width:320px">
+      <div style="max-width:320px;">
         <Select
           v-model="value"
           label="Clearable select"
@@ -160,7 +181,7 @@ export const Disabled: Story = {
       return { value, fruitOptions }
     },
     template: `
-      <div style="max-width:320px">
+      <div style="max-width:320px;">
         <Select
           v-model="value"
           label="Disabled select"
@@ -173,6 +194,7 @@ export const Disabled: Story = {
 }
 
 export const AllSizes: Story = {
+  name: 'All Sizes',
   render: () => ({
     components: { Select },
     setup() {
@@ -182,7 +204,7 @@ export const AllSizes: Story = {
       return { sm, md, lg, fruitOptions }
     },
     template: `
-      <div class="flex flex-col gap-4" style="max-width:320px">
+      <div style="display:flex;flex-direction:column;gap:16px;max-width:320px;">
         <Select v-model="sm" size="sm" label="Small" :options="fruitOptions" placeholder="Small select" />
         <Select v-model="md" size="md" label="Medium" :options="fruitOptions" placeholder="Medium select" />
         <Select v-model="lg" size="lg" label="Large" :options="fruitOptions" placeholder="Large select" />

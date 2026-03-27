@@ -6,10 +6,30 @@ import TabsList from './TabsList.vue'
 import TabsTrigger from './TabsTrigger.vue'
 import TabsContent from './TabsContent.vue'
 
+// ── Canvas decorator ──────────────────────────────────────────────────────────
+const canvas = () => ({
+  template: `
+    <div style="
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 32px;
+      background-color: #eceae4;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.11) 1px, transparent 1px);
+      background-size: 22px 22px;
+    ">
+      <story />
+    </div>
+  `,
+})
+
 const meta: Meta<typeof Tabs> = {
   title: 'Molecules/Tabs',
   component: Tabs,
   tags: ['autodocs'],
+  decorators: [canvas],
+  parameters: { layout: 'fullscreen' },
   argTypes: {
     variant:     { control: 'select', options: ['line', 'pill', 'boxed'] },
     orientation: { control: 'select', options: ['horizontal', 'vertical'] },
@@ -40,15 +60,15 @@ export const Default: Story = {
           <TabsTrigger value="tab3">Settings</TabsTrigger>
           <TabsTrigger value="tab4" disabled>Disabled</TabsTrigger>
         </TabsList>
-        <div class="pt-4">
+        <div style="padding-top:16px;">
           <TabsContent value="tab1">
-            <p class="text-sm text-[--color-text-secondary]">Overview content goes here. This is the first tab panel.</p>
+            <p style="font-size:14px;color:var(--color-text-secondary);">Overview content goes here. This is the first tab panel.</p>
           </TabsContent>
           <TabsContent value="tab2">
-            <p class="text-sm text-[--color-text-secondary]">Details content goes here. This is the second tab panel.</p>
+            <p style="font-size:14px;color:var(--color-text-secondary);">Details content goes here. This is the second tab panel.</p>
           </TabsContent>
           <TabsContent value="tab3">
-            <p class="text-sm text-[--color-text-secondary]">Settings content goes here. This is the third tab panel.</p>
+            <p style="font-size:14px;color:var(--color-text-secondary);">Settings content goes here. This is the third tab panel.</p>
           </TabsContent>
         </div>
       </Tabs>
@@ -57,6 +77,7 @@ export const Default: Story = {
 }
 
 export const AllVariants: Story = {
+  name: 'All Variants',
   render: () => ({
     components: { Tabs, TabsList, TabsTrigger, TabsContent },
     setup() {
@@ -66,51 +87,51 @@ export const AllVariants: Story = {
       return { line, pill, boxed }
     },
     template: `
-      <div class="flex flex-col gap-10 p-4" style="max-width:600px">
+      <div style="display:flex;flex-direction:column;gap:40px;padding:16px;max-width:600px;">
         <div>
-          <p class="text-xs font-semibold text-[--color-text-secondary] uppercase tracking-wider mb-3">Line</p>
+          <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);display:block;margin-bottom:12px;">Line</span>
           <Tabs variant="line" v-model="line">
             <TabsList>
               <TabsTrigger value="a">Dashboard</TabsTrigger>
               <TabsTrigger value="b">Analytics</TabsTrigger>
               <TabsTrigger value="c">Reports</TabsTrigger>
             </TabsList>
-            <div class="pt-4">
-              <TabsContent value="a"><p class="text-sm text-[--color-text-secondary]">Dashboard panel</p></TabsContent>
-              <TabsContent value="b"><p class="text-sm text-[--color-text-secondary]">Analytics panel</p></TabsContent>
-              <TabsContent value="c"><p class="text-sm text-[--color-text-secondary]">Reports panel</p></TabsContent>
+            <div style="padding-top:16px;">
+              <TabsContent value="a"><p style="font-size:14px;color:var(--color-text-secondary);">Dashboard panel</p></TabsContent>
+              <TabsContent value="b"><p style="font-size:14px;color:var(--color-text-secondary);">Analytics panel</p></TabsContent>
+              <TabsContent value="c"><p style="font-size:14px;color:var(--color-text-secondary);">Reports panel</p></TabsContent>
             </div>
           </Tabs>
         </div>
 
         <div>
-          <p class="text-xs font-semibold text-[--color-text-secondary] uppercase tracking-wider mb-3">Pill</p>
+          <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);display:block;margin-bottom:12px;">Pill</span>
           <Tabs variant="pill" v-model="pill">
             <TabsList>
               <TabsTrigger value="a">Dashboard</TabsTrigger>
               <TabsTrigger value="b">Analytics</TabsTrigger>
               <TabsTrigger value="c">Reports</TabsTrigger>
             </TabsList>
-            <div class="pt-4">
-              <TabsContent value="a"><p class="text-sm text-[--color-text-secondary]">Dashboard panel</p></TabsContent>
-              <TabsContent value="b"><p class="text-sm text-[--color-text-secondary]">Analytics panel</p></TabsContent>
-              <TabsContent value="c"><p class="text-sm text-[--color-text-secondary]">Reports panel</p></TabsContent>
+            <div style="padding-top:16px;">
+              <TabsContent value="a"><p style="font-size:14px;color:var(--color-text-secondary);">Dashboard panel</p></TabsContent>
+              <TabsContent value="b"><p style="font-size:14px;color:var(--color-text-secondary);">Analytics panel</p></TabsContent>
+              <TabsContent value="c"><p style="font-size:14px;color:var(--color-text-secondary);">Reports panel</p></TabsContent>
             </div>
           </Tabs>
         </div>
 
         <div>
-          <p class="text-xs font-semibold text-[--color-text-secondary] uppercase tracking-wider mb-3">Boxed</p>
+          <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);display:block;margin-bottom:12px;">Boxed</span>
           <Tabs variant="boxed" v-model="boxed">
             <TabsList>
               <TabsTrigger value="a">Dashboard</TabsTrigger>
               <TabsTrigger value="b">Analytics</TabsTrigger>
               <TabsTrigger value="c">Reports</TabsTrigger>
             </TabsList>
-            <div class="pt-4">
-              <TabsContent value="a"><p class="text-sm text-[--color-text-secondary]">Dashboard panel</p></TabsContent>
-              <TabsContent value="b"><p class="text-sm text-[--color-text-secondary]">Analytics panel</p></TabsContent>
-              <TabsContent value="c"><p class="text-sm text-[--color-text-secondary]">Reports panel</p></TabsContent>
+            <div style="padding-top:16px;">
+              <TabsContent value="a"><p style="font-size:14px;color:var(--color-text-secondary);">Dashboard panel</p></TabsContent>
+              <TabsContent value="b"><p style="font-size:14px;color:var(--color-text-secondary);">Analytics panel</p></TabsContent>
+              <TabsContent value="c"><p style="font-size:14px;color:var(--color-text-secondary);">Reports panel</p></TabsContent>
             </div>
           </Tabs>
         </div>
@@ -120,6 +141,7 @@ export const AllVariants: Story = {
 }
 
 export const AllSizes: Story = {
+  name: 'All Sizes',
   render: () => ({
     components: { Tabs, TabsList, TabsTrigger, TabsContent },
     setup() {
@@ -129,9 +151,9 @@ export const AllSizes: Story = {
       return { sm, md, lg }
     },
     template: `
-      <div class="flex flex-col gap-8 p-4" style="max-width:500px">
+      <div style="display:flex;flex-direction:column;gap:32px;padding:16px;max-width:500px;">
         <div>
-          <p class="text-xs font-semibold text-[--color-text-secondary] uppercase tracking-wider mb-3">Small</p>
+          <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);display:block;margin-bottom:12px;">Small</span>
           <Tabs variant="pill" size="sm" v-model="sm">
             <TabsList>
               <TabsTrigger value="a">Home</TabsTrigger>
@@ -141,7 +163,7 @@ export const AllSizes: Story = {
           </Tabs>
         </div>
         <div>
-          <p class="text-xs font-semibold text-[--color-text-secondary] uppercase tracking-wider mb-3">Medium (default)</p>
+          <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);display:block;margin-bottom:12px;">Medium (default)</span>
           <Tabs variant="pill" size="md" v-model="md">
             <TabsList>
               <TabsTrigger value="a">Home</TabsTrigger>
@@ -151,7 +173,7 @@ export const AllSizes: Story = {
           </Tabs>
         </div>
         <div>
-          <p class="text-xs font-semibold text-[--color-text-secondary] uppercase tracking-wider mb-3">Large</p>
+          <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);display:block;margin-bottom:12px;">Large</span>
           <Tabs variant="pill" size="lg" v-model="lg">
             <TabsList>
               <TabsTrigger value="a">Home</TabsTrigger>
@@ -173,29 +195,29 @@ export const Vertical: Story = {
       return { active }
     },
     template: `
-      <Tabs variant="line" orientation="vertical" v-model="active" style="max-width:500px">
+      <Tabs variant="line" orientation="vertical" v-model="active" style="max-width:500px;">
         <TabsList>
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
         </TabsList>
-        <div class="flex-1 pl-4">
+        <div style="flex:1;padding-left:16px;">
           <TabsContent value="profile">
-            <h3 class="font-semibold text-[--color-text-heading] mb-2">Profile Settings</h3>
-            <p class="text-sm text-[--color-text-secondary]">Manage your profile information and preferences.</p>
+            <h3 style="font-weight:600;color:var(--color-text-heading);margin-bottom:8px;">Profile Settings</h3>
+            <p style="font-size:14px;color:var(--color-text-secondary);">Manage your profile information and preferences.</p>
           </TabsContent>
           <TabsContent value="notifications">
-            <h3 class="font-semibold text-[--color-text-heading] mb-2">Notifications</h3>
-            <p class="text-sm text-[--color-text-secondary]">Configure how and when you receive notifications.</p>
+            <h3 style="font-weight:600;color:var(--color-text-heading);margin-bottom:8px;">Notifications</h3>
+            <p style="font-size:14px;color:var(--color-text-secondary);">Configure how and when you receive notifications.</p>
           </TabsContent>
           <TabsContent value="security">
-            <h3 class="font-semibold text-[--color-text-heading] mb-2">Security</h3>
-            <p class="text-sm text-[--color-text-secondary]">Manage passwords, two-factor authentication, and sessions.</p>
+            <h3 style="font-weight:600;color:var(--color-text-heading);margin-bottom:8px;">Security</h3>
+            <p style="font-size:14px;color:var(--color-text-secondary);">Manage passwords, two-factor authentication, and sessions.</p>
           </TabsContent>
           <TabsContent value="billing">
-            <h3 class="font-semibold text-[--color-text-heading] mb-2">Billing</h3>
-            <p class="text-sm text-[--color-text-secondary]">View invoices and manage your payment methods.</p>
+            <h3 style="font-weight:600;color:var(--color-text-heading);margin-bottom:8px;">Billing</h3>
+            <p style="font-size:14px;color:var(--color-text-secondary);">View invoices and manage your payment methods.</p>
           </TabsContent>
         </div>
       </Tabs>
@@ -204,6 +226,7 @@ export const Vertical: Story = {
 }
 
 export const WithIcons: Story = {
+  name: 'With Icons',
   render: () => ({
     components: { Tabs, TabsList, TabsTrigger, TabsContent, RiHomeLine, RiUserLine, RiSettings4Line, RiBellLine },
     setup() {
@@ -211,7 +234,7 @@ export const WithIcons: Story = {
       return { active }
     },
     template: `
-      <Tabs variant="pill" v-model="active" style="max-width:500px">
+      <Tabs variant="pill" v-model="active" style="max-width:500px;">
         <TabsList>
           <TabsTrigger value="home">
             <RiHomeLine :size="14" />
@@ -230,11 +253,11 @@ export const WithIcons: Story = {
             Settings
           </TabsTrigger>
         </TabsList>
-        <div class="pt-4">
-          <TabsContent value="home"><p class="text-sm text-[--color-text-secondary]">Home content</p></TabsContent>
-          <TabsContent value="profile"><p class="text-sm text-[--color-text-secondary]">Profile content</p></TabsContent>
-          <TabsContent value="notifications"><p class="text-sm text-[--color-text-secondary]">Notifications content</p></TabsContent>
-          <TabsContent value="settings"><p class="text-sm text-[--color-text-secondary]">Settings content</p></TabsContent>
+        <div style="padding-top:16px;">
+          <TabsContent value="home"><p style="font-size:14px;color:var(--color-text-secondary);">Home content</p></TabsContent>
+          <TabsContent value="profile"><p style="font-size:14px;color:var(--color-text-secondary);">Profile content</p></TabsContent>
+          <TabsContent value="notifications"><p style="font-size:14px;color:var(--color-text-secondary);">Notifications content</p></TabsContent>
+          <TabsContent value="settings"><p style="font-size:14px;color:var(--color-text-secondary);">Settings content</p></TabsContent>
         </div>
       </Tabs>
     `,
@@ -242,6 +265,7 @@ export const WithIcons: Story = {
 }
 
 export const WithDisabledTab: Story = {
+  name: 'With Disabled Tab',
   render: () => ({
     components: { Tabs, TabsList, TabsTrigger, TabsContent },
     setup() {
@@ -249,17 +273,17 @@ export const WithDisabledTab: Story = {
       return { active }
     },
     template: `
-      <Tabs variant="line" v-model="active" style="max-width:500px">
+      <Tabs variant="line" v-model="active" style="max-width:500px;">
         <TabsList>
           <TabsTrigger value="active1">Active Tab</TabsTrigger>
           <TabsTrigger value="active2">Another Tab</TabsTrigger>
           <TabsTrigger value="disabled" disabled>Disabled</TabsTrigger>
           <TabsTrigger value="active3">Last Tab</TabsTrigger>
         </TabsList>
-        <div class="pt-4">
-          <TabsContent value="active1"><p class="text-sm text-[--color-text-secondary]">First tab content</p></TabsContent>
-          <TabsContent value="active2"><p class="text-sm text-[--color-text-secondary]">Second tab content</p></TabsContent>
-          <TabsContent value="active3"><p class="text-sm text-[--color-text-secondary]">Third tab content</p></TabsContent>
+        <div style="padding-top:16px;">
+          <TabsContent value="active1"><p style="font-size:14px;color:var(--color-text-secondary);">First tab content</p></TabsContent>
+          <TabsContent value="active2"><p style="font-size:14px;color:var(--color-text-secondary);">Second tab content</p></TabsContent>
+          <TabsContent value="active3"><p style="font-size:14px;color:var(--color-text-secondary);">Third tab content</p></TabsContent>
         </div>
       </Tabs>
     `,

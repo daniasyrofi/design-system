@@ -1,10 +1,31 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import Tooltip from './Tooltip.vue'
+import Button from '@/components/atoms/Button/Button.vue'
+
+// ── Canvas decorator — consistent with Alert/Toast ────────────────────────────
+const canvas = () => ({
+  template: `
+    <div style="
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 32px;
+      background-color: #eceae4;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.11) 1px, transparent 1px);
+      background-size: 22px 22px;
+    ">
+      <story />
+    </div>
+  `,
+})
 
 const meta: Meta<typeof Tooltip> = {
   title: 'Molecules/Tooltip',
   component: Tooltip,
   tags: ['autodocs'],
+  decorators: [canvas],
+  parameters: { layout: 'fullscreen' },
   argTypes: {
     content:   { control: 'text' },
     placement: { control: 'select', options: ['top', 'bottom', 'left', 'right'] },
@@ -25,95 +46,87 @@ const meta: Meta<typeof Tooltip> = {
 export default meta
 type Story = StoryObj<typeof Tooltip>
 
+// ── Default ───────────────────────────────────────────────────────────────────
+
 export const Default: Story = {
   render: (args) => ({
-    components: { Tooltip },
+    components: { Tooltip, Button },
     setup: () => ({ args }),
     template: `
-      <div class="flex items-center justify-center p-20">
+      <div style="display:flex;align-items:center;justify-content:center;padding:80px;">
         <Tooltip v-bind="args">
-          <button class="px-4 py-2 text-sm rounded-[--radius-md] bg-[--color-neutral] text-[--color-text-inverse]">
-            Hover me
-          </button>
+          <Button>Hover me</Button>
         </Tooltip>
       </div>
     `,
   }),
 }
+
+// ── All Placements ────────────────────────────────────────────────────────────
 
 export const AllPlacements: Story = {
+  name: 'All Placements',
   render: () => ({
-    components: { Tooltip },
+    components: { Tooltip, Button },
     template: `
-      <div class="grid grid-cols-2 gap-8 p-20 place-items-center" style="min-height:300px">
-        <Tooltip content="Tooltip on top" placement="top">
-          <button class="px-4 py-2 text-sm rounded-[--radius-md] border border-[--color-border] text-[--color-text-primary]">
-            Top
-          </button>
-        </Tooltip>
-        <Tooltip content="Tooltip on bottom" placement="bottom">
-          <button class="px-4 py-2 text-sm rounded-[--radius-md] border border-[--color-border] text-[--color-text-primary]">
-            Bottom
-          </button>
-        </Tooltip>
-        <Tooltip content="Tooltip on left" placement="left">
-          <button class="px-4 py-2 text-sm rounded-[--radius-md] border border-[--color-border] text-[--color-text-primary]">
-            Left
-          </button>
-        </Tooltip>
-        <Tooltip content="Tooltip on right" placement="right">
-          <button class="px-4 py-2 text-sm rounded-[--radius-md] border border-[--color-border] text-[--color-text-primary]">
-            Right
-          </button>
-        </Tooltip>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;padding:80px;place-items:center;min-height:300px;">
+        <Tooltip content="Tooltip on top"    placement="top">    <Button variant="secondary" size="sm">Top</Button></Tooltip>
+        <Tooltip content="Tooltip on bottom" placement="bottom"> <Button variant="secondary" size="sm">Bottom</Button></Tooltip>
+        <Tooltip content="Tooltip on left"   placement="left">   <Button variant="secondary" size="sm">Left</Button></Tooltip>
+        <Tooltip content="Tooltip on right"  placement="right">  <Button variant="secondary" size="sm">Right</Button></Tooltip>
       </div>
     `,
   }),
 }
+
+// ── Click Trigger ─────────────────────────────────────────────────────────────
 
 export const ClickTrigger: Story = {
+  name: 'Click Trigger',
   render: () => ({
-    components: { Tooltip },
+    components: { Tooltip, Button },
     template: `
-      <div class="flex items-center justify-center p-20">
+      <div style="display:flex;align-items:center;justify-content:center;padding:80px;">
         <Tooltip content="Click-triggered tooltip" trigger="click">
-          <button class="px-4 py-2 text-sm rounded-[--radius-md] bg-[--color-primary] text-[--color-primary-text]">
-            Click me
-          </button>
+          <Button>Click me</Button>
         </Tooltip>
       </div>
     `,
   }),
 }
+
+// ── No Arrow ──────────────────────────────────────────────────────────────────
 
 export const NoArrow: Story = {
+  name: 'No Arrow',
   render: () => ({
-    components: { Tooltip },
+    components: { Tooltip, Button },
     template: `
-      <div class="flex items-center justify-center p-20">
+      <div style="display:flex;align-items:center;justify-content:center;padding:80px;">
         <Tooltip content="No arrow on this tooltip" :arrow="false">
-          <button class="px-4 py-2 text-sm rounded-[--radius-md] border border-[--color-border] text-[--color-text-primary]">
-            No arrow
-          </button>
+          <Button variant="secondary">No arrow</Button>
         </Tooltip>
       </div>
     `,
   }),
 }
 
+// ── Rich Content ──────────────────────────────────────────────────────────────
+
 export const RichContent: Story = {
+  name: 'Rich Content',
   render: () => ({
-    components: { Tooltip },
+    components: { Tooltip, Button },
     template: `
-      <div class="flex items-center justify-center p-20">
+      <div style="display:flex;align-items:center;justify-content:center;padding:80px;">
         <Tooltip placement="bottom" max-width="260px">
-          <button class="px-4 py-2 text-sm rounded-[--radius-md] border border-[--color-border] text-[--color-text-primary]">
-            Rich tooltip
-          </button>
+          <Button variant="secondary">Rich tooltip</Button>
           <template #content>
-            <div class="flex flex-col gap-1">
-              <span class="font-semibold">Pro tip</span>
-              <span class="text-xs opacity-80">You can use the <kbd class="px-1 py-0.5 rounded bg-white/20 text-xs">Esc</kbd> key to close modals quickly.</span>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <span style="font-weight:600;">Pro tip</span>
+              <span style="font-size:12px;opacity:0.8;">
+                Use <kbd style="padding:1px 5px;border-radius:4px;background:rgba(255,255,255,0.2);font-size:11px;">Esc</kbd> key to close modals quickly.
+              </span>
             </div>
           </template>
         </Tooltip>

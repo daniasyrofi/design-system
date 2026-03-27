@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { cn } from '@/lib/utils'
 import { RiUploadCloud2Line, RiCloseLine } from '@remixicon/vue'
+import Button from '@/components/atoms/Button/Button.vue'
 
 interface Props {
   accept?: string
@@ -184,13 +185,13 @@ function matchAccept(file: File, accept: string): boolean {
 
 const dropzoneClasses = computed(() =>
   cn(
-    'relative flex flex-col items-center justify-center gap-2',
-    'rounded-[--radius-lg] border-2 border-dashed p-8',
-    'cursor-pointer select-none',
-    'transition-colors duration-[--duration-normal] ease-[--ease-default]',
+    'relative flex flex-col items-center justify-center gap-3',
+    'rounded-[--radius-2xl] border border-dashed p-10',
+    'cursor-pointer select-none ring-1 ring-inset ring-transparent',
+    'transition-all duration-[--duration-normal] ease-[--ease-default]',
     isDragOver.value
-      ? 'border-[--color-primary] bg-[--color-primary-light]'
-      : 'border-[--color-border] hover:border-[--color-border-strong] bg-[--color-surface]',
+      ? 'border-[--color-primary] ring-[--color-primary]/20 bg-[--color-primary-light]/50 scale-[1.01]'
+      : 'border-[--color-border]/60 bg-[--color-surface] hover:border-[--color-border] hover:bg-[--color-neutral-light]/30 shadow-[--shadow-sm] hover:shadow-[--shadow-md]',
     props.disabled && 'opacity-50 pointer-events-none cursor-not-allowed',
   )
 )
@@ -211,16 +212,24 @@ const dropzoneClasses = computed(() =>
       @dragleave="handleDragLeave"
       @drop="handleDrop"
     >
-      <RiUploadCloud2Line
-        :size="32"
+      <span
         :class="cn(
+          'flex items-center justify-center w-12 h-12 rounded-full',
           'transition-colors duration-[--duration-normal]',
-          isDragOver ? 'text-[--color-primary]' : 'text-[--color-text-tertiary]',
+          isDragOver ? 'bg-[--color-primary]/15' : 'bg-[--color-neutral-light]',
         )"
-      />
+      >
+        <RiUploadCloud2Line
+          :size="'24'"
+          :class="cn(
+            'transition-colors duration-[--duration-normal]',
+            isDragOver ? 'text-[--color-primary]' : 'text-[--color-text-tertiary]',
+          )"
+        />
+      </span>
       <div class="text-center">
-        <p class="text-sm font-medium text-[--color-text-primary]">
-          Click to upload or drag and drop
+        <p class="text-sm font-semibold text-[--color-text-primary]">
+          Click to upload <span class="font-normal text-[--color-text-secondary]">or drag and drop</span>
         </p>
         <p v-if="acceptHint" class="text-xs text-[--color-text-tertiary] mt-1">
           {{ acceptHint }}
@@ -270,14 +279,18 @@ const dropzoneClasses = computed(() =>
         </div>
 
         <!-- Remove button -->
-        <button
-          type="button"
-          class="absolute top-1 right-1 flex items-center justify-center h-5 w-5 rounded-[--radius-full] bg-[--color-neutral] text-[--color-text-inverse] opacity-0 group-hover:opacity-100 transition-opacity duration-[--duration-normal] cursor-pointer hover:bg-[--color-neutral-hover]"
+        <Button
+          variant="secondary"
+          size="xs"
+          icon-only
+          class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-[--duration-normal] z-10"
           aria-label="Remove file"
           @click.stop="removeFile(index)"
         >
-          <RiCloseLine :size="12" />
-        </button>
+          <template #icon>
+            <RiCloseLine :size="'14'" />
+          </template>
+        </Button>
       </div>
     </div>
   </div>

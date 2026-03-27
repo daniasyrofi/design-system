@@ -147,9 +147,9 @@ onBeforeUnmount(() => {
 
 const menuClasses = computed(() =>
   cn(
-    'absolute z-50 min-w-[8rem] py-1',
-    'bg-[--color-surface] border border-[--color-border]',
-    'rounded-[--radius-lg] shadow-[--shadow-lg]',
+    'absolute z-50 min-w-[10rem] py-1.5',
+    'bg-[--color-surface] ring-1 ring-inset ring-[--color-border]/60',
+    'rounded-[--radius-2xl] shadow-[--shadow-2xl]',
     'overflow-hidden',
     placementClasses[props.placement],
   )
@@ -194,13 +194,14 @@ const menuClasses = computed(() =>
             role="menuitem"
             :disabled="item.disabled"
             :class="cn(
-              'flex w-full items-center gap-2 px-3 py-2 text-sm text-left',
+              'flex w-full items-center gap-2.5 px-2.5 py-2 text-sm text-left',
+              'rounded-[--radius-md] mx-1',
               'text-[--color-text-primary]',
               'transition-colors duration-[--duration-fast]',
               item.disabled
                 ? 'opacity-50 pointer-events-none cursor-default'
-                : 'hover:bg-[--color-surface-hover] cursor-pointer',
-              focusedIndex === index && !item.disabled && 'bg-[--color-surface-hover]',
+                : 'hover:bg-[--color-neutral-light] cursor-pointer',
+              focusedIndex === index && !item.disabled && 'bg-[--color-neutral-light]',
             )"
             @click="selectItem(item)"
             @mouseenter="focusedIndex = index"

@@ -9,11 +9,32 @@ import {
   RiMore2Fill,
 } from '@remixicon/vue'
 import DropdownMenu from './DropdownMenu.vue'
+import Button from '@/components/atoms/Button/Button.vue'
+
+// ── Canvas decorator ──────────────────────────────────────────────────────────
+const canvas = () => ({
+  template: `
+    <div style="
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 32px;
+      background-color: #eceae4;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.11) 1px, transparent 1px);
+      background-size: 22px 22px;
+    ">
+      <story />
+    </div>
+  `,
+})
 
 const meta: Meta<typeof DropdownMenu> = {
   title: 'Molecules/DropdownMenu',
   component: DropdownMenu,
   tags: ['autodocs'],
+  decorators: [canvas],
+  parameters: { layout: 'fullscreen' },
   argTypes: {
     placement: { control: 'select', options: ['bottom-start', 'bottom-end', 'top-start', 'top-end'] },
     width:     { control: 'text' },
@@ -28,7 +49,7 @@ type Story = StoryObj<typeof DropdownMenu>
 
 export const Default: Story = {
   render: (args) => ({
-    components: { DropdownMenu },
+    components: { DropdownMenu, Button },
     setup() {
       const items = [
         { label: 'Edit', action: () => console.log('Edit') },
@@ -39,12 +60,10 @@ export const Default: Story = {
       return { args, items }
     },
     template: `
-      <div class="p-20">
+      <div style="padding:80px;">
         <DropdownMenu v-bind="args" :items="items">
           <template #trigger>
-            <button class="px-4 py-2 text-sm rounded-[--radius-md] border border-[--color-border] text-[--color-text-primary] cursor-pointer">
-              Open Menu
-            </button>
+            <Button variant="secondary">Open Menu</Button>
           </template>
         </DropdownMenu>
       </div>
@@ -53,8 +72,9 @@ export const Default: Story = {
 }
 
 export const WithIcons: Story = {
+  name: 'With Icons',
   render: () => ({
-    components: { DropdownMenu, RiArrowDownSLine },
+    components: { DropdownMenu, Button, RiArrowDownSLine },
     setup() {
       const items = [
         { label: 'Edit', icon: RiEditLine, action: () => console.log('Edit') },
@@ -67,13 +87,13 @@ export const WithIcons: Story = {
       return { items }
     },
     template: `
-      <div class="p-20">
+      <div style="padding:80px;">
         <DropdownMenu :items="items">
           <template #trigger>
-            <button class="inline-flex items-center gap-1 px-4 py-2 text-sm rounded-[--radius-md] bg-[--color-primary] text-[--color-primary-text] cursor-pointer">
+            <Button>
               Actions
-              <RiArrowDownSLine :size="16" />
-            </button>
+              <template #trailing><RiArrowDownSLine style="width:16px;height:16px;" /></template>
+            </Button>
           </template>
         </DropdownMenu>
       </div>
@@ -82,8 +102,9 @@ export const WithIcons: Story = {
 }
 
 export const WithShortcuts: Story = {
+  name: 'With Shortcuts',
   render: () => ({
-    components: { DropdownMenu },
+    components: { DropdownMenu, Button },
     setup() {
       const items = [
         { label: 'Undo', shortcut: '⌘Z', action: () => console.log('Undo') },
@@ -98,12 +119,10 @@ export const WithShortcuts: Story = {
       return { items }
     },
     template: `
-      <div class="p-20">
+      <div style="padding:80px;">
         <DropdownMenu :items="items" width="220px">
           <template #trigger>
-            <button class="px-4 py-2 text-sm rounded-[--radius-md] border border-[--color-border] text-[--color-text-primary] cursor-pointer">
-              Edit
-            </button>
+            <Button variant="secondary">Edit</Button>
           </template>
         </DropdownMenu>
       </div>
@@ -112,8 +131,9 @@ export const WithShortcuts: Story = {
 }
 
 export const WithSeparators: Story = {
+  name: 'With Separators',
   render: () => ({
-    components: { DropdownMenu, RiMore2Fill },
+    components: { DropdownMenu, Button, RiMore2Fill },
     setup() {
       const items = [
         { label: 'View profile', action: () => console.log('View profile') },
@@ -127,12 +147,12 @@ export const WithSeparators: Story = {
       return { items }
     },
     template: `
-      <div class="p-20">
+      <div style="padding:80px;">
         <DropdownMenu :items="items" placement="bottom-end">
           <template #trigger>
-            <button class="inline-flex items-center justify-center w-8 h-8 rounded-[--radius-md] border border-[--color-border] text-[--color-text-secondary] hover:bg-[--color-surface-hover] cursor-pointer">
-              <RiMore2Fill :size="16" />
-            </button>
+            <Button variant="ghost" size="sm" :iconOnly="true" aria-label="More options">
+              <template #icon><RiMore2Fill style="width:16px;height:16px;" /></template>
+            </Button>
           </template>
         </DropdownMenu>
       </div>

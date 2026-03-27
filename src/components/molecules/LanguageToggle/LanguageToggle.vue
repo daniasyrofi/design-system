@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { cn } from '@/lib/utils'
 
@@ -12,7 +11,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const { locale } = useI18n()
-
 const locales = ['id', 'en'] as const
 
 function setLocale(loc: string) {
@@ -20,26 +18,25 @@ function setLocale(loc: string) {
   localStorage.setItem('ds-locale', loc)
 }
 
-const sizeClasses: Record<string, string> = {
-  sm: 'h-7 text-xs gap-0',
-  md: 'h-8 text-sm gap-0',
-  lg: 'h-9 text-sm gap-0',
+const wrapperSize: Record<string, string> = {
+  sm: 'p-[3px] gap-0.5',
+  md: 'p-[3px] gap-0.5',
+  lg: 'p-1   gap-1',
 }
 
-const buttonPadding: Record<string, string> = {
-  sm: 'px-2',
-  md: 'px-2.5',
-  lg: 'px-3',
+const btnSize: Record<string, string> = {
+  sm: 'h-6 px-2.5 text-[10px]',
+  md: 'h-7 px-3   text-xs',
+  lg: 'h-8 px-3.5 text-xs',
 }
 </script>
 
 <template>
   <div
     :class="cn(
-      'inline-flex items-center rounded-[--radius-md]',
-      'border border-[--color-border] bg-[--color-surface]',
-      'overflow-hidden',
-      sizeClasses[props.size],
+      'inline-flex items-center',
+      'rounded-full ring-1 ring-inset ring-[--color-border]/60 bg-[--color-neutral-light]/80 shadow-[--shadow-sm]',
+      wrapperSize[props.size],
     )"
     role="radiogroup"
     aria-label="Language"
@@ -51,14 +48,15 @@ const buttonPadding: Record<string, string> = {
       role="radio"
       :aria-checked="locale === loc"
       :class="cn(
-        'h-full inline-flex items-center justify-center font-medium uppercase',
-        'transition-all duration-[--duration-normal] ease-[--ease-default]',
-        'cursor-pointer',
-        'focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[--color-primary]',
-        buttonPadding[props.size],
+        'inline-flex items-center justify-center rounded-full',
+        'font-semibold uppercase tracking-wider',
+        'transition-all duration-[--duration-normal] ease-[--ease-out]',
+        'cursor-pointer select-none',
+        'focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[--color-primary]',
+        btnSize[props.size],
         locale === loc
-          ? 'bg-[--color-neutral] text-[--color-text-inverse]'
-          : 'text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-neutral-light]',
+          ? 'bg-[--color-surface] text-[--color-text-primary] shadow-sm ring-1 ring-inset ring-[--color-border]/40'
+          : 'text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-neutral-light]/50',
       )"
       @click="setLocale(loc)"
     >

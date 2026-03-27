@@ -245,18 +245,17 @@ const hasError = computed(() => !!props.error)
 
 const triggerClasses = computed(() =>
   cn(
+    'ds-datepicker-trigger',
     'relative flex items-center w-full gap-2',
-    'rounded-[--radius-md] border bg-[--color-surface]',
-    'cursor-pointer select-none',
-    'transition-colors duration-[--duration-normal] ease-[--ease-default]',
-    'focus-within:outline-2 focus-within:outline-offset-0 focus-within:outline-[--color-primary]',
+    'rounded-[var(--radius-lg)] border outline-none',
+    'transition-all duration-200 ease-out select-none',
+    !props.disabled && 'cursor-pointer',
     heightClass[props.size],
     textSizeClass[props.size],
     'px-3',
-    hasError.value
-      ? 'border-[--color-danger] focus-within:outline-[--color-danger]'
-      : 'border-[--color-border] hover:border-[--color-border-strong]',
-    props.disabled && 'opacity-50 cursor-not-allowed bg-[--color-bg-subtle]',
+    hasError.value && 'ds-datepicker-trigger--error',
+    isOpen.value && 'ds-datepicker-trigger--focus',
+    props.disabled && 'ds-datepicker-trigger--disabled cursor-not-allowed',
   )
 )
 
@@ -291,13 +290,13 @@ const dayCellBase = [
       <span
         :class="cn(
           'flex-1 text-left truncate',
-          displayValue ? 'text-[--color-text-primary]' : 'text-[--color-text-tertiary]',
+          displayValue ? 'ds-datepicker-trigger-text' : 'ds-datepicker-trigger-text--placeholder',
         )"
       >
         {{ displayValue || placeholder }}
       </span>
       <RiCalendarLine
-        :size="iconSizePx[size]"
+        :size="String(iconSizePx[size])"
         class="shrink-0 text-[--color-text-tertiary]"
       />
     </button>
@@ -318,28 +317,28 @@ const dayCellBase = [
     >
       <div
         v-if="isOpen"
-        class="absolute z-50 top-full mt-1 left-0 rounded-[--radius-lg] border border-[--color-border] bg-[--color-surface] shadow-[--shadow-lg] p-3 w-[280px]"
+        class="absolute z-50 top-full mt-1.5 left-0 rounded-[--radius-2xl] ring-1 ring-inset ring-[--color-border]/60 bg-[--color-surface] shadow-[--shadow-2xl] p-3 w-[308px]"
       >
         <!-- Month/Year header -->
-        <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center justify-between mb-3 px-1">
           <button
             type="button"
-            class="inline-flex items-center justify-center h-7 w-7 rounded-[--radius-md] text-[--color-text-primary] hover:bg-[--color-neutral-light] cursor-pointer transition-colors duration-[--duration-fast]"
+            class="inline-flex items-center justify-center h-7 w-7 rounded-full text-[--color-text-secondary] hover:bg-[--color-neutral-light] hover:text-[--color-text-primary] cursor-pointer transition-colors duration-[--duration-fast]"
             aria-label="Previous month"
             @click="prevMonth"
           >
-            <RiArrowLeftSLine :size="16" />
+            <RiArrowLeftSLine :size="'16'" />
           </button>
-          <span class="text-sm font-medium text-[--color-text-primary]">
+          <span class="text-sm font-semibold text-[--color-text-primary] tracking-tight">
             {{ monthYearLabel }}
           </span>
           <button
             type="button"
-            class="inline-flex items-center justify-center h-7 w-7 rounded-[--radius-md] text-[--color-text-primary] hover:bg-[--color-neutral-light] cursor-pointer transition-colors duration-[--duration-fast]"
+            class="inline-flex items-center justify-center h-7 w-7 rounded-full text-[--color-text-secondary] hover:bg-[--color-neutral-light] hover:text-[--color-text-primary] cursor-pointer transition-colors duration-[--duration-fast]"
             aria-label="Next month"
             @click="nextMonth"
           >
-            <RiArrowRightSLine :size="16" />
+            <RiArrowRightSLine :size="'16'" />
           </button>
         </div>
 
@@ -363,13 +362,14 @@ const dayCellBase = [
             :disabled="cell.isDisabled"
             :class="cn(
               ...dayCellBase,
+              'rounded-full',
               cell.isSelected
-                ? 'bg-[--color-neutral] text-[--color-text-inverse] rounded-[--radius-full] font-medium'
+                ? 'bg-[--color-primary] text-[--color-text-inverse] font-medium shadow-sm'
                 : cell.isToday
-                  ? 'ring-1 ring-[--color-primary] rounded-[--radius-full] text-[--color-text-primary]'
+                  ? 'ring-1.5 ring-[--color-primary] text-[--color-primary] font-medium hover:bg-[--color-primary-light]'
                   : cell.isCurrentMonth
-                    ? 'text-[--color-text-primary] hover:bg-[--color-neutral-light] rounded-[--radius-full]'
-                    : 'text-[--color-text-tertiary] hover:bg-[--color-neutral-light] rounded-[--radius-full]',
+                    ? 'text-[--color-text-primary] hover:bg-[--color-neutral-light]'
+                    : 'text-[--color-text-muted] hover:bg-[--color-neutral-light]',
               cell.isDisabled && 'opacity-30 pointer-events-none cursor-not-allowed',
             )"
             :aria-label="`${cell.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`"
@@ -383,3 +383,46 @@ const dayCellBase = [
     </Transition>
   </div>
 </template>
+
+<style scoped>
+/* ── Wrapper base (matches Input atom) ── */
+.ds-datepicker-trigger {
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+.ds-datepicker-trigger:hover:not(.ds-datepicker-trigger--disabled) {
+  border-color: var(--color-border-strong);
+}
+
+.ds-datepicker-trigger--focus:not(.ds-datepicker-trigger--error),
+.ds-datepicker-trigger:focus-visible:not(.ds-datepicker-trigger--error) {
+  border-color: var(--color-text-primary);
+  box-shadow: 0 0 0 1px var(--color-text-primary);
+}
+
+/* ── Error state ── */
+.ds-datepicker-trigger--error {
+  border-color: var(--color-danger);
+}
+
+.ds-datepicker-trigger--error.ds-datepicker-trigger--focus,
+.ds-datepicker-trigger--error:focus-visible {
+  box-shadow: 0 0 0 1px var(--color-danger);
+}
+
+/* ── Disabled state ── */
+.ds-datepicker-trigger--disabled {
+  opacity: 0.5;
+  background-color: var(--color-bg-subtle);
+}
+
+/* ── Typography ── */
+.ds-datepicker-trigger-text {
+  color: var(--color-text-primary);
+}
+
+.ds-datepicker-trigger-text--placeholder {
+  color: var(--color-text-tertiary);
+}
+</style>

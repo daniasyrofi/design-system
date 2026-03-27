@@ -43,8 +43,8 @@ const classes = computed(() => {
       ...base,
       sizePadding.line[size],
       active
-        ? 'text-[--color-text-primary] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[--color-text-primary] after:rounded-t-full'
-        : 'text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-neutral-light]',
+        ? 'text-[--color-text-primary] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-[--color-text-primary] after:rounded-t-full'
+        : 'text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-neutral-light] rounded-t-[--radius-md]',
     )
   }
 
@@ -52,10 +52,10 @@ const classes = computed(() => {
     return cn(
       ...base,
       sizePadding.pill[size],
-      'rounded-[--radius-md]',
+      'rounded-xl',
       active
-        ? 'bg-[--color-surface] text-[--color-text-primary] shadow-[--shadow-xs]'
-        : 'text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-surface]/60',
+        ? 'bg-[--color-surface] text-[--color-text-primary] shadow-sm ring-1 ring-inset ring-[--color-border]/40'
+        : 'text-[--color-text-secondary] hover:text-[--color-text-primary]',
     )
   }
 
@@ -63,10 +63,10 @@ const classes = computed(() => {
     return cn(
       ...base,
       sizePadding.boxed[size],
-      'border-r border-[--color-border] last:border-r-0',
+      'border-r border-[--color-border]/60 last:border-r-0',
       active
-        ? 'bg-[--color-surface] text-[--color-text-primary]'
-        : 'bg-[--color-neutral-light] text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-surface]/60',
+        ? 'bg-[--color-neutral-light]/50 text-[--color-text-primary] font-medium shadow-inner'
+        : 'bg-transparent text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-neutral-light]/30',
     )
   }
 

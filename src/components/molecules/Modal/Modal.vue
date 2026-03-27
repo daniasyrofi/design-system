@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, watch, onMounted, onBeforeUnmount, ref, nextTick, useId } from 'vue'
+import { computed, watch, onBeforeUnmount, ref, nextTick, useId } from 'vue'
 import { cn } from '@/lib/utils'
 import { RiCloseLine } from '@remixicon/vue'
+import Button from '@/components/atoms/Button/Button.vue'
 
 type ModalSize       = 'sm' | 'md' | 'lg' | 'xl' | 'full'
 type ScrollBehavior  = 'inside' | 'outside'
@@ -130,9 +131,9 @@ onBeforeUnmount(() => {
 const overlayClasses = computed(() =>
   cn(
     'fixed inset-0 z-50',
-    'bg-black/55 backdrop-blur-md',
+    'bg-black/30 backdrop-blur-[12px]',
     props.scrollBehavior === 'outside'
-      ? 'overflow-y-auto'
+      ? 'overflow-y-auto w-full h-full'
       : 'flex items-center justify-center p-4',
   )
 )
@@ -140,7 +141,8 @@ const overlayClasses = computed(() =>
 const panelClasses = computed(() =>
   cn(
     'relative w-full bg-[--color-surface]',
-    'rounded-[--radius-lg] shadow-[--shadow-xl]',
+    'rounded-[--radius-2xl]',
+    'shadow-[--shadow-2xl] ring-1 ring-inset ring-[--color-border]/60',
     'flex flex-col',
     sizeMap[props.size],
     props.scrollBehavior === 'outside'
@@ -188,7 +190,7 @@ const panelClasses = computed(() =>
             <!-- Header -->
             <div
               v-if="$slots.header || $slots.title || closable"
-              class="flex items-start gap-4 p-6 pb-0"
+              class="flex items-start gap-4 px-6 pt-6 pb-4 relative"
             >
               <slot name="header">
                 <div class="flex-1 min-w-0 flex flex-col gap-1">
@@ -211,23 +213,19 @@ const panelClasses = computed(() =>
 
               <!-- Close button -->
               <slot name="close-button">
-                <button
+                <Button
                   v-if="closable && !preventClose"
-                  type="button"
-                  :class="cn(
-                    'shrink-0 flex items-center justify-center',
-                    'size-8 rounded-[--radius-md]',
-                    'text-[--color-text-tertiary] hover:text-[--color-text-primary]',
-                    'hover:bg-[--color-neutral-light]',
-                    'transition-colors duration-[--duration-normal]',
-                    'cursor-pointer',
-                    'focus-visible:outline-none focus-visible:shadow-[--ring-primary]',
-                  )"
+                  variant="ghost"
+                  size="sm"
+                  icon-only
+                  class="shrink-0 size-7"
                   aria-label="Close dialog"
                   @click="close"
                 >
-                  <RiCloseLine :size="18" />
-                </button>
+                  <template #icon>
+                    <RiCloseLine :size="'16'" />
+                  </template>
+                </Button>
               </slot>
             </div>
 

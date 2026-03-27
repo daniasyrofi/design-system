@@ -27,11 +27,11 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{ click: [e: MouseEvent] }>()
 
 const variantClasses: Record<Variant, string> = {
-  default:  'bg-[--color-surface] border border-[--color-border] shadow-[--shadow-sm] [border-top-color:oklch(1_0_0/0.8)]',
-  outlined: 'bg-[--color-surface] border border-[--color-border]',
-  elevated: 'bg-[--color-surface] shadow-[--shadow-lg]',
+  default:  'bg-[--color-surface] shadow-[--shadow-md] ring-1 ring-inset ring-[--color-border]/60 [border-top-color:oklch(1_0_0/0.85)]',
+  outlined: 'bg-[--color-surface] ring-1 ring-inset ring-[--color-border]/60',
+  elevated: 'bg-[--color-surface] shadow-[--shadow-2xl] ring-1 ring-inset ring-[--color-border]/60 [border-top-color:oklch(1_0_0/0.85)]',
   flat:     'bg-[--color-surface]',
-  glass:    'border border-[--glass-border] shadow-[--shadow-md]',
+  glass:    'ring-1 ring-inset ring-[--glass-border] shadow-[--shadow-xl] [background:var(--color-surface-glass)] [backdrop-filter:var(--glass-blur)]',
 }
 
 const paddingClasses: Record<Padding, string> = {
@@ -42,10 +42,10 @@ const paddingClasses: Record<Padding, string> = {
 }
 
 const radiusClasses: Record<Radius, string> = {
-  sm: 'rounded-[--radius-sm]',
-  md: 'rounded-[--radius-md]',
-  lg: 'rounded-[--radius-lg]',
-  xl: 'rounded-[--radius-xl]',
+  sm: 'rounded-[--radius-md]',
+  md: 'rounded-[--radius-lg]',
+  lg: 'rounded-[--radius-xl]',
+  xl: 'rounded-[--radius-2xl]',
 }
 
 const bodyPaddingClasses: Record<Padding, string> = {
@@ -62,12 +62,11 @@ const classes = computed(() =>
     variantClasses[props.variant],
     props.variant === 'glass' && '[background:var(--color-surface-glass)] [backdrop-filter:var(--glass-blur)]',
     radiusClasses[props.radius],
-    // Only apply padding when no structural slots are used
     !hasStructuredSlots.value && paddingClasses[props.padding],
-    props.hoverable && 'hover:shadow-[--shadow-lg] hover:-translate-y-1 cursor-default',
+    props.hoverable && 'hover:shadow-[--shadow-xl] hover:-translate-y-1.5 cursor-default',
     props.clickable && [
       'cursor-pointer',
-      'hover:shadow-[--shadow-lg] hover:-translate-y-1',
+      'hover:shadow-[--shadow-xl] hover:-translate-y-1.5',
       'active:scale-[0.99] active:translate-y-0',
       'focus-visible:outline-none focus-visible:shadow-[--ring-primary]',
     ],

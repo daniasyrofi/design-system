@@ -154,8 +154,8 @@ onBeforeUnmount(() => {
 const popoverClasses = computed(() =>
   cn(
     'absolute z-50 p-4',
-    'bg-[--color-surface] border border-[--color-border]',
-    'rounded-[--radius-lg] shadow-[--shadow-lg]',
+    'bg-[--color-surface] ring-1 ring-inset ring-[--color-border]/60',
+    'rounded-[--radius-2xl] shadow-[--shadow-2xl]',
     placementClasses[props.placement],
   )
 )

@@ -21,7 +21,7 @@ const classes = computed(() => {
     return cn(
       base,
       isVertical ? 'flex-col' : 'flex-row',
-      'gap-1 p-1 bg-[--color-neutral-light] rounded-[--radius-lg]',
+      'gap-1 p-1 bg-[--color-neutral-light]/80 rounded-[--radius-2xl]',
     )
   }
 
@@ -29,7 +29,7 @@ const classes = computed(() => {
     return cn(
       base,
       isVertical ? 'flex-col' : 'flex-row',
-      'gap-0 border border-[--color-border] rounded-[--radius-md] overflow-hidden',
+      'gap-0 ring-1 ring-inset ring-[--color-border]/60 rounded-[--radius-xl] bg-[--color-surface] shadow-[--shadow-sm] overflow-hidden',
     )
   }
 

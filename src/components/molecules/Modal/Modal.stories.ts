@@ -1,11 +1,34 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ref } from 'vue'
 import Modal from './Modal.vue'
+import Button from '@/components/atoms/Button/Button.vue'
+import Input from '@/components/atoms/Input/Input.vue'
+import Textarea from '@/components/atoms/Textarea/Textarea.vue'
+
+// ── Canvas decorator ──────────────────────────────────────────────────────────
+const canvas = () => ({
+  template: `
+    <div style="
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 32px;
+      background-color: #eceae4;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.11) 1px, transparent 1px);
+      background-size: 22px 22px;
+    ">
+      <story />
+    </div>
+  `,
+})
 
 const meta: Meta<typeof Modal> = {
   title: 'Molecules/Modal',
   component: Modal,
   tags: ['autodocs'],
+  decorators: [canvas],
+  parameters: { layout: 'fullscreen' },
   argTypes: {
     size:           { control: 'select', options: ['sm', 'md', 'lg', 'xl', 'full'] },
     closable:       { control: 'boolean' },
@@ -26,39 +49,24 @@ type Story = StoryObj<typeof Modal>
 
 export const Default: Story = {
   render: (args) => ({
-    components: { Modal },
+    components: { Modal, Button },
     setup() {
       const open = ref(false)
       return { open, args }
     },
     template: `
       <div>
-        <button
-          class="px-4 py-2 text-sm rounded-[--radius-md] bg-[--color-neutral] text-[--color-text-inverse]"
-          @click="open = true"
-        >
-          Open Modal
-        </button>
+        <Button @click="open = true">Open Modal</Button>
         <Modal v-bind="args" v-model="open">
           <template #title>Modal title</template>
           <template #description>This is a description of the modal content.</template>
-          <p class="text-sm text-[--color-text-secondary]">
+          <p style="font-size:14px;color:var(--color-text-secondary);">
             This is the body content of the modal. It can contain any kind of content
             including text, forms, images, and other components.
           </p>
           <template #footer>
-            <button
-              class="px-4 py-2 text-sm rounded-[--radius-md] border border-[--color-border] text-[--color-text-primary] hover:bg-[--color-neutral-light]"
-              @click="open = false"
-            >
-              Cancel
-            </button>
-            <button
-              class="px-4 py-2 text-sm rounded-[--radius-md] bg-[--color-neutral] text-[--color-text-inverse]"
-              @click="open = false"
-            >
-              Confirm
-            </button>
+            <Button variant="secondary" @click="open = false">Cancel</Button>
+            <Button @click="open = false">Confirm</Button>
           </template>
         </Modal>
       </div>
@@ -67,22 +75,23 @@ export const Default: Story = {
 }
 
 export const AllSizes: Story = {
+  name: 'All Sizes',
   render: () => ({
-    components: { Modal },
+    components: { Modal, Button },
     setup() {
       const activeSize = ref<string | null>(null)
       return { activeSize }
     },
     template: `
-      <div class="flex flex-wrap gap-3">
-        <button
+      <div style="display:flex;flex-wrap:wrap;gap:12px;">
+        <Button
           v-for="size in ['sm', 'md', 'lg', 'xl', 'full']"
           :key="size"
-          class="px-4 py-2 text-sm rounded-[--radius-md] border border-[--color-border] text-[--color-text-primary] hover:bg-[--color-neutral-light]"
+          variant="secondary"
           @click="activeSize = size"
         >
           {{ size.toUpperCase() }}
-        </button>
+        </Button>
         <Modal
           v-for="size in ['sm', 'md', 'lg', 'xl', 'full']"
           :key="size"
@@ -92,16 +101,11 @@ export const AllSizes: Story = {
         >
           <template #title>{{ size.toUpperCase() }} Modal</template>
           <template #description>This modal uses the "{{ size }}" size variant.</template>
-          <p class="text-sm text-[--color-text-secondary]">
+          <p style="font-size:14px;color:var(--color-text-secondary);">
             Modal panel content at the {{ size }} breakpoint.
           </p>
           <template #footer>
-            <button
-              class="px-4 py-2 text-sm rounded-[--radius-md] bg-[--color-neutral] text-[--color-text-inverse]"
-              @click="activeSize = null"
-            >
-              Close
-            </button>
+            <Button @click="activeSize = null">Close</Button>
           </template>
         </Modal>
       </div>
@@ -110,61 +114,27 @@ export const AllSizes: Story = {
 }
 
 export const WithForm: Story = {
+  name: 'With Form',
   render: () => ({
-    components: { Modal },
+    components: { Modal, Button, Input, Textarea },
     setup() {
       const open = ref(false)
       return { open }
     },
     template: `
       <div>
-        <button
-          class="px-4 py-2 text-sm rounded-[--radius-md] bg-[--color-neutral] text-[--color-text-inverse]"
-          @click="open = true"
-        >
-          Edit Profile
-        </button>
+        <Button @click="open = true">Edit Profile</Button>
         <Modal v-model="open" size="md">
           <template #title>Edit Profile</template>
           <template #description>Update your personal information below.</template>
-          <form class="flex flex-col gap-4" @submit.prevent="open = false">
-            <div class="flex flex-col gap-1">
-              <label class="text-sm font-medium text-[--color-text-primary]">Full name</label>
-              <input
-                type="text"
-                value="Jane Cooper"
-                class="h-9 px-3 text-sm rounded-[--radius-md] border border-[--color-border] bg-[--color-surface] text-[--color-text-primary] outline-none focus:outline-2 focus:outline-[--color-primary]"
-              />
-            </div>
-            <div class="flex flex-col gap-1">
-              <label class="text-sm font-medium text-[--color-text-primary]">Email</label>
-              <input
-                type="email"
-                value="jane@example.com"
-                class="h-9 px-3 text-sm rounded-[--radius-md] border border-[--color-border] bg-[--color-surface] text-[--color-text-primary] outline-none focus:outline-2 focus:outline-[--color-primary]"
-              />
-            </div>
-            <div class="flex flex-col gap-1">
-              <label class="text-sm font-medium text-[--color-text-primary]">Bio</label>
-              <textarea
-                rows="3"
-                class="px-3 py-2 text-sm rounded-[--radius-md] border border-[--color-border] bg-[--color-surface] text-[--color-text-primary] outline-none focus:outline-2 focus:outline-[--color-primary] resize-none"
-              >Product designer with 8 years of experience.</textarea>
-            </div>
+          <form style="display:flex;flex-direction:column;gap:16px;" @submit.prevent="open = false">
+            <Input label="Full name" modelValue="Jane Cooper" />
+            <Input label="Email" type="email" modelValue="jane@example.com" />
+            <Textarea label="Bio" :rows="3" modelValue="Product designer with 8 years of experience." />
           </form>
           <template #footer>
-            <button
-              class="px-4 py-2 text-sm rounded-[--radius-md] border border-[--color-border] text-[--color-text-primary] hover:bg-[--color-neutral-light]"
-              @click="open = false"
-            >
-              Cancel
-            </button>
-            <button
-              class="px-4 py-2 text-sm rounded-[--radius-md] bg-[--color-neutral] text-[--color-text-inverse]"
-              @click="open = false"
-            >
-              Save changes
-            </button>
+            <Button variant="secondary" @click="open = false">Cancel</Button>
+            <Button @click="open = false">Save changes</Button>
           </template>
         </Modal>
       </div>
@@ -173,8 +143,9 @@ export const WithForm: Story = {
 }
 
 export const PreventClose: Story = {
+  name: 'Prevent Close',
   render: () => ({
-    components: { Modal },
+    components: { Modal, Button },
     setup() {
       const open = ref(false)
       const confirmed = ref(false)
@@ -182,40 +153,24 @@ export const PreventClose: Story = {
     },
     template: `
       <div>
-        <button
-          class="px-4 py-2 text-sm rounded-[--radius-md] bg-[--color-danger] text-white"
-          @click="open = true; confirmed = false"
-        >
-          Delete Account
-        </button>
+        <Button variant="danger" @click="open = true; confirmed = false">Delete Account</Button>
         <Modal v-model="open" size="sm" prevent-close>
           <template #title>Are you sure?</template>
           <template #description>This action cannot be undone.</template>
-          <div class="flex items-start gap-3">
+          <div style="display:flex;align-items:flex-start;gap:12px;">
             <input
               id="confirm-check"
               type="checkbox"
               v-model="confirmed"
-              class="mt-0.5 accent-[--color-danger]"
+              style="margin-top:2px;accent-color:var(--color-danger);"
             />
-            <label for="confirm-check" class="text-sm text-[--color-text-secondary]">
+            <label for="confirm-check" style="font-size:14px;color:var(--color-text-secondary);">
               I understand that deleting my account is permanent and all my data will be lost.
             </label>
           </div>
           <template #footer>
-            <button
-              class="px-4 py-2 text-sm rounded-[--radius-md] border border-[--color-border] text-[--color-text-primary] hover:bg-[--color-neutral-light]"
-              @click="open = false"
-            >
-              Cancel
-            </button>
-            <button
-              class="px-4 py-2 text-sm rounded-[--radius-md] bg-[--color-danger] text-white disabled:opacity-50 disabled:cursor-not-allowed"
-              :disabled="!confirmed"
-              @click="open = false"
-            >
-              Delete Account
-            </button>
+            <Button variant="secondary" @click="open = false">Cancel</Button>
+            <Button variant="danger" :disabled="!confirmed" @click="open = false">Delete Account</Button>
           </template>
         </Modal>
       </div>
@@ -224,63 +179,44 @@ export const PreventClose: Story = {
 }
 
 export const ScrollBehavior: Story = {
+  name: 'Scroll Behavior',
   render: () => ({
-    components: { Modal },
+    components: { Modal, Button },
     setup() {
       const insideOpen = ref(false)
       const outsideOpen = ref(false)
       return { insideOpen, outsideOpen }
     },
     template: `
-      <div class="flex gap-3">
-        <button
-          class="px-4 py-2 text-sm rounded-[--radius-md] border border-[--color-border] text-[--color-text-primary] hover:bg-[--color-neutral-light]"
-          @click="insideOpen = true"
-        >
-          Scroll Inside
-        </button>
-        <button
-          class="px-4 py-2 text-sm rounded-[--radius-md] border border-[--color-border] text-[--color-text-primary] hover:bg-[--color-neutral-light]"
-          @click="outsideOpen = true"
-        >
-          Scroll Outside
-        </button>
+      <div style="display:flex;gap:12px;">
+        <Button variant="secondary" @click="insideOpen = true">Scroll Inside</Button>
+        <Button variant="secondary" @click="outsideOpen = true">Scroll Outside</Button>
 
         <Modal v-model="insideOpen" scroll-behavior="inside">
           <template #title>Inside scroll</template>
           <template #description>The modal body scrolls while header and footer stay fixed.</template>
-          <div class="flex flex-col gap-3">
-            <p v-for="i in 20" :key="i" class="text-sm text-[--color-text-secondary]">
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <p v-for="i in 20" :key="i" style="font-size:14px;color:var(--color-text-secondary);">
               Paragraph {{ i }} — Lorem ipsum dolor sit amet, consectetur adipiscing elit.
               Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
           </div>
           <template #footer>
-            <button
-              class="px-4 py-2 text-sm rounded-[--radius-md] bg-[--color-neutral] text-[--color-text-inverse]"
-              @click="insideOpen = false"
-            >
-              Close
-            </button>
+            <Button @click="insideOpen = false">Close</Button>
           </template>
         </Modal>
 
         <Modal v-model="outsideOpen" scroll-behavior="outside">
           <template #title>Outside scroll</template>
           <template #description>The entire modal scrolls within the overlay.</template>
-          <div class="flex flex-col gap-3">
-            <p v-for="i in 20" :key="i" class="text-sm text-[--color-text-secondary]">
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <p v-for="i in 20" :key="i" style="font-size:14px;color:var(--color-text-secondary);">
               Paragraph {{ i }} — Lorem ipsum dolor sit amet, consectetur adipiscing elit.
               Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
           </div>
           <template #footer>
-            <button
-              class="px-4 py-2 text-sm rounded-[--radius-md] bg-[--color-neutral] text-[--color-text-inverse]"
-              @click="outsideOpen = false"
-            >
-              Close
-            </button>
+            <Button @click="outsideOpen = false">Close</Button>
           </template>
         </Modal>
       </div>

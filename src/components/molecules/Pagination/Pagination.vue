@@ -92,10 +92,15 @@ function goTo(page: number) {
   }
 }
 
-const sizeClasses: Record<Size, string> = {
-  sm: 'h-7 w-7 text-xs',
-  md: 'h-8 w-8 text-sm',
-  lg: 'h-9 w-9 text-sm',
+import Button from '@/components/atoms/Button/Button.vue'
+
+type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+
+// Map Pagination size to Button atom size
+const btnSizeMap: Record<Size, ButtonSize> = {
+  sm: 'xs',
+  md: 'sm',
+  lg: 'md',
 }
 
 const iconSize: Record<Size, number> = {
@@ -104,40 +109,10 @@ const iconSize: Record<Size, number> = {
   lg: 18,
 }
 
-const buttonBase = [
-  'inline-flex items-center justify-center',
-  'rounded-[--radius-md] border border-transparent',
-  'cursor-pointer select-none',
-  'transition-colors duration-[--duration-normal] ease-[--ease-default]',
-  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--color-primary]',
-]
-
-function navBtnClasses(disabled: boolean) {
-  return cn(
-    ...buttonBase,
-    sizeClasses[props.size],
-    'text-[--color-text-primary]',
-    disabled
-      ? 'opacity-30 cursor-not-allowed pointer-events-none'
-      : 'hover:bg-[--color-neutral-light]',
-  )
-}
-
-function pageBtnClasses(page: number | string) {
-  const isCurrent = page === props.modelValue
-  return cn(
-    ...buttonBase,
-    sizeClasses[props.size],
-    isCurrent
-      ? 'bg-[--color-neutral] text-[--color-text-inverse] font-medium'
-      : 'text-[--color-text-primary] hover:bg-[--color-neutral-light]',
-  )
-}
-
 function ellipsisClasses() {
   return cn(
     'inline-flex items-center justify-center',
-    sizeClasses[props.size],
+    props.size === 'sm' ? 'w-7 h-7 text-xs' : props.size === 'md' ? 'w-8 h-8 text-sm' : 'w-9 h-9 text-sm',
     'text-[--color-text-tertiary] select-none',
   )
 }
@@ -146,66 +121,83 @@ function ellipsisClasses() {
 <template>
   <nav aria-label="Pagination" class="flex items-center gap-1">
     <!-- First page -->
-    <button
+    <Button
       v-if="showFirstLast"
-      type="button"
-      :class="navBtnClasses(isFirstPage)"
+      variant="ghost"
+      icon-only
+      :size="btnSizeMap[size]"
       :disabled="isFirstPage"
       aria-label="First page"
       @click="goTo(1)"
     >
-      <RiSkipBackLine :size="iconSize[size]" />
-    </button>
+      <template #icon>
+        <RiSkipBackLine :size="String(iconSize[size])" />
+      </template>
+    </Button>
 
     <!-- Previous page -->
-    <button
-      type="button"
-      :class="navBtnClasses(isFirstPage)"
+    <Button
+      variant="ghost"
+      icon-only
+      :size="btnSizeMap[size]"
       :disabled="isFirstPage"
       aria-label="Previous page"
       @click="goTo(modelValue - 1)"
     >
-      <RiArrowLeftSLine :size="iconSize[size]" />
-    </button>
+      <template #icon>
+        <RiArrowLeftSLine :size="String(iconSize[size])" />
+      </template>
+    </Button>
 
     <!-- Page numbers -->
     <template v-for="page in visiblePages" :key="page">
       <span v-if="typeof page === 'string'" :class="ellipsisClasses()">
         &hellip;
       </span>
-      <button
+      <Button
         v-else
-        type="button"
-        :class="pageBtnClasses(page)"
+        :variant="page === modelValue ? 'secondary' : 'ghost'"
+        icon-only
+        :size="btnSizeMap[size]"
         :aria-current="page === modelValue ? 'page' : undefined"
         :aria-label="`Page ${page}`"
         @click="goTo(page)"
       >
-        {{ page }}
-      </button>
+        <template #icon>
+          <span :class="page === modelValue ? 'font-semibold text-[--color-text-primary]' : ''">
+            {{ page }}
+          </span>
+        </template>
+      </Button>
     </template>
 
     <!-- Next page -->
-    <button
-      type="button"
-      :class="navBtnClasses(isLastPage)"
+    <Button
+      variant="ghost"
+      icon-only
+      :size="btnSizeMap[size]"
       :disabled="isLastPage"
       aria-label="Next page"
       @click="goTo(modelValue + 1)"
     >
-      <RiArrowRightSLine :size="iconSize[size]" />
-    </button>
+      <template #icon>
+        <RiArrowRightSLine :size="String(iconSize[size])" />
+      </template>
+    </Button>
 
     <!-- Last page -->
-    <button
+    <Button
       v-if="showFirstLast"
-      type="button"
-      :class="navBtnClasses(isLastPage)"
+      variant="ghost"
+      icon-only
+      :size="btnSizeMap[size]"
       :disabled="isLastPage"
       aria-label="Last page"
       @click="goTo(totalPages)"
     >
-      <RiSkipForwardLine :size="iconSize[size]" />
-    </button>
+      <template #icon>
+        <RiSkipForwardLine :size="String(iconSize[size])" />
+      </template>
+    </Button>
   </nav>
 </template>

@@ -2,10 +2,29 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ref } from 'vue'
 import Pagination from './Pagination.vue'
 
+// ── Canvas decorator ──────────────────────────────────────────────────────────
+const canvas = () => ({
+  template: `
+    <div style="
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 32px;
+      background-color: #eceae4;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.11) 1px, transparent 1px);
+      background-size: 22px 22px;
+    ">
+      <story />
+    </div>
+  `,
+})
+
 const meta: Meta<typeof Pagination> = {
   title: 'Molecules/Pagination',
   component: Pagination,
   tags: ['autodocs'],
+  decorators: [canvas],
   argTypes: {
     modelValue:      { control: 'number' },
     total:           { control: 'number' },

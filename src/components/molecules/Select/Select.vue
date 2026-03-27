@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount, useId, nextTick } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, useId, nextTick } from 'vue'
 import { cn } from '@/lib/utils'
 import { RiArrowDownSLine, RiCheckLine, RiCloseLine, RiSearchLine } from '@remixicon/vue'
 
@@ -172,39 +172,37 @@ const iconSizePx: Record<SelectSize, number> = {
 
 const triggerClasses = computed(() =>
   cn(
-    'relative flex items-center w-full gap-2',
-    'rounded-[--radius-md] border bg-[--color-surface]',
-    'transition-colors duration-[--duration-normal] ease-[--ease-default]',
-    'cursor-pointer select-none',
+    'ds-select-trigger',
+    'relative flex items-center w-full gap-2 text-left',
+    'rounded-[var(--radius-lg)] border outline-none',
+    'transition-all duration-200 ease-out select-none',
+    !props.disabled && 'cursor-pointer',
     heightClass[props.size],
     paddingXClass[props.size],
     textSizeClass[props.size],
-    hasError.value
-      ? 'border-[--color-danger] focus-within:outline-[--color-danger]'
-      : 'border-[--color-border] hover:border-[--color-border-strong]',
-    isOpen.value && !hasError.value && 'outline-2 outline-offset-0 outline-[--color-primary]',
-    isOpen.value && hasError.value && 'outline-2 outline-offset-0 outline-[--color-danger]',
-    props.disabled && 'opacity-50 cursor-not-allowed bg-[--color-bg-subtle]',
+    hasError.value && 'ds-select-trigger--error',
+    isOpen.value && 'ds-select-trigger--focus',
+    props.disabled && 'ds-select-trigger--disabled cursor-not-allowed',
   )
 )
 
 const dropdownClasses = computed(() =>
   cn(
-    'absolute z-50 left-0 right-0 top-full mt-1',
-    'rounded-[--radius-md] border border-[--color-border] bg-[--color-surface]',
-    'shadow-[--shadow-lg] overflow-hidden',
+    'absolute z-50 left-0 right-0 top-full mt-1.5',
+    'rounded-[--radius-2xl] ring-1 ring-inset ring-[--color-border]/60 bg-[--color-surface]',
+    'shadow-[--shadow-2xl] overflow-hidden',
   )
 )
 
 const optionClasses = (opt: Option) =>
   cn(
-    'flex items-center gap-2 w-full',
-    'cursor-pointer select-none',
+    'flex items-center gap-2 w-full text-left',
+    'cursor-pointer select-none rounded-[--radius-md] mx-1',
     textSizeClass[props.size],
-    props.size === 'sm' ? 'px-2.5 py-1.5' : 'px-3 py-2',
+    props.size === 'sm' ? 'px-2 py-1.5' : 'px-2.5 py-2',
     'transition-colors duration-[--duration-fast]',
     isSelected(opt.value)
-      ? 'bg-[--color-primary-light] text-[--color-text-primary]'
+      ? 'bg-[--color-primary] text-[--color-text-inverse] font-medium'
       : 'text-[--color-text-primary] hover:bg-[--color-neutral-light]',
     opt.disabled && 'opacity-40 cursor-not-allowed',
   )
@@ -237,7 +235,10 @@ const optionClasses = (opt: Option) =>
         @click="toggleOpen"
       >
         <span
-          :class="cn('flex-1 truncate text-left', !displayText && 'text-[--color-text-tertiary]')"
+          :class="cn(
+            'flex-1 truncate',
+            displayText ? 'ds-select-trigger-text' : 'ds-select-trigger-text--placeholder'
+          )"
         >
           {{ displayText || placeholder }}
         </span>
@@ -250,12 +251,12 @@ const optionClasses = (opt: Option) =>
           aria-label="Clear selection"
           @click="handleClear"
         >
-          <RiCloseLine :size="iconSizePx[size]" />
+          <RiCloseLine :size="String(iconSizePx[size])" />
         </button>
 
         <!-- Chevron -->
         <RiArrowDownSLine
-          :size="iconSizePx[size]"
+          :size="String(iconSizePx[size])"
           :class="cn(
             'shrink-0 text-[--color-text-tertiary] transition-transform duration-[--duration-normal]',
             isOpen && 'rotate-180',
@@ -284,7 +285,7 @@ const optionClasses = (opt: Option) =>
             v-if="searchable"
             class="flex items-center gap-2 px-3 py-2 border-b border-[--color-border]"
           >
-            <RiSearchLine :size="14" class="shrink-0 text-[--color-text-tertiary]" />
+            <RiSearchLine :size="'14'" class="shrink-0 text-[--color-text-tertiary]" />
             <input
               ref="searchRef"
               v-model="searchQuery"
@@ -296,7 +297,7 @@ const optionClasses = (opt: Option) =>
           </div>
 
           <!-- Options list -->
-          <div class="max-h-60 overflow-y-auto py-1">
+          <div class="max-h-60 overflow-y-auto py-1.5">
             <template v-if="filteredOptions.length === 0">
               <div class="px-3 py-4 text-center text-sm text-[--color-text-tertiary]">
                 No options found
@@ -324,8 +325,8 @@ const optionClasses = (opt: Option) =>
                   <span class="flex-1 truncate">{{ opt.label }}</span>
                   <RiCheckLine
                     v-if="isSelected(opt.value)"
-                    :size="iconSizePx[size]"
-                    class="shrink-0 text-[--color-primary]"
+                    :size="String(iconSizePx[size])"
+                    class="shrink-0"
                   />
                 </button>
               </template>
@@ -345,7 +346,7 @@ const optionClasses = (opt: Option) =>
                 <span class="flex-1 truncate">{{ opt.label }}</span>
                 <RiCheckLine
                   v-if="isSelected(opt.value)"
-                  :size="iconSizePx[size]"
+                  :size="String(iconSizePx[size])"
                   class="shrink-0 text-[--color-primary]"
                 />
               </button>
@@ -367,3 +368,46 @@ const optionClasses = (opt: Option) =>
     </p>
   </div>
 </template>
+
+<style scoped>
+/* ── Wrapper base (matches Input atom) ── */
+.ds-select-trigger {
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+.ds-select-trigger:hover:not(.ds-select-trigger--disabled) {
+  border-color: var(--color-border-strong);
+}
+
+.ds-select-trigger--focus:not(.ds-select-trigger--error),
+.ds-select-trigger:focus-visible:not(.ds-select-trigger--error) {
+  border-color: var(--color-text-primary);
+  box-shadow: 0 0 0 1px var(--color-text-primary);
+}
+
+/* ── Error state ── */
+.ds-select-trigger--error {
+  border-color: var(--color-danger);
+}
+
+.ds-select-trigger--error.ds-select-trigger--focus,
+.ds-select-trigger--error:focus-visible {
+  box-shadow: 0 0 0 1px var(--color-danger);
+}
+
+/* ── Disabled state ── */
+.ds-select-trigger--disabled {
+  opacity: 0.5;
+  background-color: var(--color-bg-subtle);
+}
+
+/* ── Typography ── */
+.ds-select-trigger-text {
+  color: var(--color-text-primary);
+}
+
+.ds-select-trigger-text--placeholder {
+  color: var(--color-text-tertiary);
+}
+</style>

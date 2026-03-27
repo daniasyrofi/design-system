@@ -30,9 +30,11 @@ const iconSize: Record<string, number> = {
   <button
     type="button"
     :class="cn(
-      'inline-flex items-center justify-center rounded-[--radius-md]',
+      'inline-flex items-center justify-center rounded-full',
+      'ring-1 ring-inset ring-[--color-border]/60 bg-[--color-surface]',
       'text-[--color-text-secondary] hover:text-[--color-text-primary]',
-      'hover:bg-[--color-neutral-light]',
+      'hover:bg-[--color-neutral-light]/50 hover:shadow-[--shadow-md]',
+      'shadow-[--shadow-sm]',
       'transition-all duration-[--duration-normal] ease-[--ease-default]',
       'cursor-pointer',
       'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--color-primary]',
@@ -42,8 +44,8 @@ const iconSize: Record<string, number> = {
     @click="toggle"
   >
     <Transition name="theme-icon" mode="out-in">
-      <RiSunLine v-if="theme === 'light'" :size="iconSize[props.size]" />
-      <RiMoonLine v-else :size="iconSize[props.size]" />
+      <RiSunLine v-if="theme === 'light'" :key="'sun'" :size="String(iconSize[props.size])" />
+      <RiMoonLine v-else :key="'moon'" :size="String(iconSize[props.size])" />
     </Transition>
   </button>
 </template>

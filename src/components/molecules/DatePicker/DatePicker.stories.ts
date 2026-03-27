@@ -2,10 +2,30 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ref } from 'vue'
 import DatePicker from './DatePicker.vue'
 
+// ── Canvas decorator ──────────────────────────────────────────────────────────
+const canvas = () => ({
+  template: `
+    <div style="
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 32px;
+      background-color: #eceae4;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.11) 1px, transparent 1px);
+      background-size: 22px 22px;
+    ">
+      <story />
+    </div>
+  `,
+})
+
 const meta: Meta<typeof DatePicker> = {
   title: 'Molecules/DatePicker',
   component: DatePicker,
   tags: ['autodocs'],
+  decorators: [canvas],
+  parameters: { layout: 'fullscreen' },
   argTypes: {
     modelValue:  { control: 'text' },
     mode:        { control: 'select', options: ['single', 'range'] },
@@ -38,15 +58,16 @@ export const Default: Story = {
       return { date, args }
     },
     template: `
-      <div class="max-w-xs">
+      <div style="max-width:320px;">
         <DatePicker v-bind="args" v-model="date" />
-        <p class="text-xs text-[--color-text-tertiary] mt-2">Value: {{ date ?? 'null' }}</p>
+        <p style="font-size:12px;color:var(--color-text-tertiary);margin-top:8px;">Value: {{ date ?? 'null' }}</p>
       </div>
     `,
   }),
 }
 
 export const WithLabel: Story = {
+  name: 'With Label',
   render: () => ({
     components: { DatePicker },
     setup() {
@@ -54,7 +75,7 @@ export const WithLabel: Story = {
       return { date }
     },
     template: `
-      <div class="max-w-xs">
+      <div style="max-width:320px;">
         <DatePicker v-model="date" label="Date of birth" placeholder="DD/MM/YYYY" />
       </div>
     `,
@@ -62,6 +83,7 @@ export const WithLabel: Story = {
 }
 
 export const MinMaxDate: Story = {
+  name: 'Min / Max Date',
   render: () => ({
     components: { DatePicker },
     setup() {
@@ -74,14 +96,14 @@ export const MinMaxDate: Story = {
       return { date, minDate, maxDate }
     },
     template: `
-      <div class="max-w-xs">
+      <div style="max-width:320px;">
         <DatePicker
           v-model="date"
           label="Appointment date"
           :min-date="minDate"
           :max-date="maxDate"
         />
-        <p class="text-xs text-[--color-text-tertiary] mt-2">
+        <p style="font-size:12px;color:var(--color-text-tertiary);margin-top:8px;">
           Only dates in the current month are selectable.
         </p>
       </div>
@@ -97,7 +119,7 @@ export const Disabled: Story = {
       return { date }
     },
     template: `
-      <div class="max-w-xs">
+      <div style="max-width:320px;">
         <DatePicker v-model="date" label="Start date" disabled />
       </div>
     `,
@@ -105,6 +127,7 @@ export const Disabled: Story = {
 }
 
 export const WithError: Story = {
+  name: 'With Error',
   render: () => ({
     components: { DatePicker },
     setup() {
@@ -112,7 +135,7 @@ export const WithError: Story = {
       return { date }
     },
     template: `
-      <div class="max-w-xs">
+      <div style="max-width:320px;">
         <DatePicker
           v-model="date"
           label="Due date"
@@ -124,6 +147,7 @@ export const WithError: Story = {
 }
 
 export const AllSizes: Story = {
+  name: 'All Sizes',
   render: () => ({
     components: { DatePicker },
     setup() {
@@ -133,7 +157,7 @@ export const AllSizes: Story = {
       return { sm, md, lg }
     },
     template: `
-      <div class="flex flex-col gap-4 max-w-xs">
+      <div style="display:flex;flex-direction:column;gap:16px;max-width:320px;">
         <DatePicker v-model="sm" size="sm" label="Small" />
         <DatePicker v-model="md" size="md" label="Medium" />
         <DatePicker v-model="lg" size="lg" label="Large" />
