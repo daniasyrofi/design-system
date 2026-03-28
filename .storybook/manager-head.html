@@ -316,8 +316,10 @@
   }
 
   /* ══ GENERAL / HOME ICONS ══ */
+  #welcome--welcome > div::after,
   #welcome--docs > div::after,
   #welcome > div::after,
+  [data-item-id="welcome--welcome"] > div::after,
   [data-item-id="welcome--docs"] > div::after,
   [data-item-id="welcome"] > div::after {
     mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M19 21H5a2 2 0 0 1-2-2V9.414a1 1 0 0 1 .293-.707l7-7a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2zm-2-2V9.586l-5-5-5 5V19h10z'/></svg>") !important;
@@ -325,26 +327,21 @@
   }
 
   /* ══ ATOMS ICONS ══ */
-  /* Hide the native folder items if we want hoisting (just in case they aren't hoisted) */
-  [data-item-id="welcome--welcome"],
-  [data-item-id="welcome--default"] {
-    display: none !important;
-  }
+  /* Remove aggressive hiding — let's see what Storybook renders first */
 
-  /* ══ TOP-LEVEL WELCOME LINK ══ */
-  [data-item-id="welcome"] {
+
+
+  /* ══ TOP-LEVEL WELCOME LINK (Covers both Folder and Hoisted Story) ══ */
+  [data-item-id="welcome"],
+  [data-item-id="welcome--welcome"] {
     margin: 2px 8px !important;
     padding-left: 0 !important;
     border-radius: 10px !important;
   }
   
-  /* Hide the child 'Default' item entirely so 'Welcome' acts as the only item */
-  [data-item-id="welcome--default"] {
-    display: none !important;
-  }
-
-  /* Make the parent Welcome folder look exactly like a top-level link */
-  [data-item-id="welcome"] > button {
+  [data-item-id="welcome"] > button,
+  [data-item-id="welcome--welcome"] > button,
+  [data-item-id="welcome--welcome"] {
     display: flex !important;
     align-items: center !important;
     margin-left: 0 !important;
@@ -355,15 +352,19 @@
     font-weight: 500 !important;
     color: var(--s-text) !important;
     background: transparent !important;
+    text-decoration: none !important;
   }
   [data-item-id="welcome"][data-selected="true"] > button,
-  [data-item-id="welcome"]:focus-within > button {
+  [data-item-id="welcome--welcome"][data-selected="true"],
+  [data-item-id="welcome--welcome"][data-highlighted="true"] {
     background: var(--s-active) !important;
     font-weight: 600 !important;
   }
 
-  /* Apply the custom Home icon to the Welcome parent button */
-  [data-item-id="welcome"] > button::before {
+
+  /* Apply the custom Home icon to the Welcome parent button or story link */
+  [data-item-id="welcome"] > button::before,
+  [data-item-id="welcome--welcome"]::before {
     content: '';
     display: inline-block;
     width: 28px;
@@ -381,6 +382,7 @@
     mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M19 21H5a2 2 0 0 1-2-2V9.414a1 1 0 0 1 .293-.707l7-7a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2zm-2-2V9.586l-5-5-5 5V19h10z'/></svg>") !important;
     -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='black' d='M19 21H5a2 2 0 0 1-2-2V9.414a1 1 0 0 1 .293-.707l7-7a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2zm-2-2V9.586l-5-5-5 5V19h10z'/></svg>") !important;
   }
+
   
   /* Hide Storybook's native SVG icons and chevrons inside the Welcome button */
   [data-item-id="welcome"] > button > svg,
@@ -715,28 +717,52 @@
     // ═══════════════════════════════════════════════════════════════
 
     function syncTheme() {
-      // storybook-dark-mode uses localStorage as the source of truth
       try {
-        const sbDarkMode = localStorage.getItem('sb-addon-themes-3');
         let isDark = false;
+        
+        // 1. Check local storage
+        const sbDarkMode = localStorage.getItem('sb-addon-themes-3');
         if (sbDarkMode) {
-          const config = JSON.parse(sbDarkMode);
-          isDark = config.current === 'dark';
-        } else {
-          isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          try {
+            const config = JSON.parse(sbDarkMode);
+            isDark = config.current === 'dark';
+          } catch (e) {}
+        }
+        
+        // 2. Check for classes on html/body (direct SB toggle evidence)
+        if (document.documentElement.classList.contains('dark') || 
+            document.body.classList.contains('dark') ||
+            document.documentElement.classList.contains('sb-main-dark') || 
+            document.body.classList.contains('sb-main-dark')) {
+          isDark = true;
         }
 
         const themeValue = isDark ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', themeValue);
-        document.body.setAttribute('data-theme', themeValue);
-      } catch (e) {}
+        const currentAttr = document.documentElement.getAttribute('data-theme');
+        
+        if (currentAttr !== themeValue) {
+          document.documentElement.setAttribute('data-theme', themeValue);
+          document.body.setAttribute('data-theme', themeValue);
+          // Force a repaint if needed
+          window.dispatchEvent(new Event('resize'));
+        }
+      } catch (e) {
+        console.error("Theme sync error:", e);
+      }
     }
 
-    // Initial sync and aggressive polling for manager UI
+    // Initial sync
     syncTheme();
-    setInterval(syncTheme, 500);
 
-    // Intersection observer etc...
+    // 1. Listen for storage changes from the theme addon
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'sb-addon-themes-3') syncTheme();
+    });
+
+    // 2. Poll as a safety net (some browsers/Storybook versions don't trigger storage event on same tab)
+    setInterval(syncTheme, 200);
+
+    // 3. Observer for UI changes and theme class toggles
     const observer = new MutationObserver(() => {
       syncTheme();
       
@@ -773,6 +799,8 @@
       }
     });
 
+    // Observe both html and body for attribute changes (where Storybook sets themes)
+    observer.observe(document.documentElement, { attributes: true });
     observer.observe(document.body, { attributes: true, childList: true, subtree: true });
     
     // Initial redirect

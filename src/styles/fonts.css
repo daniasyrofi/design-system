@@ -1,30 +1,9 @@
 /* ── Abadikan Sans (custom, user-supplied) ─────────────────────────────── */
-/* Drop your .woff2 files into src/assets/fonts/ and they will be loaded here */
+/* Using the .otf file from /public as the primary source to avoid 404s */
 @font-face {
   font-family: 'Abadikan Sans';
-  src: url('@/assets/fonts/AbadikanSans-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Abadikan Sans';
-  src: url('@/assets/fonts/AbadikanSans-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Abadikan Sans';
-  src: url('@/assets/fonts/AbadikanSans-SemiBold.woff2') format('woff2');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Abadikan Sans';
-  src: url('@/assets/fonts/AbadikanSans-Bold.woff2') format('woff2');
-  font-weight: 700;
+  src: url('/AbadikanSans.otf') format('opentype');
+  font-weight: 400 900;
   font-style: normal;
   font-display: swap;
 }
