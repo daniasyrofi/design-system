@@ -116,13 +116,13 @@ export const WithForm: Story = {
       <div style="display:flex;align-items:center;justify-content:center;padding:80px;">
         <Popover placement="bottom-start" width="280px">
           <template #trigger>
-            <Button>Edit profile</Button>
+            <Button>{{ $t('common.edit') }}</Button>
           </template>
           <form @submit.prevent="handleSubmit" style="display:flex;flex-direction:column;gap:12px;">
-            <p style="font-size:14px;font-weight:600;color:var(--color-text-primary);">Edit Profile</p>
+            <p style="font-size:14px;font-weight:600;color:var(--color-text-primary);">{{ $t('common.edit') }}</p>
             <Input v-model="name" label="Name" placeholder="John Doe" size="sm" />
             <Input v-model="email" label="Email" type="email" placeholder="john@example.com" size="sm" />
-            <Button type="submit" size="sm" fullWidth>Save</Button>
+            <Button type="submit" size="sm" fullWidth>{{ $t('common.save') }}</Button>
           </form>
         </Popover>
       </div>

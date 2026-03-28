@@ -2,11 +2,9 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ref } from 'vue'
 import {
   RiAddLine, RiArrowRightLine, RiDeleteBinLine,
-  RiDownloadLine, RiCheckLine, RiSendPlane2Line,
+  RiDownloadLine
 } from '@remixicon/vue'
 import Button from './Button.vue'
-import Spinner from '@/components/atoms/Spinner/Spinner.vue'
-
 const meta: Meta<typeof Button> = {
   title: 'Atoms/Button',
   component: Button,
@@ -95,9 +93,7 @@ export const WithTrailingIcon: Story = {
           Continue
           <template #trailing><RiArrowRightLine style="width:1em;height:1em;" /></template>
         </Button>
-        <Button variant="secondary">
-          Send
-          <template #trailing><RiSendPlane2Line style="width:1em;height:1em;" /></template>
+          <template #trailing><RiArrowRightLine style="width:1em;height:1em;" /></template>
         </Button>
       </div>
     `,
@@ -143,10 +139,10 @@ export const Loading: Story = {
     template: `
       <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
         <Button :loading="loading" @click="handleClick">
-          {{ loading ? 'Saving…' : 'Save Changes' }}
+          {{ loading ? $t('common.loading') : $t('common.save') }}
         </Button>
-        <Button variant="secondary" loading>Loading</Button>
-        <Button variant="ghost" loading>Loading</Button>
+        <Button variant="secondary" loading>{{ $t('common.loading') }}</Button>
+        <Button variant="ghost" loading>{{ $t('common.loading') }}</Button>
       </div>
     `,
   }),
@@ -192,9 +188,9 @@ export const Danger: Story = {
         <div style="display:flex;gap:8px;">
           <Button variant="danger">
             <template #leading><RiDeleteBinLine style="width:1em;height:1em;" /></template>
-            Delete Account
+            {{ $t('common.delete') }}
           </Button>
-          <Button variant="secondary">Cancel</Button>
+          <Button variant="secondary">{{ $t('common.cancel') }}</Button>
         </div>
       </div>
     `,

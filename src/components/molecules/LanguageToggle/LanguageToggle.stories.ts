@@ -81,13 +81,14 @@ export const InNavbar: Story = {
           padding:10px 20px;background:var(--color-surface);
           border:1px solid var(--color-border);border-radius:var(--radius-xl);
         ">
-          <span style="font-size:15px;font-weight:700;color:var(--color-text-heading);">Undangan.id</span>
+          <span style="font-size:15px;font-weight:700;color:var(--color-text-heading);">{{ $t('nav.settings') }}</span>
           <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:12px;color:var(--color-text-secondary);">{{ $t('settings.language') }}: </span>
             <LanguageToggle />
           </div>
         </div>
         <p style="font-size:12px;color:var(--color-text-tertiary);text-align:center;">
-          Toggle memilih bahasa dan menyimpan ke localStorage
+          {{ $t('common.save') }} / {{ $t('common.cancel') }}
         </p>
       </div>
     `,

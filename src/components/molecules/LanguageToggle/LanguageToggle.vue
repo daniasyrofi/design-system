@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const { locale } = useI18n()
-const locales = ['id', 'en'] as const
+const locales = ['id', 'en', 'zh'] as const
 
 function setLocale(loc: string) {
   locale.value = loc

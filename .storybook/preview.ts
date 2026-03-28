@@ -48,13 +48,14 @@ const preview: Preview = {
     },
     locale: {
       description: 'Language',
-      defaultValue: 'id',
+      defaultValue: 'en',
       toolbar: {
         title: 'Language',
         icon: 'globe',
         items: [
           { value: 'id', right: '🇮🇩', title: 'Bahasa Indonesia' },
           { value: 'en', right: '🇬🇧', title: 'English'          },
+          { value: 'zh', right: '🇨🇳', title: 'Mandarin'         },
         ],
         dynamicTitle: true,
       },
@@ -71,7 +72,7 @@ const preview: Preview = {
       document.documentElement.setAttribute('data-density', density)
 
       // @ts-ignore
-      i18n.global.locale.value = locale as 'id' | 'en'
+      i18n.global.locale.value = locale as 'id' | 'en' | 'zh'
 
       return {
         template: `<story />`,

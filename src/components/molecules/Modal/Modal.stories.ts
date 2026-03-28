@@ -65,8 +65,8 @@ export const Default: Story = {
             including text, forms, images, and other components.
           </p>
           <template #footer>
-            <Button variant="secondary" @click="open = false">Cancel</Button>
-            <Button @click="open = false">Confirm</Button>
+            <Button variant="secondary" @click="open = false">{{ $t('common.cancel') }}</Button>
+            <Button @click="open = false">{{ $t('common.confirm') }}</Button>
           </template>
         </Modal>
       </div>
@@ -105,7 +105,7 @@ export const AllSizes: Story = {
             Modal panel content at the {{ size }} breakpoint.
           </p>
           <template #footer>
-            <Button @click="activeSize = null">Close</Button>
+            <Button @click="activeSize = null">{{ $t('common.close') }}</Button>
           </template>
         </Modal>
       </div>
@@ -133,8 +133,8 @@ export const WithForm: Story = {
             <Textarea label="Bio" :rows="3" modelValue="Product designer with 8 years of experience." />
           </form>
           <template #footer>
-            <Button variant="secondary" @click="open = false">Cancel</Button>
-            <Button @click="open = false">Save changes</Button>
+            <Button variant="secondary" @click="open = false">{{ $t('common.cancel') }}</Button>
+            <Button @click="open = false">{{ $t('common.save') }}</Button>
           </template>
         </Modal>
       </div>
@@ -169,8 +169,8 @@ export const PreventClose: Story = {
             </label>
           </div>
           <template #footer>
-            <Button variant="secondary" @click="open = false">Cancel</Button>
-            <Button variant="danger" :disabled="!confirmed" @click="open = false">Delete Account</Button>
+            <Button variant="secondary" @click="open = false">{{ $t('common.cancel') }}</Button>
+            <Button variant="danger" :disabled="!confirmed" @click="open = false">{{ $t('common.delete') }}</Button>
           </template>
         </Modal>
       </div>
@@ -202,7 +202,7 @@ export const ScrollBehavior: Story = {
             </p>
           </div>
           <template #footer>
-            <Button @click="insideOpen = false">Close</Button>
+            <Button @click="insideOpen = false">{{ $t('common.close') }}</Button>
           </template>
         </Modal>
 
@@ -216,7 +216,7 @@ export const ScrollBehavior: Story = {
             </p>
           </div>
           <template #footer>
-            <Button @click="outsideOpen = false">Close</Button>
+            <Button @click="outsideOpen = false">{{ $t('common.close') }}</Button>
           </template>
         </Modal>
       </div>

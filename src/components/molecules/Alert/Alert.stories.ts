@@ -57,7 +57,7 @@ export const Default: Story = {
   render: (args) => ({
     components: { Alert },
     setup: () => ({ args }),
-    template: `<div style="${W}"><Alert v-bind="args">This is the description text giving extra context to the user.</Alert></div>`,
+    template: `<div style="${W}"><Alert v-bind="args">{{ $t('alert.defaultContext') }}</Alert></div>`,
   }),
 }
 
@@ -69,17 +69,17 @@ export const AllVariants: Story = {
     components: { Alert },
     template: `
       <div style="${W}">
-        <Alert variant="info" title="System update available">
-          A new version (v2.4.1) is ready to install. Restart to apply the update.
+        <Alert variant="info" :title="$t('alert.systemUpdate.title')">
+          {{ $t('alert.systemUpdate.desc') }}
         </Alert>
-        <Alert variant="success" title="Payment successful">
-          Your invoice #INV-2026-0042 has been paid. A receipt was sent to your email.
+        <Alert variant="success" :title="$t('alert.paymentSuccess.title')">
+          {{ $t('alert.paymentSuccess.desc') }}
         </Alert>
-        <Alert variant="warning" title="Storage almost full">
-          You've used 92% of your 5 GB storage. Upgrade to avoid service interruption.
+        <Alert variant="warning" :title="$t('alert.storageFull.title')">
+          {{ $t('alert.storageFull.desc') }}
         </Alert>
-        <Alert variant="danger" title="Failed to save changes">
-          Your changes could not be saved due to a network error. Please try again.
+        <Alert variant="danger" :title="$t('alert.saveFailed.title')">
+          {{ $t('alert.saveFailed.desc') }}
         </Alert>
       </div>
     `,
