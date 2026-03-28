@@ -163,6 +163,10 @@
   --color-surface-glass: oklch(1 0 0 / 0.72);
   --glass-border: oklch(1 0 0 / 0.20);
   --glass-blur: blur(16px) saturate(180%);
+
+  /* ── Avatar initials lightness (hue comes from JS) ────────── */
+  --avatar-bg-l:   0.88;
+  --avatar-text-l: 0.38;
 }
 
 /* ── Dark Mode ────────────────────────────────────────────────── */
@@ -215,6 +219,10 @@
   /* ── Glass surface: Dark variant ─────────────────────────── */
   --color-surface-glass: oklch(0.20 0.008 80 / 0.75);
   --glass-border: oklch(1 0 0 / 0.08);
+
+  /* ── Avatar initials lightness: dark mode variant ────────── */
+  --avatar-bg-l:   0.28;
+  --avatar-text-l: 0.78;
 }
 
 /* ── Golden Ratio Spacing ─────────────────────────────────────── */
@@ -319,6 +327,22 @@ html {
    KEYFRAME ANIMATIONS
    Used by components via Tailwind animate-[] or inline styles.
 ═══════════════════════════════════════════════════════════════ */
+
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position:  400px 0; }
+}
+
+.skel {
+  background: linear-gradient(
+    90deg,
+    var(--color-neutral-light) 25%,
+    var(--color-border)        50%,
+    var(--color-neutral-light) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
