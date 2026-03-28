@@ -103,24 +103,23 @@
 ═══════════════════════════════════════════════════════════════ */
 :root {
   /* Spacing system: default = 4px grid, comfortable density */
-  --spacing-scale: 1;
   --space-0:   0px;
   --space-px:  1px;
-  --space-0-5: calc(2px  * var(--spacing-scale));
-  --space-1:   calc(4px  * var(--spacing-scale));
-  --space-1-5: calc(6px  * var(--spacing-scale));
-  --space-2:   calc(8px  * var(--spacing-scale));
-  --space-2-5: calc(10px * var(--spacing-scale));
-  --space-3:   calc(12px * var(--spacing-scale));
-  --space-4:   calc(16px * var(--spacing-scale));
-  --space-5:   calc(20px * var(--spacing-scale));
-  --space-6:   calc(24px * var(--spacing-scale));
-  --space-8:   calc(32px * var(--spacing-scale));
-  --space-10:  calc(40px * var(--spacing-scale));
-  --space-12:  calc(48px * var(--spacing-scale));
-  --space-16:  calc(64px * var(--spacing-scale));
-  --space-20:  calc(80px * var(--spacing-scale));
-  --space-24:  calc(96px * var(--spacing-scale));
+  --space-0-5: 2px;
+  --space-1:   4px;
+  --space-1-5: 6px;
+  --space-2:   8px;
+  --space-2-5: 10px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-16:  64px;
+  --space-20:  80px;
+  --space-24:  96px;
 
   /* ── Colors: Light mode ───────────────────────────────────── */
   --color-bg:             var(--primitive-neutral-50);
@@ -248,27 +247,6 @@
   --avatar-text-l: 0.78;
 }
 
-/* ── Golden Ratio Spacing ─────────────────────────────────────── */
-[data-spacing='golden'] {
-  --space-0-5: calc(2px   * var(--spacing-scale));
-  --space-1:   calc(4px   * var(--spacing-scale));
-  --space-1-5: calc(6px   * var(--spacing-scale));
-  --space-2:   calc(7px   * var(--spacing-scale));   /* 4 × φ ≈ 6.5 → 7 */
-  --space-2-5: calc(10px  * var(--spacing-scale));
-  --space-3:   calc(10px  * var(--spacing-scale));   /* 4 × φ² ≈ 10.5 */
-  --space-4:   calc(17px  * var(--spacing-scale));   /* 4 × φ³ ≈ 17 */
-  --space-5:   calc(22px  * var(--spacing-scale));
-  --space-6:   calc(28px  * var(--spacing-scale));   /* 4 × φ⁴ ≈ 27 */
-  --space-8:   calc(44px  * var(--spacing-scale));   /* 4 × φ⁵ ≈ 44 */
-  --space-10:  calc(72px  * var(--spacing-scale));   /* 4 × φ⁶ ≈ 72 */
-  --space-12:  calc(116px * var(--spacing-scale));   /* 4 × φ⁷ ≈ 116 */
-  --space-16:  calc(188px * var(--spacing-scale));   /* 4 × φ⁸ ≈ 188 */
-}
-
-/* ── Density ─────────────────────────────────────────────────── */
-[data-density='compact']     { --spacing-scale: 0.75; }
-[data-density='comfortable'] { --spacing-scale: 1;    }
-[data-density='spacious']    { --spacing-scale: 1.25; }
 
 /* ═══════════════════════════════════════════════════════════════
    BASE STYLES

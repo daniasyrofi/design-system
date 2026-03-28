@@ -19,33 +19,7 @@ setup((app: App) => {
 
 const preview: Preview = {
   globalTypes: {
-    spacing: {
-      description: 'Spacing scale',
-      defaultValue: 'grid',
-      toolbar: {
-        title: 'Spacing',
-        icon: 'ruler',
-        items: [
-          { value: 'grid',   title: '4px Grid'     },
-          { value: 'golden', title: 'Golden Ratio'  },
-        ],
-        dynamicTitle: true,
-      },
-    },
-    density: {
-      description: 'Density',
-      defaultValue: 'comfortable',
-      toolbar: {
-        title: 'Density',
-        icon: 'component',
-        items: [
-          { value: 'compact',     title: 'Compact'     },
-          { value: 'comfortable', title: 'Comfortable' },
-          { value: 'spacious',    title: 'Spacious'    },
-        ],
-        dynamicTitle: true,
-      },
-    },
+
     locale: {
       description: 'Language',
       defaultValue: 'en',
@@ -64,12 +38,7 @@ const preview: Preview = {
 
   decorators: [
     (story, context) => {
-      const spacing = context.globals.spacing ?? 'grid'
-      const density = context.globals.density ?? 'comfortable'
       const locale  = context.globals.locale  ?? 'id'
-
-      document.documentElement.setAttribute('data-spacing', spacing)
-      document.documentElement.setAttribute('data-density', density)
 
       // @ts-ignore
       i18n.global.locale.value = locale as 'id' | 'en' | 'zh'
