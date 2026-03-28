@@ -5,12 +5,11 @@ export const lightTheme = create({
   brandTitle: 'Abadikan Design System',
   brandUrl: '/',
 
-  // Terracotta/Black
   colorPrimary:   '#111111',
-  colorSecondary: '#111111', // Active tabs
+  colorSecondary: '#111111',
 
-  appBg:          '#FAFAF8', // Sidebar warm white
-  appContentBg:   '#FFFFFF', // Storybook main area
+  appBg:          '#FAFAF8',
+  appContentBg:   '#FFFFFF',
   appPreviewBg:   '#FFFFFF',
   appBorderColor: '#EBE8E0',
   appBorderRadius: 8,
@@ -41,38 +40,38 @@ export const lightTheme = create({
 
 export const darkTheme = create({
   base: 'dark',
-  brandTitle: 'Design System',
+  brandTitle: 'Abadikan Design System',
   brandUrl: '/',
 
-  colorPrimary:   '#d44e8c',
-  colorSecondary: '#d44e8c',
+  colorPrimary:   '#E8957A',
+  colorSecondary: '#E8957A',
 
-  appBg:            '#141414',
-  appContentBg:     '#1A1A1A',
-  appPreviewBg:     '#1A1A1A',
-  appBorderColor:   '#2A2A2A',
+  appBg:            '#151513',
+  appContentBg:     '#1C1C1A',
+  appPreviewBg:     '#1C1C1A',
+  appBorderColor:   '#2E2E2A',
   appBorderRadius:  8,
 
   fontBase:  '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  fontCode:  '"JetBrains Mono", "SF Mono", "Cascadia Code", monospace',
+  fontCode:  '"JetBrains Mono", "SF Mono", monospace',
 
-  textColor:        '#E5E5E5',
-  textInverseColor: '#141414',
-  textMutedColor:   '#888888',
+  textColor:        '#E5E3DB',
+  textInverseColor: '#151513',
+  textMutedColor:   '#8A887F',
 
-  barTextColor:     '#888888',
-  barSelectedColor: '#E5E5E5',
-  barHoverColor:    '#E5E5E5',
-  barBg:            '#1A1A1A',
+  barTextColor:     '#8A887F',
+  barSelectedColor: '#E5E3DB',
+  barHoverColor:    '#E5E3DB',
+  barBg:            '#1C1C1A',
 
-  inputBg:            '#222222',
-  inputBorder:        '#2A2A2A',
-  inputTextColor:     '#E5E5E5',
+  inputBg:            '#232320',
+  inputBorder:        '#2E2E2A',
+  inputTextColor:     '#E5E3DB',
   inputBorderRadius:  6,
 
-  booleanBg:          '#2A2A2A',
-  booleanSelectedBg:  '#d44e8c',
+  booleanBg:          '#2E2E2A',
+  booleanSelectedBg:  '#E8957A',
 
-  buttonBg:           '#222222',
-  buttonBorder:       '#2A2A2A',
+  buttonBg:           '#232320',
+  buttonBorder:       '#2E2E2A',
 })

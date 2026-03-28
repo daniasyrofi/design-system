@@ -75,12 +75,13 @@ const preview: Preview = {
       document.documentElement.setAttribute('data-theme',   theme)
       document.documentElement.setAttribute('data-spacing', spacing)
       document.documentElement.setAttribute('data-density', density)
+      document.body.setAttribute('data-theme', theme)
 
       // @ts-ignore
       i18n.global.locale.value = locale as 'id' | 'en'
 
       return {
-        template: `<div style="padding: 2rem;"><story /></div>`,
+        template: `<div style="color: var(--color-text-primary);"><story /></div>`,
       }
     },
   ],

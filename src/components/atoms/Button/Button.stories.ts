@@ -1,19 +1,23 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { RiAddLine, RiArrowRightLine, RiDeleteBinLine, RiDownloadLine } from '@remixicon/vue'
-import { h } from 'vue'
+import { ref } from 'vue'
+import {
+  RiAddLine, RiArrowRightLine, RiDeleteBinLine,
+  RiDownloadLine, RiCheckLine, RiSendPlane2Line,
+} from '@remixicon/vue'
 import Button from './Button.vue'
+import Spinner from '@/components/atoms/Spinner/Spinner.vue'
 
 const meta: Meta<typeof Button> = {
   title: 'Atoms/Button',
   component: Button,
   tags: ['autodocs'],
+  parameters: { layout: 'centered' },
   argTypes: {
-    variant:   { control: 'select', options: ['default', 'secondary', 'ghost', 'danger', 'link'] },
-    size:      { control: 'select', options: ['xs', 'sm', 'md', 'lg', 'xl'] },
+    variant:   { control: 'select',  options: ['default', 'secondary', 'ghost', 'danger', 'link'] },
+    size:      { control: 'select',  options: ['xs', 'sm', 'md', 'lg', 'xl'] },
     disabled:  { control: 'boolean' },
     loading:   { control: 'boolean' },
     fullWidth: { control: 'boolean' },
-    text:      { control: 'text' },
   },
   args: {
     variant:   'default',
@@ -27,27 +31,19 @@ export default meta
 type Story = StoryObj<typeof Button>
 
 export const Default: Story = {
-  args: {
-    variant:   'default',
-    size:      'md',
-    disabled:  false,
-    loading:   false,
-    fullWidth: false,
-    text:      'Button',
-  },
-  parameters: { layout: 'centered' },
-  render: (args: any) => ({
+  render: (args) => ({
     components: { Button },
     setup: () => ({ args }),
-    template: '<Button v-bind="args">{{ args.text }}</Button>',
+    template: '<Button v-bind="args">Button</Button>',
   }),
 }
 
 export const AllVariants: Story = {
+  name: 'All Variants',
   render: () => ({
     components: { Button },
     template: `
-      <div class="flex flex-wrap gap-3">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
         <Button variant="default">Default</Button>
         <Button variant="secondary">Secondary</Button>
         <Button variant="ghost">Ghost</Button>
@@ -59,10 +55,11 @@ export const AllVariants: Story = {
 }
 
 export const AllSizes: Story = {
+  name: 'All Sizes',
   render: () => ({
     components: { Button },
     template: `
-      <div class="flex flex-wrap items-center gap-3">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;">
         <Button size="xs">Extra Small</Button>
         <Button size="sm">Small</Button>
         <Button size="md">Medium</Button>
@@ -74,12 +71,13 @@ export const AllSizes: Story = {
 }
 
 export const WithLeadingIcon: Story = {
+  name: 'With Leading Icon',
   render: () => ({
     components: { Button, RiAddLine },
     template: `
-      <div class="flex flex-wrap gap-3">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;">
         <Button v-for="size in ['xs','sm','md','lg','xl']" :key="size" :size="size">
-          <template #leading><RiAddLine class="size-4" /></template>
+          <template #leading><RiAddLine style="width:1em;height:1em;" /></template>
           Add Item
         </Button>
       </div>
@@ -88,24 +86,42 @@ export const WithLeadingIcon: Story = {
 }
 
 export const WithTrailingIcon: Story = {
+  name: 'With Trailing Icon',
   render: () => ({
     components: { Button, RiArrowRightLine },
     template: `
-      <Button>
-        Continue
-        <template #trailing><RiArrowRightLine class="size-4" /></template>
-      </Button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <Button>
+          Continue
+          <template #trailing><RiArrowRightLine style="width:1em;height:1em;" /></template>
+        </Button>
+        <Button variant="secondary">
+          Send
+          <template #trailing><RiSendPlane2Line style="width:1em;height:1em;" /></template>
+        </Button>
+      </div>
     `,
   }),
 }
 
 export const IconOnly: Story = {
+  name: 'Icon Only',
   render: () => ({
-    components: { Button, RiDownloadLine },
+    components: { Button, RiDownloadLine, RiAddLine, RiDeleteBinLine },
     template: `
-      <div class="flex flex-wrap items-center gap-3">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;">
         <Button v-for="size in ['xs','sm','md','lg','xl']" :key="size" :size="size" :iconOnly="true" :aria-label="'Download ' + size">
-          <template #icon><RiDownloadLine class="size-4" /></template>
+          <template #icon><RiDownloadLine style="width:1em;height:1em;" /></template>
+        </Button>
+        <div style="width:1px;height:32px;background:var(--color-border);"></div>
+        <Button variant="secondary" :iconOnly="true" aria-label="Add">
+          <template #icon><RiAddLine style="width:1em;height:1em;" /></template>
+        </Button>
+        <Button variant="ghost" :iconOnly="true" aria-label="Delete">
+          <template #icon><RiDeleteBinLine style="width:1em;height:1em;" /></template>
+        </Button>
+        <Button variant="danger" :iconOnly="true" aria-label="Delete permanently">
+          <template #icon><RiDeleteBinLine style="width:1em;height:1em;" /></template>
         </Button>
       </div>
     `,
@@ -115,9 +131,20 @@ export const IconOnly: Story = {
 export const Loading: Story = {
   render: () => ({
     components: { Button },
+    setup() {
+      const loading = ref(false)
+      async function handleClick() {
+        loading.value = true
+        await new Promise(r => setTimeout(r, 2000))
+        loading.value = false
+      }
+      return { loading, handleClick }
+    },
     template: `
-      <div class="flex flex-wrap gap-3">
-        <Button loading>Loading</Button>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+        <Button :loading="loading" @click="handleClick">
+          {{ loading ? 'Saving…' : 'Save Changes' }}
+        </Button>
         <Button variant="secondary" loading>Loading</Button>
         <Button variant="ghost" loading>Loading</Button>
       </div>
@@ -125,44 +152,46 @@ export const Loading: Story = {
   }),
 }
 
-export const Disabled: Story = {
+export const States: Story = {
   render: () => ({
     components: { Button },
     template: `
-      <div class="flex flex-wrap gap-3">
-        <Button disabled>Disabled</Button>
-        <Button variant="secondary" disabled>Disabled</Button>
-        <Button variant="danger" disabled>Disabled</Button>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div>
+          <p style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:10px;">Disabled</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <Button disabled>Default</Button>
+            <Button variant="secondary" disabled>Secondary</Button>
+            <Button variant="ghost" disabled>Ghost</Button>
+            <Button variant="danger" disabled>Danger</Button>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:10px;">Full Width</p>
+          <div style="width:280px;display:flex;flex-direction:column;gap:8px;">
+            <Button fullWidth>Full Width Default</Button>
+            <Button variant="secondary" fullWidth>Full Width Secondary</Button>
+          </div>
+        </div>
       </div>
     `,
   }),
 }
 
-export const FullWidth: Story = {
-  render: () => ({
-    components: { Button },
-    template: `
-      <div class="flex flex-col gap-3 w-64">
-        <Button fullWidth>Full Width Default</Button>
-        <Button fullWidth variant="secondary">Full Width Secondary</Button>
-      </div>
-    `,
-  }),
-}
-
-export const DangerIsRed: Story = {
-  name: '⚠️ Danger (Destructive — red)',
+export const Danger: Story = {
+  name: '⚠️ Danger — Destructive',
   render: () => ({
     components: { Button, RiDeleteBinLine },
+    setup() {
+      const confirmed = ref(false)
+      return { confirmed }
+    },
     template: `
-      <div class="flex flex-col gap-4">
-        <p class="text-body-sm text-[--color-text-secondary]">
-          Red is reserved for destructive actions only.
-          Default buttons use black (neutral).
-        </p>
-        <div class="flex gap-3">
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:320px;">
+        <p style="font-size:14px;color:var(--color-text-secondary);">Red is reserved for destructive actions only.</p>
+        <div style="display:flex;gap:8px;">
           <Button variant="danger">
-            <template #leading><RiDeleteBinLine class="size-4" /></template>
+            <template #leading><RiDeleteBinLine style="width:1em;height:1em;" /></template>
             Delete Account
           </Button>
           <Button variant="secondary">Cancel</Button>

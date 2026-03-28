@@ -5,11 +5,14 @@ const meta: Meta<typeof Avatar> = {
   title: 'Atoms/Avatar',
   component: Avatar,
   tags: ['autodocs'],
+  parameters: { layout: 'centered' },
   argTypes: {
     size:         { control: 'select', options: ['xs', 'sm', 'md', 'lg', 'xl', '2xl'] },
-    shape:        { control: 'select', options: ['circle', 'rounded'] },
-    status:       { control: 'select', options: ['online', 'offline', 'busy', 'away'] },
+    shape:        { control: 'select', options: ['circle', 'rounded', 'square'] },
+    status:       { control: 'select', options: [null, 'online', 'offline', 'busy', 'away'] },
     fallbackIcon: { control: 'text' },
+    src:          { control: 'text' },
+    name:         { control: 'text' },
   },
   args: {
     size:  'md',
@@ -23,19 +26,25 @@ export const Default: Story = {
   args: {
     src:  'https://i.pravatar.cc/150?img=1',
     alt:  'Jane Doe',
-    name: 'Jane Doe',
     size: 'lg',
-    status: 'online',
   },
-  parameters: {
-    layout: 'centered',
-  },
-  render: (args: any) => ({
+  render: (args) => ({
     components: { Avatar },
-    setup() {
-      return { args }
-    },
+    setup: () => ({ args }),
     template: '<Avatar v-bind="args" />',
+  }),
+}
+
+export const WithImage: Story = {
+  name: 'With Image',
+  render: () => ({
+    components: { Avatar },
+    setup: () => ({ sizes: ['xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const }),
+    template: `
+      <div style="display:flex;align-items:flex-end;gap:12px;">
+        <Avatar v-for="s in sizes" :key="s" :size="s" src="https://i.pravatar.cc/150?img=3" alt="User" />
+      </div>
+    `,
   }),
 }
 
@@ -43,51 +52,55 @@ export const Initials: Story = {
   render: () => ({
     components: { Avatar },
     template: `
-      <div class="flex flex-wrap items-center gap-3">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;">
         <Avatar name="Jane Doe" size="md" />
-        <Avatar name="Bob" size="md" />
+        <Avatar name="Bob Smith" size="md" />
         <Avatar name="Alex Kim" size="md" />
         <Avatar name="María García" size="md" />
+        <Avatar name="Tom" size="md" />
+        <Avatar name="Yuki Tanaka" size="md" />
       </div>
     `,
   }),
 }
 
 export const IconFallback: Story = {
+  name: 'Icon Fallback',
   render: () => ({
     components: { Avatar },
     template: `
-      <div class="flex flex-wrap items-center gap-3">
+      <div style="display:flex;align-items:center;gap:12px;">
         <Avatar size="md" />
         <Avatar size="md" fallback-icon="RiRobotLine" />
         <Avatar size="md" fallback-icon="RiBuildingLine" />
+        <Avatar size="md" fallback-icon="RiTeamLine" />
       </div>
     `,
   }),
 }
 
 export const AllSizes: Story = {
+  name: 'All Sizes',
   render: () => ({
     components: { Avatar },
-    setup: () => ({ sizes: ['xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const }),
     template: `
-      <div class="flex flex-col gap-6">
+      <div style="display:flex;flex-direction:column;gap:20px;">
         <div>
-          <p class="text-body-sm text-[--color-text-secondary] mb-3">With image</p>
-          <div class="flex flex-wrap items-end gap-3">
-            <Avatar v-for="s in sizes" :key="s" :size="s" src="https://i.pravatar.cc/150?img=3" alt="User" />
+          <p style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:10px;">With image</p>
+          <div style="display:flex;align-items:flex-end;gap:10px;">
+            <Avatar v-for="s in ['xs','sm','md','lg','xl','2xl']" :key="s" :size="s" src="https://i.pravatar.cc/150?img=5" alt="User" />
           </div>
         </div>
         <div>
-          <p class="text-body-sm text-[--color-text-secondary] mb-3">With initials</p>
-          <div class="flex flex-wrap items-end gap-3">
-            <Avatar v-for="s in sizes" :key="s" :size="s" name="Alex Kim" />
+          <p style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:10px;">Initials</p>
+          <div style="display:flex;align-items:flex-end;gap:10px;">
+            <Avatar v-for="s in ['xs','sm','md','lg','xl','2xl']" :key="s" :size="s" name="Alex Kim" />
           </div>
         </div>
         <div>
-          <p class="text-body-sm text-[--color-text-secondary] mb-3">Icon fallback</p>
-          <div class="flex flex-wrap items-end gap-3">
-            <Avatar v-for="s in sizes" :key="s" :size="s" />
+          <p style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:10px;">Icon</p>
+          <div style="display:flex;align-items:flex-end;gap:10px;">
+            <Avatar v-for="s in ['xs','sm','md','lg','xl','2xl']" :key="s" :size="s" />
           </div>
         </div>
       </div>
@@ -96,14 +109,15 @@ export const AllSizes: Story = {
 }
 
 export const AllStatuses: Story = {
+  name: 'All Statuses',
   render: () => ({
     components: { Avatar },
     setup: () => ({ statuses: ['online', 'offline', 'busy', 'away'] as const }),
     template: `
-      <div class="flex flex-wrap items-center gap-4">
-        <div v-for="s in statuses" :key="s" class="flex flex-col items-center gap-2">
+      <div style="display:flex;gap:20px;">
+        <div v-for="s in statuses" :key="s" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
           <Avatar name="Alex Kim" size="lg" :status="s" />
-          <span class="text-caption text-[--color-text-secondary]">{{ s }}</span>
+          <span style="font-size:12px;color:var(--color-text-secondary);">{{ s }}</span>
         </div>
       </div>
     `,
@@ -114,37 +128,34 @@ export const Shapes: Story = {
   render: () => ({
     components: { Avatar },
     template: `
-      <div class="flex flex-wrap items-center gap-6">
-        <div class="flex flex-col items-center gap-2">
-          <Avatar src="https://i.pravatar.cc/150?img=5" size="lg" shape="circle" />
-          <span class="text-caption text-[--color-text-secondary]">circle</span>
-        </div>
-        <div class="flex flex-col items-center gap-2">
-          <Avatar src="https://i.pravatar.cc/150?img=5" size="lg" shape="rounded" />
-          <span class="text-caption text-[--color-text-secondary]">rounded</span>
-        </div>
-        <div class="flex flex-col items-center gap-2">
-          <Avatar name="Alex Kim" size="lg" shape="circle" />
-          <span class="text-caption text-[--color-text-secondary]">circle</span>
-        </div>
-        <div class="flex flex-col items-center gap-2">
-          <Avatar name="Alex Kim" size="lg" shape="rounded" />
-          <span class="text-caption text-[--color-text-secondary]">rounded</span>
+      <div style="display:flex;gap:20px;">
+        <div v-for="[shape, label] in [['circle','circle'],['rounded','rounded'],['square','square']]" :key="shape" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <Avatar src="https://i.pravatar.cc/150?img=7" size="lg" :shape="shape" />
+          <span style="font-size:12px;color:var(--color-text-secondary);">{{ label }}</span>
         </div>
       </div>
     `,
   }),
 }
 
-export const WithStatusAndShape: Story = {
+export const AvatarGroup: Story = {
+  name: 'Avatar Group',
   render: () => ({
     components: { Avatar },
     template: `
-      <div class="flex flex-wrap items-center gap-4">
-        <Avatar src="https://i.pravatar.cc/150?img=7" size="lg" shape="circle" status="online" />
-        <Avatar src="https://i.pravatar.cc/150?img=8" size="lg" shape="rounded" status="busy" />
-        <Avatar name="Jane Doe" size="lg" shape="circle" status="away" />
-        <Avatar name="Bob Smith" size="lg" shape="rounded" status="offline" />
+      <div style="display:flex;align-items:center;">
+        <Avatar src="https://i.pravatar.cc/150?img=1" size="md" alt="User 1" style="outline:2px solid var(--color-surface);" />
+        <Avatar src="https://i.pravatar.cc/150?img=2" size="md" alt="User 2" style="outline:2px solid var(--color-surface);margin-left:-10px;" />
+        <Avatar src="https://i.pravatar.cc/150?img=3" size="md" alt="User 3" style="outline:2px solid var(--color-surface);margin-left:-10px;" />
+        <Avatar name="Jane Doe" size="md" style="outline:2px solid var(--color-surface);margin-left:-10px;" />
+        <div style="
+          width:40px;height:40px;border-radius:9999px;
+          background:var(--color-neutral-light);
+          border:1px solid var(--color-border);
+          display:inline-flex;align-items:center;justify-content:center;
+          font-size:12px;font-weight:600;color:var(--color-text-secondary);
+          outline:2px solid var(--color-surface);margin-left:-10px;
+        ">+4</div>
       </div>
     `,
   }),

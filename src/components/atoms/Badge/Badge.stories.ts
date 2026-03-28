@@ -1,20 +1,26 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { RiStarLine, RiCheckLine, RiAlertLine } from '@remixicon/vue'
+import { ref } from 'vue'
+import { RiStarLine, RiCheckLine, RiAlertLine, RiFlashlightLine } from '@remixicon/vue'
 import Badge from './Badge.vue'
+
+const variants = ['neutral', 'primary', 'danger', 'success', 'warning', 'info', 'secondary'] as const
+const styles   = ['subtle', 'solid', 'outline'] as const
+const sizes    = ['sm', 'md', 'lg'] as const
 
 const meta: Meta<typeof Badge> = {
   title: 'Atoms/Badge',
   component: Badge,
   tags: ['autodocs'],
+  parameters: { layout: 'centered' },
   argTypes: {
-    variant:    { control: 'select', options: ['neutral', 'primary', 'danger', 'success', 'warning', 'info', 'secondary'] },
-    size:       { control: 'select', options: ['sm', 'md', 'lg'] },
-    badgeStyle: { control: 'select', options: ['subtle', 'solid', 'outline'] },
+    variant:    { control: 'select',  options: [...variants] },
+    size:       { control: 'select',  options: [...sizes] },
+    badgeStyle: { control: 'select',  options: [...styles] },
     dot:        { control: 'boolean' },
     removable:  { control: 'boolean' },
   },
   args: {
-    variant:    'neutral',
+    variant:    'primary',
     size:       'md',
     badgeStyle: 'subtle',
     dot:        false,
@@ -25,37 +31,20 @@ export default meta
 type Story = StoryObj<typeof Badge>
 
 export const Default: Story = {
-  args: {
-    variant: 'primary',
-    size: 'md',
-    badgeStyle: 'subtle',
-    dot: false,
-    removable: false,
-    text: 'Badge',
-  },
-  argTypes: {
-    text: { control: 'text' },
-  },
-  parameters: {
-    layout: 'centered',
-  },
-  render: (args: any) => ({
+  render: (args) => ({
     components: { Badge },
     setup: () => ({ args }),
-    template: '<Badge v-bind="args">{{ args.text }}</Badge>',
+    template: '<Badge v-bind="args">Badge</Badge>',
   }),
 }
 
-const variants = ['neutral', 'primary', 'danger', 'success', 'warning', 'info', 'secondary'] as const
-const styles   = ['subtle', 'solid', 'outline'] as const
-const sizes    = ['sm', 'md', 'lg'] as const
-
 export const AllVariants: Story = {
+  name: 'All Variants',
   render: () => ({
     components: { Badge },
     setup: () => ({ variants }),
     template: `
-      <div class="flex flex-wrap gap-2">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
         <Badge v-for="v in variants" :key="v" :variant="v">{{ v }}</Badge>
       </div>
     `,
@@ -63,13 +52,14 @@ export const AllVariants: Story = {
 }
 
 export const AllStyles: Story = {
+  name: 'All Styles',
   render: () => ({
     components: { Badge },
     setup: () => ({ variants, styles }),
     template: `
-      <div class="flex flex-col gap-4">
-        <div v-for="s in styles" :key="s" class="flex flex-wrap gap-2 items-center">
-          <span class="text-body-sm text-[--color-text-secondary] w-16">{{ s }}</span>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div v-for="s in styles" :key="s" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-tertiary);width:52px;flex-shrink:0;">{{ s }}</span>
           <Badge v-for="v in variants" :key="v" :variant="v" :badge-style="s">{{ v }}</Badge>
         </div>
       </div>
@@ -78,11 +68,12 @@ export const AllStyles: Story = {
 }
 
 export const AllSizes: Story = {
+  name: 'All Sizes',
   render: () => ({
     components: { Badge },
     setup: () => ({ sizes }),
     template: `
-      <div class="flex flex-wrap items-center gap-3">
+      <div style="display:flex;align-items:center;gap:8px;">
         <Badge v-for="s in sizes" :key="s" :size="s" variant="primary">{{ s }}</Badge>
       </div>
     `,
@@ -90,25 +81,26 @@ export const AllSizes: Story = {
 }
 
 export const WithIcon: Story = {
+  name: 'With Icon',
   render: () => ({
-    components: { Badge, RiStarLine, RiCheckLine, RiAlertLine },
+    components: { Badge, RiStarLine, RiCheckLine, RiAlertLine, RiFlashlightLine },
     template: `
-      <div class="flex flex-wrap gap-2">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
         <Badge variant="primary">
-          <template #leading><RiStarLine class="size-3" /></template>
+          <template #leading><RiStarLine style="width:11px;height:11px;" /></template>
           Featured
         </Badge>
         <Badge variant="success">
-          <template #leading><RiCheckLine class="size-3" /></template>
+          <template #leading><RiCheckLine style="width:11px;height:11px;" /></template>
           Verified
         </Badge>
         <Badge variant="warning">
-          <template #leading><RiAlertLine class="size-3" /></template>
+          <template #leading><RiAlertLine style="width:11px;height:11px;" /></template>
           Warning
         </Badge>
         <Badge variant="danger" badge-style="solid">
-          <template #leading><RiAlertLine class="size-3" /></template>
-          Error
+          <template #leading><RiFlashlightLine style="width:11px;height:11px;" /></template>
+          Critical
         </Badge>
       </div>
     `,
@@ -116,11 +108,12 @@ export const WithIcon: Story = {
 }
 
 export const WithDot: Story = {
+  name: 'With Dot',
   render: () => ({
     components: { Badge },
     setup: () => ({ variants }),
     template: `
-      <div class="flex flex-wrap gap-2">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
         <Badge v-for="v in variants" :key="v" :variant="v" dot>{{ v }}</Badge>
       </div>
     `,
@@ -130,40 +123,37 @@ export const WithDot: Story = {
 export const Removable: Story = {
   render: () => ({
     components: { Badge },
-    setup: () => ({
-      tags: ['Design', 'Development', 'Vue 3', 'TypeScript'],
-      remove(tag: string) {
-        console.log('Remove:', tag)
-      },
-    }),
+    setup() {
+      const tags = ref(['Design', 'Vue 3', 'TypeScript', 'Storybook'])
+      return { tags }
+    },
     template: `
-      <div class="flex flex-wrap gap-2">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;min-height:32px;">
         <Badge
           v-for="tag in tags"
           :key="tag"
           variant="primary"
           removable
-          @remove="remove(tag)"
-        >
-          {{ tag }}
-        </Badge>
+          @remove="tags = tags.filter(t => t !== tag)"
+        >{{ tag }}</Badge>
+        <span v-if="!tags.length" style="font-size:13px;color:var(--color-text-tertiary);">All removed — refresh to reset</span>
       </div>
     `,
   }),
 }
 
-export const AllStylesGrid: Story = {
+export const FullMatrix: Story = {
   name: 'Full Matrix',
   render: () => ({
     components: { Badge },
     setup: () => ({ variants, styles, sizes }),
     template: `
-      <div class="flex flex-col gap-8">
+      <div style="display:flex;flex-direction:column;gap:24px;">
         <div v-for="s in styles" :key="s">
-          <p class="text-overline text-[--color-text-secondary] mb-3 uppercase">{{ s }}</p>
-          <div class="flex flex-col gap-3">
-            <div v-for="sz in sizes" :key="sz" class="flex flex-wrap gap-2 items-center">
-              <span class="text-caption text-[--color-text-tertiary] w-6">{{ sz }}</span>
+          <p style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:10px;">{{ s }}</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div v-for="sz in sizes" :key="sz" style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;">
+              <span style="font-size:11px;color:var(--color-text-tertiary);width:20px;">{{ sz }}</span>
               <Badge v-for="v in variants" :key="v" :variant="v" :badge-style="s" :size="sz">{{ v }}</Badge>
             </div>
           </div>

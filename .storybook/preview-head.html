@@ -1,78 +1,201 @@
 <style>
 /* ══════════════════════════════════════════
-   STORYBOOK DOCS CANVAS — Claude Style
+   STORYBOOK DOCS — Uses Design System tokens
+   Font: Abadikan Sans → Inter fallback
+   Colors: var(--color-*) from globals.css
 ══════════════════════════════════════════ */
+
+/* ── Base body ── */
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-  color: #2C2B29 !important;
-  background-color: #FFFFFF !important;
+  font-family: 'Abadikan Sans', 'Inter', -apple-system, sans-serif !important;
+  color: var(--color-text-primary) !important;
+  background-color: var(--color-bg) !important;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Serif Headers mimicking Claude Docs */
-.sbdocs-title {
-  font-family: "Tiempos", "Georgia", "Cambria", serif !important;
-  font-size: 34px !important;
-  font-weight: 600 !important;
-  color: #111111 !important;
-  letter-spacing: -0.02em !important;
-  margin-bottom: 8px !important;
-  border-bottom: none !important;
+/* ── Docs wrappers ── */
+.sbdocs-wrapper,
+.sbdocs-content {
+  background-color: var(--color-bg) !important;
+  color: var(--color-text-primary) !important;
 }
 
+/* ── Headings ── */
+.sbdocs-title {
+  font-family: 'Abadikan Sans', 'Inter', sans-serif !important;
+  font-size: 34px !important;
+  font-weight: 700 !important;
+  color: var(--color-text-heading) !important;
+  letter-spacing: -0.02em !important;
+  border-bottom: none !important;
+}
 .sbdocs-h2 {
-  font-family: "Tiempos", "Georgia", "Cambria", serif !important;
-  font-size: 24px !important;
-  font-weight: 500 !important;
-  color: #111111 !important;
+  font-family: 'Abadikan Sans', 'Inter', sans-serif !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  color: var(--color-text-heading) !important;
   letter-spacing: -0.01em !important;
   margin-top: 32px !important;
-  margin-bottom: 12px !important;
   border-bottom: none !important;
 }
-
 .sbdocs-h3 {
-  font-family: "Tiempos", "Georgia", "Cambria", serif !important;
-  font-size: 18px !important;
-  font-weight: 500 !important;
-  color: #111111 !important;
-  margin-top: 24px !important;
+  font-family: 'Abadikan Sans', 'Inter', sans-serif !important;
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  color: var(--color-text-heading) !important;
 }
 
-/* Base text */
+/* ── Body text ── */
 .sbdocs-p {
-  font-size: 15px !important;
-  line-height: 1.6 !important;
-  color: #4B4A48 !important;
-  margin-bottom: 16px !important;
+  font-family: 'Abadikan Sans', 'Inter', sans-serif !important;
+  color: var(--color-text-secondary) !important;
+  line-height: 1.65 !important;
 }
 
-/* Code blocks */
-.sbdocs-pre, .sbdocs-code {
-  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
-  font-size: 13px !important;
-  background-color: #F9F8F6 !important;
-  border: 1px solid #E5E3DB !important;
-  border-radius: 6px !important;
-}
-.sbdocs-code {
-  padding: 2px 4px !important;
-}
-
-/* Component blocks (Props/Canvas containers) */
+/* ── Canvas preview blocks ── */
 .sbdocs-preview {
-  border: 1px solid #E5E3DB !important;
+  border: 1px solid var(--color-border) !important;
   border-radius: 8px !important;
   box-shadow: none !important;
-  background-color: #FFFFFF !important;
+  background-color: var(--color-bg) !important;
+  overflow: hidden !important;
 }
-
 .sbdocs-preview > div:first-child {
-  background-color: #FFFFFF !important;
+  background-color: var(--color-bg) !important;
+}
+/* "Show code" / "Copy code" bar */
+.sbdocs-preview > div:last-child {
+  background-color: var(--color-bg-subtle) !important;
+  border-top: 1px solid var(--color-border) !important;
 }
 
-/* Hide default bottom Storybook branding line if any */
-.sbdocs-footer {
+/* ── Code ── */
+.sbdocs-pre,
+.sbdocs-code,
+code {
+  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
+  font-size: 13px !important;
+  background-color: var(--color-bg-subtle) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 5px !important;
+  color: var(--color-text-primary) !important;
+}
+.sbdocs-code { padding: 2px 5px !important; }
+
+/* ── Story wrapper — transparent, no box ── */
+.docs-story,
+.docs-story > div {
+  background: transparent !important;
+}
+
+/* ══════════════════════
+   PROPS / CONTROLS TABLE
+══════════════════════ */
+table {
+  border-collapse: collapse !important;
+  background: transparent !important;
+}
+thead, tbody, tr, th, td {
+  background-color: var(--color-bg) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border) !important;
+  font-family: 'Abadikan Sans', 'Inter', sans-serif !important;
+}
+
+/* Header row */
+.docblock-argstable-head th {
+  background-color: var(--color-bg-subtle) !important;
+  color: var(--color-text-secondary) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+
+/* Universal table cells - no white background leakage */
+.docblock-argstable-body tr td,
+.docblock-argstable-body tr th {
+  background-color: transparent !important;
+}
+
+/* Category headers (PROPS / EVENTS / SLOTS) */
+/* Target the row containing a colspan cell */
+tr:has(td[colspan]), 
+tr:has(th[colspan]),
+td[colspan], 
+th[colspan] {
+  background-color: var(--color-bg-subtle) !important;
+  color: var(--color-text-secondary) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.08em !important;
+}
+
+/* Category buttons (Show/Hide items) */
+td[colspan] button, 
+th[colspan] button {
+  background: transparent !important;
+  color: var(--color-text-tertiary) !important;
+  border: none !important;
+  font-size: 10px !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+}
+
+/* Hide the REDUNDANT button on the right side of the row */
+td[colspan] > div > button:nth-child(2),
+th[colspan] > div > button:nth-child(2),
+td[colspan] > button:nth-child(2),
+th[colspan] > button:nth-child(2) {
   display: none !important;
 }
+
+/* Fix any remaining internal elements that might have white bg */
+td[colspan] *, th[colspan] * {
+  background-color: transparent !important;
+}
+
+/* Prop rows */
+.docblock-argstable-body tr {
+  border-bottom: 1px solid var(--color-border) !important;
+}
+td:first-child {
+  font-weight: 500 !important;
+  color: var(--color-text-primary) !important;
+}
+td:nth-child(2) { color: var(--color-text-secondary) !important; }
+td:nth-child(3) code {
+  background: var(--color-bg-subtle) !important;
+  color: var(--color-text-secondary) !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+/* ══════════════════════
+   CONTROL INPUTS
+══════════════════════ */
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text-primary) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 5px !important;
+  font-family: 'Abadikan Sans', 'Inter', sans-serif !important;
+}
+
+/* All buttons and links */
+button, a {
+  color: var(--color-text-secondary) !important;
+  font-family: 'Abadikan Sans', 'Inter', sans-serif !important;
+}
+
+/* "Set string" / "Set boolean" action buttons */
+button {
+  background-color: var(--color-bg-subtle) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 5px !important;
+}
+
+/* ── Footer ── */
+.sbdocs-footer { display: none !important; }
 </style>

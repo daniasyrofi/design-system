@@ -96,9 +96,12 @@ function nameToHue(name: string): number {
 const initialsStyle = computed(() => {
   if (!props.name) return {}
   const hue = nameToHue(props.name)
+  // Use CSS custom property so dark mode can be overridden via [data-theme='dark'] in globals.css
+  // We expose --avatar-hue and compute the tones relative to it
   return {
-    backgroundColor: `oklch(0.92 0.06 ${hue})`,
-    color: `oklch(0.45 0.12 ${hue})`,
+    '--avatar-hue': hue,
+    backgroundColor: `oklch(var(--avatar-bg-l, 0.88) 0.06 ${hue})`,
+    color: `oklch(var(--avatar-text-l, 0.38) 0.12 ${hue})`,
   }
 })
 
