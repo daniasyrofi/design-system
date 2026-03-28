@@ -42,6 +42,11 @@
   --primitive-red-base:   oklch(0.55 0.22 18);
   --primitive-red-dark:   oklch(0.42 0.22 18);
 
+  /* ── Primitive: Danger (true red) ────────────────────────── */
+  --primitive-danger-light: oklch(0.92 0.05 28);
+  --primitive-danger-base:  oklch(0.60 0.22 28);
+  --primitive-danger-dark:  oklch(0.45 0.22 28);
+
   /* ── Primitive: Pink (secondary accent) ──────────────────── */
   --primitive-pink-light: oklch(0.92 0.04 350);
   --primitive-pink-base:  oklch(0.60 0.18 350);
@@ -165,9 +170,9 @@
   --color-info-hover:     var(--primitive-info-dark);
   --color-info-light:     var(--primitive-info-light);
 
-  --color-danger:         var(--primitive-red-base);
-  --color-danger-hover:   var(--primitive-red-dark);
-  --color-danger-light:   var(--primitive-red-light);
+  --color-danger:         var(--primitive-danger-base);
+  --color-danger-hover:   var(--primitive-danger-dark);
+  --color-danger-light:   var(--primitive-danger-light);
 
   /* ── Shadows: Light mode (warm-tinted for palette harmony) ── */
   --shadow-xs:  0 1px 2px oklch(0.20 0.005 80 / 0.06);
@@ -192,7 +197,7 @@
 }
 
 /* ── Dark Mode ────────────────────────────────────────────────── */
-[data-theme='dark'] {
+[data-theme='dark'], .dark, .sb-main-dark {
   --color-bg:             oklch(0.15 0.005 80);
   --color-bg-subtle:      oklch(0.18 0.006 80);
   --color-surface:        oklch(0.20 0.008 80);
@@ -223,9 +228,9 @@
   --color-neutral-hover:  oklch(0.96 0.005 80);
   --color-neutral-light:  oklch(0.25 0.008 80);
 
-  --color-danger:         oklch(0.65 0.20 18);
-  --color-danger-hover:   oklch(0.70 0.20 18);
-  --color-danger-light:   oklch(0.25 0.06 18);
+  --color-danger:         oklch(0.60 0.22 28);
+  --color-danger-hover:   oklch(0.65 0.22 28);
+  --color-danger-light:   oklch(0.30 0.06 28);
 
   /* ── Shadows: Dark mode (multi-layer, higher opacity) ───────── */
   --shadow-xs:  0 1px 2px oklch(0.05 0 0 / 0.25);

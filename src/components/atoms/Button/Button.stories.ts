@@ -11,7 +11,7 @@ const meta: Meta<typeof Button> = {
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
   argTypes: {
-    variant:   { control: 'select',  options: ['default', 'secondary', 'ghost', 'danger', 'link'] },
+    variant:   { control: 'select',  options: ['default', 'primary', 'secondary', 'outline', 'ghost', 'danger', 'link'] },
     size:      { control: 'select',  options: ['xs', 'sm', 'md', 'lg', 'xl'] },
     disabled:  { control: 'boolean' },
     loading:   { control: 'boolean' },
@@ -43,7 +43,9 @@ export const AllVariants: Story = {
     template: `
       <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
         <Button variant="default">Default</Button>
+        <Button variant="primary">Primary</Button>
         <Button variant="secondary">Secondary</Button>
+        <Button variant="outline">Outline</Button>
         <Button variant="ghost">Ghost</Button>
         <Button variant="danger">Danger</Button>
         <Button variant="link">Link</Button>
@@ -93,8 +95,6 @@ export const WithTrailingIcon: Story = {
           Continue
           <template #trailing><RiArrowRightLine style="width:1em;height:1em;" /></template>
         </Button>
-          <template #trailing><RiArrowRightLine style="width:1em;height:1em;" /></template>
-        </Button>
       </div>
     `,
   }),
@@ -110,7 +110,7 @@ export const IconOnly: Story = {
           <template #icon><RiDownloadLine style="width:1em;height:1em;" /></template>
         </Button>
         <div style="width:1px;height:32px;background:var(--color-border);"></div>
-        <Button variant="secondary" :iconOnly="true" aria-label="Add">
+        <Button variant="outline" :iconOnly="true" aria-label="Add">
           <template #icon><RiAddLine style="width:1em;height:1em;" /></template>
         </Button>
         <Button variant="ghost" :iconOnly="true" aria-label="Delete">
@@ -141,7 +141,7 @@ export const Loading: Story = {
         <Button :loading="loading" @click="handleClick">
           {{ loading ? $t('common.loading') : $t('common.save') }}
         </Button>
-        <Button variant="secondary" loading>{{ $t('common.loading') }}</Button>
+        <Button variant="outline" loading>{{ $t('common.loading') }}</Button>
         <Button variant="ghost" loading>{{ $t('common.loading') }}</Button>
       </div>
     `,
@@ -157,7 +157,8 @@ export const States: Story = {
           <p style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:10px;">Disabled</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
             <Button disabled>Default</Button>
-            <Button variant="secondary" disabled>Secondary</Button>
+            <Button variant="primary" disabled>Primary</Button>
+            <Button variant="outline" disabled>Outline</Button>
             <Button variant="ghost" disabled>Ghost</Button>
             <Button variant="danger" disabled>Danger</Button>
           </div>
@@ -166,7 +167,7 @@ export const States: Story = {
           <p style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:10px;">Full Width</p>
           <div style="width:280px;display:flex;flex-direction:column;gap:8px;">
             <Button fullWidth>Full Width Default</Button>
-            <Button variant="secondary" fullWidth>Full Width Secondary</Button>
+            <Button variant="outline" fullWidth>Full Width Outline</Button>
           </div>
         </div>
       </div>
@@ -175,7 +176,7 @@ export const States: Story = {
 }
 
 export const Danger: Story = {
-  name: '⚠️ Danger — Destructive',
+  name: 'Danger — Destructive',
   render: () => ({
     components: { Button, RiDeleteBinLine },
     setup() {
@@ -190,7 +191,7 @@ export const Danger: Story = {
             <template #leading><RiDeleteBinLine style="width:1em;height:1em;" /></template>
             {{ $t('common.delete') }}
           </Button>
-          <Button variant="secondary">{{ $t('common.cancel') }}</Button>
+          <Button variant="outline">{{ $t('common.cancel') }}</Button>
         </div>
       </div>
     `,

@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { cn } from '@/lib/utils'
 import Spinner from '@/components/atoms/Spinner/Spinner.vue'
 
-type Variant = 'default' | 'secondary' | 'ghost' | 'danger' | 'link'
+type Variant = 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'link'
 type Size    = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 interface Props {
@@ -48,12 +48,24 @@ const baseClasses = [
 const variants: Record<Variant, string> = {
   default: [
     'ds-btn--default',
+    'bg-[var(--color-neutral)] text-[var(--color-text-inverse)]',
+    'border border-[var(--color-neutral)]',
+    'hover:bg-[var(--color-neutral-hover)] hover:border-[var(--color-neutral-hover)]',
+  ].join(' '),
+  primary: [
+    'ds-btn--primary',
     'bg-[var(--color-primary)] text-[var(--color-text-inverse)]',
     'border border-[var(--color-primary)]',
     'hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]',
   ].join(' '),
   secondary: [
     'ds-btn--secondary',
+    'bg-[var(--color-secondary)] text-[var(--color-text-inverse)]',
+    'border border-[var(--color-secondary)]',
+    'hover:bg-[var(--color-secondary-hover)] hover:border-[var(--color-secondary-hover)]',
+  ].join(' '),
+  outline: [
+    'ds-btn--outline',
     'bg-[var(--color-surface)] text-[var(--color-text-primary)]',
     'border border-[var(--color-border)]',
     'hover:bg-[var(--color-bg-subtle)] hover:border-[var(--color-border-strong)]',
@@ -80,19 +92,19 @@ const variants: Record<Variant, string> = {
 }
 
 const sizes: Record<Size, string> = {
-  xs: 'px-3 py-1 text-xs rounded-[var(--radius-md)] min-h-7 gap-1.5',
-  sm: 'px-4 py-1.5 text-sm rounded-[var(--radius-md)] min-h-8 gap-1.5',
-  md: 'px-5 py-2 text-sm rounded-[var(--radius-lg)] min-h-10 gap-2',
-  lg: 'px-6 py-2.5 text-base rounded-[var(--radius-xl)] min-h-12 gap-2',
-  xl: 'px-8 py-3 text-lg rounded-[var(--radius-xl)] min-h-14 gap-2',
+  xs: 'px-3 py-1 text-xs rounded-full min-h-7 gap-1.5',
+  sm: 'px-4 py-1.5 text-sm rounded-full min-h-8 gap-1.5',
+  md: 'px-5 py-2 text-sm rounded-full min-h-10 gap-2',
+  lg: 'px-6 py-2.5 text-base rounded-full min-h-12 gap-2',
+  xl: 'px-8 py-3 text-lg rounded-full min-h-14 gap-2',
 }
 
 const iconSizes: Record<Size, string> = {
-  xs: 'h-7 w-7 rounded-[var(--radius-md)]',
-  sm: 'h-8 w-8 rounded-[var(--radius-md)]',
-  md: 'h-10 w-10 rounded-[var(--radius-lg)]',
-  lg: 'h-12 w-12 rounded-[var(--radius-xl)]',
-  xl: 'h-14 w-14 rounded-[var(--radius-xl)]',
+  xs: 'h-7 w-7 rounded-full',
+  sm: 'h-8 w-8 rounded-full',
+  md: 'h-10 w-10 rounded-full',
+  lg: 'h-12 w-12 rounded-full',
+  xl: 'h-14 w-14 rounded-full',
 }
 
 const spinnerSizes: Record<Size, 'xs' | 'sm' | 'md'> = {
@@ -156,13 +168,17 @@ const classes = computed(() =>
    box-shadow which doesn't have clean Tailwind token mapping. */
 
 .ds-btn--default,
+.ds-btn--primary,
 .ds-btn--secondary,
+.ds-btn--outline,
 .ds-btn--danger {
   box-shadow: var(--shadow-sm);
 }
 
 .ds-btn--default:hover,
+.ds-btn--primary:hover,
 .ds-btn--secondary:hover,
+.ds-btn--outline:hover,
 .ds-btn--danger:hover {
   box-shadow: var(--shadow-md);
 }

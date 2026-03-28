@@ -71,8 +71,8 @@ const dotInlineStyle = computed(() => ({
 // ── Size classes (layout only, no color) ────────────────────────────────────
 const sizeClasses: Record<Size, string> = {
   sm: 'text-[11px] leading-none px-2 py-0.5 gap-1 rounded-[var(--radius-sm)] min-h-5',
-  md: 'text-xs leading-none px-2.5 py-0.5 gap-1.5 rounded-[var(--radius-md)] min-h-6',
-  lg: 'text-sm leading-none px-3 py-1 gap-1.5 rounded-[var(--radius-lg)] min-h-7',
+  md: 'text-xs leading-none px-2.5 py-0.5 gap-1.5 rounded-[var(--radius-sm)] min-h-6',
+  lg: 'text-sm leading-none px-3 py-1 gap-1.5 rounded-[var(--radius-sm)] min-h-7',
 }
 
 const dotSizeClass: Record<Size, string> = {
