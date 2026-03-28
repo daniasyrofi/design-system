@@ -81,7 +81,7 @@ const preview: Preview = {
       i18n.global.locale.value = locale as 'id' | 'en'
 
       return {
-        template: `<div style="color: var(--color-text-primary);"><story /></div>`,
+        template: `<story />`,
       }
     },
   ],

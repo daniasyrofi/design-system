@@ -14,7 +14,7 @@ export const lightTheme = create({
   appBorderColor: '#EBE8E0',
   appBorderRadius: 8,
 
-  fontBase:  '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  fontBase:  '"Abadikan Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   fontCode:  '"JetBrains Mono", "SF Mono", monospace',
 
   textColor:       '#111111',
@@ -52,7 +52,7 @@ export const darkTheme = create({
   appBorderColor:   '#2E2E2A',
   appBorderRadius:  8,
 
-  fontBase:  '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  fontBase:  '"Abadikan Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   fontCode:  '"JetBrains Mono", "SF Mono", monospace',
 
   textColor:        '#E5E3DB',
