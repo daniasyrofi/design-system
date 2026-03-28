@@ -21,7 +21,11 @@ const meta: Meta<typeof ChatInput> = {
   },
   decorators: [
     () => ({
-      template: '<div class="max-w-xl mx-auto p-6"><story /></div>',
+      template: `
+        <div style="max-width:580px;margin:0 auto;padding:24px;">
+          <story />
+        </div>
+      `,
     }),
   ],
 }
@@ -33,18 +37,43 @@ export const Default: Story = {
     components: { ChatInput },
     setup() {
       const value = ref('')
-      const onSubmit = (msg: string) => {
-        alert(`Submitted: ${msg}`)
+      const messages = ref<string[]>([])
+      function onSubmit(msg: string) {
+        messages.value.push(msg)
         value.value = ''
       }
-      return { args, value, onSubmit }
+      return { args, value, messages, onSubmit }
     },
     template: `
-      <ChatInput
-        v-bind="args"
-        v-model="value"
-        @submit="onSubmit"
-      />
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div
+          v-if="messages.length"
+          style="
+            display:flex;flex-direction:column;gap:8px;
+            max-height:200px;overflow-y:auto;
+            padding:12px;border-radius:var(--radius-lg);
+            background:var(--color-neutral-light);
+          "
+        >
+          <div
+            v-for="(msg, i) in messages"
+            :key="i"
+            style="
+              align-self:flex-end;max-width:80%;padding:8px 14px;
+              background:var(--color-neutral);color:white;
+              border-radius:var(--radius-xl);font-size:14px;
+            "
+          >{{ msg }}</div>
+        </div>
+        <ChatInput
+          v-bind="args"
+          v-model="value"
+          @submit="onSubmit"
+        />
+        <p style="font-size:12px;color:var(--color-text-tertiary);text-align:center;">
+          Press Enter to send · Shift+Enter for new line
+        </p>
+      </div>
     `,
   }),
 }
@@ -74,11 +103,16 @@ export const Disabled: Story = {
       return { value }
     },
     template: `
-      <ChatInput
-        v-model="value"
-        :disabled="true"
-        placeholder="Chat is disabled..."
-      />
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <ChatInput
+          v-model="value"
+          :disabled="true"
+          placeholder="Chat is disabled..."
+        />
+        <p style="font-size:12px;color:var(--color-text-tertiary);text-align:center;">
+          Chat disabled — e.g. while generating a response
+        </p>
+      </div>
     `,
   }),
 }
@@ -95,14 +129,24 @@ export const WithCustomActions: Story = {
         <template #actions-start>
           <button
             type="button"
-            class="flex items-center justify-center size-8 rounded-[--radius-md] text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-neutral-light] transition-colors duration-[--duration-fast] cursor-pointer"
+            style="
+              display:flex;align-items:center;justify-content:center;
+              width:32px;height:32px;border-radius:var(--radius-md);
+              color:var(--color-text-secondary);background:transparent;border:none;
+              cursor:pointer;transition:background 0.15s, color 0.15s;
+            "
             aria-label="Attach file"
           >
             <RiAttachmentLine :size="18" />
           </button>
           <button
             type="button"
-            class="flex items-center justify-center size-8 rounded-[--radius-md] text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-neutral-light] transition-colors duration-[--duration-fast] cursor-pointer"
+            style="
+              display:flex;align-items:center;justify-content:center;
+              width:32px;height:32px;border-radius:var(--radius-md);
+              color:var(--color-text-secondary);background:transparent;border:none;
+              cursor:pointer;transition:background 0.15s, color 0.15s;
+            "
             aria-label="Add emoji"
           >
             <RiEmotionLine :size="18" />

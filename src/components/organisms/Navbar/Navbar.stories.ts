@@ -19,40 +19,77 @@ const meta: Meta<typeof Navbar> = {
   },
   decorators: [
     () => ({
-      template: '<div class="w-full min-w-[640px]"><story /></div>',
+      template: '<div style="width:100%;min-width:640px;"><story /></div>',
     }),
   ],
 }
 export default meta
 type Story = StoryObj<typeof Navbar>
 
-// -- Shared slot helpers --
+// ── Shared slot helpers ────────────────────────────────────────────────────────
+
 const navLinks = `
   <template #center>
-    <nav class="flex items-center gap-1">
-      <a href="#" class="px-3 py-1.5 text-sm font-medium rounded-[--radius-md] hover:bg-[--color-neutral-light] transition-colors duration-[--duration-normal]">Home</a>
-      <a href="#" class="px-3 py-1.5 text-sm font-medium rounded-[--radius-md] hover:bg-[--color-neutral-light] transition-colors duration-[--duration-normal]">Products</a>
-      <a href="#" class="px-3 py-1.5 text-sm font-medium rounded-[--radius-md] hover:bg-[--color-neutral-light] transition-colors duration-[--duration-normal]">About</a>
+    <nav style="display:flex;align-items:center;gap:4px;">
+      <a href="#" style="
+        padding:6px 12px;font-size:14px;font-weight:500;
+        border-radius:var(--radius-md);color:var(--color-text-primary);
+        text-decoration:none;transition:background 0.15s;
+      ">Home</a>
+      <a href="#" style="
+        padding:6px 12px;font-size:14px;font-weight:500;
+        border-radius:var(--radius-md);color:var(--color-text-primary);
+        text-decoration:none;transition:background 0.15s;
+      ">Products</a>
+      <a href="#" style="
+        padding:6px 12px;font-size:14px;font-weight:500;
+        border-radius:var(--radius-md);color:var(--color-text-primary);
+        text-decoration:none;transition:background 0.15s;
+      ">About</a>
     </nav>
   </template>
 `
 
 const actions = `
   <template #end>
-    <div class="flex items-center gap-2">
-      <div class="size-8 rounded-[--radius-md] bg-[--color-neutral-light] flex items-center justify-center text-xs text-[--color-text-secondary]" title="Theme toggle placeholder">T</div>
-      <div class="size-8 rounded-[--radius-md] bg-[--color-neutral-light] flex items-center justify-center text-xs text-[--color-text-secondary]" title="Language toggle placeholder">L</div>
-      <div class="size-8 rounded-full bg-[--color-primary-light] flex items-center justify-center text-xs font-medium text-[--color-primary]" title="Avatar placeholder">A</div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="
+        width:32px;height:32px;border-radius:var(--radius-md);flex-shrink:0;
+        background:var(--color-neutral-light);display:flex;align-items:center;
+        justify-content:center;font-size:12px;color:var(--color-text-secondary);
+      " title="Theme toggle">T</div>
+      <div style="
+        width:32px;height:32px;border-radius:var(--radius-md);flex-shrink:0;
+        background:var(--color-neutral-light);display:flex;align-items:center;
+        justify-content:center;font-size:12px;color:var(--color-text-secondary);
+      " title="Language toggle">ID</div>
+      <div style="
+        width:32px;height:32px;border-radius:9999px;flex-shrink:0;
+        background:var(--color-primary-light);display:flex;align-items:center;
+        justify-content:center;font-size:12px;font-weight:600;color:var(--color-primary);
+      " title="User avatar">A</div>
     </div>
   </template>
 `
 
 const coloredActions = `
   <template #end>
-    <div class="flex items-center gap-2">
-      <div class="size-8 rounded-[--radius-md] bg-white/10 flex items-center justify-center text-xs text-[--color-text-inverse]" title="Theme toggle placeholder">T</div>
-      <div class="size-8 rounded-[--radius-md] bg-white/10 flex items-center justify-center text-xs text-[--color-text-inverse]" title="Language toggle placeholder">L</div>
-      <div class="size-8 rounded-full bg-white/20 flex items-center justify-center text-xs font-medium text-[--color-text-inverse]" title="Avatar placeholder">A</div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="
+        width:32px;height:32px;border-radius:var(--radius-md);flex-shrink:0;
+        background:rgba(255,255,255,0.1);display:flex;align-items:center;
+        justify-content:center;font-size:12px;color:white;
+      " title="Theme toggle">T</div>
+      <div style="
+        width:32px;height:32px;border-radius:var(--radius-md);flex-shrink:0;
+        background:rgba(255,255,255,0.1);display:flex;align-items:center;
+        justify-content:center;font-size:12px;color:white;
+      " title="Language toggle">ID</div>
+      <div style="
+        width:32px;height:32px;border-radius:9999px;flex-shrink:0;
+        background:rgba(255,255,255,0.2);display:flex;align-items:center;
+        justify-content:center;font-size:12px;font-weight:600;color:white;
+      " title="User avatar">A</div>
     </div>
   </template>
 `
@@ -79,7 +116,10 @@ export const Transparent: Story = {
     components: { Navbar },
     setup: () => ({ args }),
     template: `
-      <div class="bg-gradient-to-r from-[--color-primary-light] to-[--color-secondary-light] p-0 rounded-[--radius-lg]">
+      <div style="
+        background:linear-gradient(to right, var(--color-primary-light), var(--color-secondary-light));
+        border-radius:var(--radius-lg);overflow:hidden;
+      ">
         <Navbar v-bind="args">
           ${navLinks}
           ${actions}
@@ -99,10 +139,22 @@ export const Colored: Story = {
     template: `
       <Navbar v-bind="args">
         <template #center>
-          <nav class="flex items-center gap-1">
-            <a href="#" class="px-3 py-1.5 text-sm font-medium rounded-[--radius-md] hover:bg-white/10 transition-colors duration-[--duration-normal]">Home</a>
-            <a href="#" class="px-3 py-1.5 text-sm font-medium rounded-[--radius-md] hover:bg-white/10 transition-colors duration-[--duration-normal]">Products</a>
-            <a href="#" class="px-3 py-1.5 text-sm font-medium rounded-[--radius-md] hover:bg-white/10 transition-colors duration-[--duration-normal]">About</a>
+          <nav style="display:flex;align-items:center;gap:4px;">
+            <a href="#" style="
+              padding:6px 12px;font-size:14px;font-weight:500;
+              border-radius:var(--radius-md);color:white;
+              text-decoration:none;transition:background 0.15s;
+            ">Home</a>
+            <a href="#" style="
+              padding:6px 12px;font-size:14px;font-weight:500;
+              border-radius:var(--radius-md);color:white;
+              text-decoration:none;transition:background 0.15s;
+            ">Products</a>
+            <a href="#" style="
+              padding:6px 12px;font-size:14px;font-weight:500;
+              border-radius:var(--radius-md);color:white;
+              text-decoration:none;transition:background 0.15s;
+            ">About</a>
           </nav>
         </template>
         ${coloredActions}
@@ -119,13 +171,16 @@ export const Sticky: Story = {
     components: { Navbar },
     setup: () => ({ args }),
     template: `
-      <div class="h-[400px] overflow-y-auto border border-[--color-border] rounded-[--radius-lg]">
+      <div style="
+        height:400px;overflow-y:auto;
+        border:1px solid var(--color-border);border-radius:var(--radius-lg);
+      ">
         <Navbar v-bind="args">
           ${navLinks}
           ${actions}
         </Navbar>
-        <div class="p-6 space-y-4">
-          <p v-for="i in 20" :key="i" class="text-sm text-[--color-text-secondary]">
+        <div style="padding:24px;display:flex;flex-direction:column;gap:16px;">
+          <p v-for="i in 20" :key="i" style="font-size:14px;color:var(--color-text-secondary);">
             Scroll down to see the sticky navbar remain at the top. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           </p>
         </div>

@@ -58,6 +58,15 @@ const childrenItems: SidebarItem[] = [
   { id: 'settings', label: 'Settings',      icon: RiSettingsLine },
 ]
 
+// ── Logo box helper (inline-styled to avoid broken Tailwind arbitrary values)
+const logoBox = `
+  <div style="
+    width:32px;height:32px;border-radius:var(--radius-md);flex-shrink:0;
+    background:var(--color-primary);display:flex;align-items:center;
+    justify-content:center;font-size:12px;font-weight:700;color:white;
+  ">A</div>
+`
+
 const meta: Meta<typeof Sidebar> = {
   title: 'Organisms/Sidebar',
   component: Sidebar,
@@ -78,7 +87,13 @@ const meta: Meta<typeof Sidebar> = {
   },
   decorators: [
     () => ({
-      template: '<div class="flex h-[520px] border border-[--color-border] rounded-[--radius-lg] overflow-hidden"><story /></div>',
+      template: `
+        <div style="
+          display:flex;height:520px;
+          border:1px solid var(--color-border);border-radius:var(--radius-lg);
+          overflow:hidden;
+        "><story /></div>
+      `,
     }),
   ],
 }
@@ -93,29 +108,26 @@ export const Default: Story = {
       return { args, collapsed, items: basicItems }
     },
     template: `
-      <Sidebar
-        v-bind="args"
-        v-model="collapsed"
-        :items="items"
-      >
+      <Sidebar v-bind="args" v-model="collapsed" :items="items">
         <template #header="{ collapsed: c }">
-          <div class="flex items-center gap-2">
-            <div class="size-8 rounded-[--radius-md] bg-[--color-primary] flex items-center justify-center text-xs font-bold text-white shrink-0">A</div>
-            <span v-if="!c" class="text-sm font-semibold text-[--color-text-heading] truncate">Acme Inc</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${logoBox}
+            <span v-if="!c" style="
+              font-size:14px;font-weight:600;color:var(--color-text-heading);
+              overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+            ">Acme Inc</span>
           </div>
         </template>
       </Sidebar>
-      <div class="flex-1 bg-[--color-background] p-6">
-        <p class="text-sm text-[--color-text-secondary]">Main content area</p>
+      <div style="flex:1;background:var(--color-bg);padding:24px;">
+        <p style="font-size:14px;color:var(--color-text-secondary);">Main content area</p>
       </div>
     `,
   }),
 }
 
 export const Collapsed: Story = {
-  args: {
-    modelValue: true,
-  },
+  args: { modelValue: true },
   render: (args) => ({
     components: { Sidebar },
     setup() {
@@ -123,20 +135,21 @@ export const Collapsed: Story = {
       return { args, collapsed, items: basicItems }
     },
     template: `
-      <Sidebar
-        v-bind="args"
-        v-model="collapsed"
-        :items="items"
-      >
+      <Sidebar v-bind="args" v-model="collapsed" :items="items">
         <template #header="{ collapsed: c }">
-          <div class="flex items-center gap-2">
-            <div class="size-8 rounded-[--radius-md] bg-[--color-primary] flex items-center justify-center text-xs font-bold text-white shrink-0">A</div>
-            <span v-if="!c" class="text-sm font-semibold text-[--color-text-heading] truncate">Acme Inc</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${logoBox}
+            <span v-if="!c" style="
+              font-size:14px;font-weight:600;color:var(--color-text-heading);
+              overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+            ">Acme Inc</span>
           </div>
         </template>
       </Sidebar>
-      <div class="flex-1 bg-[--color-background] p-6">
-        <p class="text-sm text-[--color-text-secondary]">Main content area. Click the arrow to expand the sidebar.</p>
+      <div style="flex:1;background:var(--color-bg);padding:24px;">
+        <p style="font-size:14px;color:var(--color-text-secondary);">
+          Main content area. Click the arrow to expand the sidebar.
+        </p>
       </div>
     `,
   }),
@@ -150,21 +163,21 @@ export const WithBadges: Story = {
       return { args, collapsed, items: badgeItems }
     },
     template: `
-      <Sidebar
-        v-bind="args"
-        v-model="collapsed"
-        :items="items"
-        active-id="inbox"
-      >
+      <Sidebar v-bind="args" v-model="collapsed" :items="items" active-id="inbox">
         <template #header="{ collapsed: c }">
-          <div class="flex items-center gap-2">
-            <div class="size-8 rounded-[--radius-md] bg-[--color-primary] flex items-center justify-center text-xs font-bold text-white shrink-0">A</div>
-            <span v-if="!c" class="text-sm font-semibold text-[--color-text-heading] truncate">Acme Inc</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${logoBox}
+            <span v-if="!c" style="
+              font-size:14px;font-weight:600;color:var(--color-text-heading);
+              overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+            ">Acme Inc</span>
           </div>
         </template>
       </Sidebar>
-      <div class="flex-1 bg-[--color-background] p-6">
-        <p class="text-sm text-[--color-text-secondary]">Sidebar with badge counts on items.</p>
+      <div style="flex:1;background:var(--color-bg);padding:24px;">
+        <p style="font-size:14px;color:var(--color-text-secondary);">
+          Sidebar with badge counts on items.
+        </p>
       </div>
     `,
   }),
@@ -178,27 +191,34 @@ export const WithChildren: Story = {
       return { args, collapsed, items: childrenItems }
     },
     template: `
-      <Sidebar
-        v-bind="args"
-        v-model="collapsed"
-        :items="items"
-        active-id="proj-active"
-      >
+      <Sidebar v-bind="args" v-model="collapsed" :items="items" active-id="proj-active">
         <template #header="{ collapsed: c }">
-          <div class="flex items-center gap-2">
-            <div class="size-8 rounded-[--radius-md] bg-[--color-primary] flex items-center justify-center text-xs font-bold text-white shrink-0">A</div>
-            <span v-if="!c" class="text-sm font-semibold text-[--color-text-heading] truncate">Acme Inc</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${logoBox}
+            <span v-if="!c" style="
+              font-size:14px;font-weight:600;color:var(--color-text-heading);
+              overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+            ">Acme Inc</span>
           </div>
         </template>
         <template #footer="{ collapsed: c }">
-          <div class="flex items-center gap-2">
-            <div class="size-8 rounded-full bg-[--color-neutral-light] flex items-center justify-center text-xs font-medium text-[--color-text-primary] shrink-0">JD</div>
-            <span v-if="!c" class="text-sm text-[--color-text-secondary] truncate">john@acme.com</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="
+              width:32px;height:32px;border-radius:9999px;flex-shrink:0;
+              background:var(--color-neutral-light);display:flex;align-items:center;
+              justify-content:center;font-size:12px;font-weight:600;color:var(--color-text-primary);
+            ">JD</div>
+            <span v-if="!c" style="
+              font-size:13px;color:var(--color-text-secondary);
+              overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+            ">john@acme.com</span>
           </div>
         </template>
       </Sidebar>
-      <div class="flex-1 bg-[--color-background] p-6">
-        <p class="text-sm text-[--color-text-secondary]">Sidebar with expandable child items. Click "Projects" or "Reports" to toggle.</p>
+      <div style="flex:1;background:var(--color-bg);padding:24px;">
+        <p style="font-size:14px;color:var(--color-text-secondary);">
+          Sidebar with expandable child items. Click "Projects" or "Reports" to toggle.
+        </p>
       </div>
     `,
   }),
@@ -216,17 +236,15 @@ export const IconOnly: Story = {
       return { args, collapsed, items: basicItems }
     },
     template: `
-      <Sidebar
-        v-bind="args"
-        v-model="collapsed"
-        :items="items"
-      >
-        <template #header="{ collapsed: c }">
-          <div class="size-8 rounded-[--radius-md] bg-[--color-primary] flex items-center justify-center text-xs font-bold text-white shrink-0">A</div>
+      <Sidebar v-bind="args" v-model="collapsed" :items="items">
+        <template #header>
+          ${logoBox}
         </template>
       </Sidebar>
-      <div class="flex-1 bg-[--color-background] p-6">
-        <p class="text-sm text-[--color-text-secondary]">Icon-only collapsed mode. Hover over icons to see tooltips.</p>
+      <div style="flex:1;background:var(--color-bg);padding:24px;">
+        <p style="font-size:14px;color:var(--color-text-secondary);">
+          Icon-only collapsed mode. Hover over icons to see tooltips.
+        </p>
       </div>
     `,
   }),
