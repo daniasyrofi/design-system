@@ -142,10 +142,10 @@ function hasActiveChild(item: SidebarItem): boolean {
               'relative flex items-center w-full gap-3 ds-sidebar-item text-sm',
               'transition-all duration-[--duration-fast] ease-[--ease-default]',
               'cursor-pointer select-none overflow-hidden',
-              isCollapsed ? 'justify-center px-0 py-2' : 'px-3 py-2',
+              isCollapsed ? 'justify-center px-0 py-2.5' : 'px-3 py-2.5',
               isActive(item) || hasActiveChild(item)
-                ? 'bg-[--color-primary-light] text-[--color-text-heading] font-semibold'
-                : 'text-[--color-text-secondary] hover:bg-[--color-neutral-light] hover:text-[--color-text-primary]',
+                ? 'bg-[--color-primary-subtle] text-[--color-primary-strong] font-semibold ds-sidebar-item--active'
+                : 'text-[--color-text-secondary] hover:bg-[--color-neutral-subtle] hover:text-[--color-text-primary]',
             )"
             :title="isCollapsed ? item.label : undefined"
             @click="handleItemClick(item)"
@@ -201,10 +201,10 @@ function hasActiveChild(item: SidebarItem): boolean {
                   'flex items-center w-full gap-3 ds-sidebar-item text-sm',
                   'transition-colors duration-[--duration-fast] ease-[--ease-default]',
                   'cursor-pointer select-none',
-                  'pl-10 pr-3 py-1.5',
+                  'pl-10 pr-3 py-2',
                   isActive(child)
-                    ? 'bg-[--color-neutral-light] text-[--color-text-heading] font-medium'
-                    : 'text-[--color-text-secondary] hover:bg-[--color-neutral-light] hover:text-[--color-text-primary]',
+                    ? 'bg-[--color-primary-subtle] text-[--color-primary-strong] font-medium ds-sidebar-item--active'
+                    : 'text-[--color-text-secondary] hover:bg-[--color-neutral-subtle] hover:text-[--color-text-primary]',
                 )"
                 @click="emit('itemClick', child)"
               >
@@ -269,5 +269,8 @@ function hasActiveChild(item: SidebarItem): boolean {
 <style scoped>
 .ds-sidebar-item {
   border-radius: var(--radius-md);
+}
+.ds-sidebar-item--active {
+  box-shadow: inset 3px 0 0 0 var(--color-primary);
 }
 </style>

@@ -33,8 +33,8 @@ const canSubmit = computed(() => props.modelValue.trim().length > 0 && !props.lo
 const containerClass = computed(() =>
   cn(
     'ds-chat-input border border-[--color-border]',
-    'transition-colors duration-[--duration-normal] ease-[--ease-default]',
-    'focus-within:border-[--color-border-strong]',
+    'transition-all duration-[--duration-normal] ease-[--ease-default]',
+    'hover:border-[--color-border-strong]',
     props.disabled && 'opacity-50 pointer-events-none',
   )
 )
@@ -109,14 +109,14 @@ onMounted(() => {
               'transition-all duration-[--duration-fast] ease-[--ease-default]',
               'cursor-pointer',
               canSubmit
-                ? 'bg-[--color-neutral] text-[--color-text-inverse] hover:bg-[--color-neutral-hover] active:scale-95'
-                : 'bg-[--color-neutral-light] text-[--color-text-tertiary] cursor-not-allowed',
+                ? 'bg-[--color-primary] text-[--color-text-inverse] hover:bg-[--color-primary-hover] shadow-sm hover:shadow-md active:scale-95'
+                : 'bg-[--color-neutral-subtle] text-[--color-text-tertiary] cursor-not-allowed',
             )"
             aria-label="Send message"
             @click="canSubmit && emit('submit', modelValue)"
           >
             <Spinner v-if="loading" size="xs" />
-            <RiSendPlaneFill v-else :size="16" />
+            <RiSendPlaneFill v-else size="16" />
           </button>
         </slot>
       </div>
@@ -127,12 +127,13 @@ onMounted(() => {
 <style scoped>
 .ds-chat-input {
   background-color: var(--color-surface);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-2xl);
 }
 .ds-chat-input:focus-within {
-  box-shadow: var(--shadow-sm);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm), 0 0 0 2px var(--color-primary-subtle);
 }
 .ds-chat-send {
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-full);
 }
 </style>

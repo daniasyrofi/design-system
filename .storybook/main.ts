@@ -14,6 +14,7 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
     '@storybook/addon-a11y',
     '@storybook/addon-vitest',
+    'storybook-dark-mode',
   ],
   framework: '@storybook/vue3-vite',
   docs: {

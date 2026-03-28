@@ -66,7 +66,7 @@ const selectAllState = computed<boolean | 'indeterminate'>(() => {
   return 'indeterminate'
 })
 
-function handleSelectAll(value: boolean | 'indeterminate') {
+function handleSelectAll(_: boolean | 'indeterminate') {
   if (selectAllState.value === true) {
     selectedRowIndices.value = new Set()
   } else {
@@ -75,7 +75,7 @@ function handleSelectAll(value: boolean | 'indeterminate') {
   emitSelection()
 }
 
-function handleSelectRow(index: number, value: boolean | 'indeterminate') {
+function handleSelectRow(index: number, _: boolean | 'indeterminate') {
   const next = new Set(selectedRowIndices.value)
   if (next.has(index)) {
     next.delete(index)
@@ -130,7 +130,7 @@ const alignClass: Record<string, string> = {
           <tr
             :class="cn(
               'bg-[--color-bg-subtle] border-b border-[--color-border]',
-              stickyHeader && 'sticky top-0 bg-[--color-surface] z-10',
+              stickyHeader && 'sticky top-0 bg-[--color-surface] z-10 ds-table-sticky-header',
             )"
           >
             <!-- Select-all checkbox column -->
@@ -176,7 +176,7 @@ const alignClass: Record<string, string> = {
                   aria-hidden="true"
                 >
                   <RiArrowUpSLine
-                    :size="14"
+                    size="14"
                     :class="cn(
                       'transition-colors duration-[--duration-fast]',
                       sortKey === col.key && sortDirection === 'asc'
@@ -185,7 +185,7 @@ const alignClass: Record<string, string> = {
                     )"
                   />
                   <RiArrowDownSLine
-                    :size="14"
+                    size="14"
                     :class="cn(
                       'transition-colors duration-[--duration-fast]',
                       sortKey === col.key && sortDirection === 'desc'
@@ -207,9 +207,9 @@ const alignClass: Record<string, string> = {
               :key="rowIndex"
               :class="cn(
                 'transition-colors duration-[--duration-fast]',
-                hoverable && 'hover:bg-[--color-neutral-light]',
+                hoverable && 'hover:bg-[--color-neutral-subtle]',
                 striped && 'even:bg-[--color-bg-subtle]',
-                selectedRowIndices.has(rowIndex) && 'bg-[--color-primary-light]',
+                selectedRowIndices.has(rowIndex) && 'bg-[--color-primary-subtle]',
               )"
             >
               <!-- Row checkbox -->
@@ -264,7 +264,10 @@ const alignClass: Record<string, string> = {
   border-radius: var(--radius-lg);
 }
 .ds-table-loading {
-  background-color: color-mix(in oklch, var(--color-surface) 80%, transparent);
-  backdrop-filter: blur(1px);
+  background-color: color-mix(in oklch, var(--color-surface) 60%, transparent);
+  backdrop-filter: blur(2px);
+}
+.ds-table-sticky-header {
+  box-shadow: var(--shadow-sm);
 }
 </style>

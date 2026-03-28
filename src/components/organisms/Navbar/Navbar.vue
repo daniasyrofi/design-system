@@ -64,6 +64,6 @@ const classes = computed(() =>
 
 <style scoped>
 .ds-navbar--sticky-shadow {
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 </style>

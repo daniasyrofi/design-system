@@ -3,26 +3,22 @@ import type { App } from 'vue'
 import { setup } from '@storybook/vue3-vite'
 import '../src/styles/globals.css'
 import { i18n } from '../src/i18n'
+import { addons } from 'storybook/preview-api'
+import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode'
+import { lightTheme, darkTheme } from './theme'
 
+const channel = addons.getChannel()
+channel.on(DARK_MODE_EVENT_NAME, (isDark: boolean) => {
+  const theme = isDark ? 'dark' : 'light'
+  document.documentElement.setAttribute('data-theme', theme)
+  document.body.setAttribute('data-theme', theme)
+})
 setup((app: App) => {
   app.use(i18n)
 })
 
 const preview: Preview = {
   globalTypes: {
-    theme: {
-      description: 'Color theme',
-      defaultValue: 'light',
-      toolbar: {
-        title: 'Theme',
-        icon: 'circlehollow',
-        items: [
-          { value: 'light', icon: 'sun',  title: 'Light' },
-          { value: 'dark',  icon: 'moon', title: 'Dark'  },
-        ],
-        dynamicTitle: true,
-      },
-    },
     spacing: {
       description: 'Spacing scale',
       defaultValue: 'grid',
@@ -67,15 +63,12 @@ const preview: Preview = {
 
   decorators: [
     (story, context) => {
-      const theme   = context.globals.theme   ?? 'light'
       const spacing = context.globals.spacing ?? 'grid'
       const density = context.globals.density ?? 'comfortable'
       const locale  = context.globals.locale  ?? 'id'
 
-      document.documentElement.setAttribute('data-theme',   theme)
       document.documentElement.setAttribute('data-spacing', spacing)
       document.documentElement.setAttribute('data-density', density)
-      document.body.setAttribute('data-theme', theme)
 
       // @ts-ignore
       i18n.global.locale.value = locale as 'id' | 'en'
@@ -87,6 +80,11 @@ const preview: Preview = {
   ],
 
   parameters: {
+    darkMode: {
+      dark: darkTheme,
+      light: lightTheme,
+      stylePreview: true,
+    },
     viewport: {
       viewports: {
         phonePortrait:   { name: 'Phone Portrait',   styles: { width: '375px',  height: '812px' } },

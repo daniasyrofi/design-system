@@ -38,12 +38,7 @@ const formattedTime = computed(() => {
   return `${hours}:${minutes}`
 })
 
-const initials = computed(() => {
-  if (!props.userName) return isUser.value ? 'U' : 'AI'
-  const parts = props.userName.trim().split(/\s+/)
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
-})
+
 
 const containerClass = computed(() =>
   cn(
@@ -105,11 +100,11 @@ function handleRetry() {
       >
         <button
           type="button"
-          class="ds-bubble-copy-btn flex items-center justify-center size-7 bg-[--color-surface] border border-[--color-border] text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-neutral-light] transition-colors duration-[--duration-fast] ease-[--ease-default] cursor-pointer"
+          class="ds-bubble-copy-btn flex items-center justify-center size-7 [background:var(--color-surface-glass)] [backdrop-filter:var(--glass-blur)] border border-[--glass-border] text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-neutral-light] transition-all duration-[--duration-fast] ease-[--ease-default] cursor-pointer"
           aria-label="Copy message"
           @click="handleCopy"
         >
-          <RiFileCopyLine :size="14" />
+          <RiFileCopyLine size="14" />
         </button>
       </div>
 
@@ -136,7 +131,7 @@ function handleRetry() {
         class="mt-2 flex items-center gap-1 text-caption text-[--color-danger] hover:underline cursor-pointer"
         @click="handleRetry"
       >
-        <RiRefreshLine :size="12" />
+        <RiRefreshLine size="12" />
         <span>Retry</span>
       </button>
     </div>
@@ -159,15 +154,15 @@ function handleRetry() {
   border-radius: var(--radius-2xl);
 }
 .ds-bubble--user {
-  border-bottom-right-radius: var(--radius-xs);
-  box-shadow: var(--shadow-sm), var(--shadow-highlight);
+  border-bottom-right-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md), var(--shadow-highlight);
 }
 .ds-bubble--assistant {
-  border-bottom-left-radius: var(--radius-xs);
-  box-shadow: var(--shadow-xs);
+  border-bottom-left-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
 }
 .ds-bubble-copy-btn {
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-md);
 }
 </style>
