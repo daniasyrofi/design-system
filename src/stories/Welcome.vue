@@ -1,46 +1,54 @@
 <template>
   <div class="welcome-container">
     <div class="sb-section-title">
-      <h1>{{ $t('welcome.welcome_title') }}</h1>
-      <p>{{ $t('welcome.welcome_subtitle') }}</p>
-      <p>{{ $t('welcome.welcome_tech') }}</p>
+      <h1 class="text-display" style="color: var(--color-text-heading); margin-bottom: var(--spacing-6);">
+        {{ $t('welcome.welcome_title') }}
+      </h1>
+      <p class="text-body-lg" style="color: var(--color-text-secondary); margin-bottom: var(--spacing-5);">
+        {{ $t('welcome.welcome_subtitle') }}
+      </p>
+      <p class="text-body-lg" style="color: var(--color-text-secondary);">
+        {{ $t('welcome.welcome_tech') }}
+      </p>
     </div>
 
     <div class="sb-section">
       <div class="sb-section-item">
-        <h4 class="sb-section-item-heading">🎨 {{ $t('welcome.visual_title') }}</h4>
-        <p class="sb-section-item-paragraph" v-html="$t('welcome.visual_desc')"></p>
+        <h4 class="text-h4" style="color: var(--color-text-heading); margin-bottom: var(--spacing-3);">🎨 {{ $t('welcome.visual_title') }}</h4>
+        <p class="text-body" style="color: var(--color-text-secondary);" v-html="$t('welcome.visual_desc')"></p>
       </div>
       
       <div class="sb-section-item">
-        <h4 class="sb-section-item-heading">🌐 {{ $t('welcome.i18n_title') }}</h4>
-        <p class="sb-section-item-paragraph" v-html="$t('welcome.i18n_desc')"></p>
+        <h4 class="text-h4" style="color: var(--color-text-heading); margin-bottom: var(--spacing-3);">🌐 {{ $t('welcome.i18n_title') }}</h4>
+        <p class="text-body" style="color: var(--color-text-secondary);" v-html="$t('welcome.i18n_desc')"></p>
       </div>
     </div>
 
-    <div class="sb-section-title" style="margin-top: 48px;">
-      <h1>{{ $t('welcome.guide_title') }}</h1>
+    <div class="sb-section-title" style="margin-top: var(--spacing-12);">
+      <h2 class="text-h1" style="color: var(--color-text-heading); margin-bottom: var(--spacing-6);">
+        {{ $t('welcome.guide_title') }}
+      </h2>
     </div>
 
     <div class="sb-features-grid">
       <div class="sb-grid-item">
-        <h4 class="sb-section-item-heading">1. {{ $t('welcome.atomic_title') }}</h4>
-        <p class="sb-section-item-paragraph" v-html="$t('welcome.atomic_desc')"></p>
+        <h4 class="text-h4" style="color: var(--color-text-heading); margin-bottom: var(--spacing-2);">1. {{ $t('welcome.atomic_title') }}</h4>
+        <p class="text-body" style="color: var(--color-text-secondary);" v-html="$t('welcome.atomic_desc')"></p>
       </div>
 
       <div class="sb-grid-item">
-        <h4 class="sb-section-item-heading">2. {{ $t('welcome.controls_title') }}</h4>
-        <p class="sb-section-item-paragraph" v-html="$t('welcome.controls_desc')"></p>
+        <h4 class="text-h4" style="color: var(--color-text-heading); margin-bottom: var(--spacing-2);">2. {{ $t('welcome.controls_title') }}</h4>
+        <p class="text-body" style="color: var(--color-text-secondary);" v-html="$t('welcome.controls_desc')"></p>
       </div>
 
       <div class="sb-grid-item">
-        <h4 class="sb-section-item-heading">3. {{ $t('welcome.theme_title') }}</h4>
-        <p class="sb-section-item-paragraph" v-html="$t('welcome.theme_desc')"></p>
+        <h4 class="text-h4" style="color: var(--color-text-heading); margin-bottom: var(--spacing-2);">3. {{ $t('welcome.theme_title') }}</h4>
+        <p class="text-body" style="color: var(--color-text-secondary);" v-html="$t('welcome.theme_desc')"></p>
       </div>
 
       <div class="sb-grid-item">
-        <h4 class="sb-section-item-heading">4. {{ $t('welcome.a11y_title') }}</h4>
-        <p class="sb-section-item-paragraph" v-html="$t('welcome.a11y_desc')"></p>
+        <h4 class="text-h4" style="color: var(--color-text-heading); margin-bottom: var(--spacing-2);">4. {{ $t('welcome.a11y_title') }}</h4>
+        <p class="text-body" style="color: var(--color-text-secondary);" v-html="$t('welcome.a11y_desc')"></p>
       </div>
     </div>
   </div>
@@ -48,102 +56,71 @@
 
 <style>
   .welcome-container {
-    padding-bottom: 48px;
-    font-family: 'AbadikanSans', sans-serif;
-  }
-
-  .sb-section {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    gap: 24px;
-    margin-top: 24px;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: var(--spacing-16) var(--spacing-6);
+    font-family: var(--font-ui), sans-serif;
+    color: var(--color-text-primary);
   }
 
   .sb-section-title {
-    margin-bottom: 32px;
+    margin-bottom: var(--spacing-12);
   }
-  .sb-section-title h1 {
-    font-size: 32px;
-    font-weight: 800;
-    margin-bottom: 16px;
-  }
-  .sb-section-title p {
-    font-size: 16px;
-    line-height: 1.6;
-    color: var(--color-text-secondary, #666);
-    margin-bottom: 12px;
+
+  .sb-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-8);
+    margin-top: var(--spacing-12);
+    margin-bottom: var(--spacing-16);
   }
 
   .sb-section-item {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    background: var(--color-surface, #fff);
-    border: 1px solid var(--color-border, #ddd);
-    padding: 24px;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    padding: var(--spacing-8);
+    background: var(--color-bg-subtle);
+    border-radius: var(--spacing-4);
+    border: 1px solid var(--color-border);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
   }
 
-  .sb-section-item-heading {
-    padding-top: 0 !important;
-    padding-bottom: 8px !important;
-    margin: 0 !important;
-    font-weight: 700;
+  .sb-section-item:hover {
+    background: var(--color-surface);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-sm);
   }
 
-  .sb-section-item-paragraph {
-    margin: 0;
-    font-size: 14px;
-    color: var(--color-text-secondary, #666);
-    line-height: 1.6;
-  }
-  .sb-section-item-paragraph code {
-    background: rgba(0,0,0,0.05);
-    padding: 2px 4px;
-    border-radius: 4px;
+  /* Target the code elements generically since they are injected via v-html */
+  .welcome-container code {
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-family: var(--font-mono), monospace;
+    font-size: 0.85em;
+    color: var(--color-primary);
   }
 
   .sb-features-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-8);
   }
 
   .sb-grid-item {
-    display: flex;
-    flex-direction: column;
-    background: var(--color-surface, #fff);
-    border: 1px solid var(--color-border, #ddd);
-    padding: 24px;
-    border-radius: 12px;
-    transition: all 0.2s;
+    padding-left: var(--spacing-5);
+    border-left: 3px solid var(--color-border-strong);
+    transition: border-color 0.2s ease;
   }
-
+  
   .sb-grid-item:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    border-color: #999;
-  }
-
-  /* Dark mode overrides (from manager) */
-  [data-theme='dark'] .sb-section-item,
-  [data-theme='dark'] .sb-grid-item {
-    background: var(--color-surface-glass, #1a1a1a);
-    border-color: var(--color-border, #333);
-  }
-  [data-theme='dark'] .sb-section-title p,
-  [data-theme='dark'] .sb-section-item-paragraph {
-    color: #999;
-  }
-  [data-theme='dark'] .sb-section-item-paragraph code {
-    background: rgba(255,255,255,0.1);
+    border-left-color: var(--color-primary);
   }
 
   @media screen and (max-width: 768px) {
-    .sb-section, .sb-features-grid {
-      flex-direction: column;
-      grid-template-columns: 1fr;
+    .welcome-container {
+      padding: var(--spacing-8) var(--spacing-4);
     }
   }
 </style>
