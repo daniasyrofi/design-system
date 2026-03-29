@@ -2,17 +2,59 @@ import type { Preview } from '@storybook/vue3-vite'
 import type { App } from 'vue'
 import { setup } from '@storybook/vue3-vite'
 import '../src/styles/globals.css'
-import { i18n } from '../src/i18n'
+import { i18n, resolveLocale, setI18nLocale } from '../src/i18n'
 import { addons } from 'storybook/preview-api'
 import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode'
 import { lightTheme, darkTheme } from './theme'
 
+type ThemeMode = 'light' | 'dark'
+type DarkModeStore = { current?: ThemeMode }
+
+const DARK_MODE_STORAGE_KEY = 'sb-addon-themes-3'
+
+const getStoredTheme = (): ThemeMode | null => {
+  try {
+    const raw = window.localStorage.getItem(DARK_MODE_STORAGE_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as DarkModeStore
+    return parsed.current === 'dark' || parsed.current === 'light' ? parsed.current : null
+  } catch {
+    return null
+  }
+}
+
+const detectThemeFromClasses = (): ThemeMode | null => {
+  const html = document.documentElement
+  const body = document.body
+  const hasDarkClass = html.classList.contains('dark')
+    || html.classList.contains('sb-main-dark')
+    || body?.classList.contains('dark')
+    || body?.classList.contains('sb-main-dark')
+
+  const hasLightClass = html.classList.contains('light')
+    || html.classList.contains('sb-main-light')
+    || body?.classList.contains('light')
+    || body?.classList.contains('sb-main-light')
+
+  if (hasDarkClass) return 'dark'
+  if (hasLightClass) return 'light'
+  return null
+}
+
+const resolveThemeMode = (): ThemeMode => detectThemeFromClasses() ?? getStoredTheme() ?? 'light'
+
+const applyThemeMode = (theme: ThemeMode) => {
+  document.documentElement.setAttribute('data-theme', theme)
+  if (document.body) {
+    document.body.setAttribute('data-theme', theme)
+  }
+}
+
 const channel = addons.getChannel()
 channel.on(DARK_MODE_EVENT_NAME, (isDark: boolean) => {
-  const theme = isDark ? 'dark' : 'light'
-  document.documentElement.setAttribute('data-theme', theme)
-  document.body.setAttribute('data-theme', theme)
+  applyThemeMode(isDark ? 'dark' : 'light')
 })
+applyThemeMode(resolveThemeMode())
 setup((app: App) => {
   app.use(i18n)
 })
@@ -38,10 +80,11 @@ const preview: Preview = {
 
   decorators: [
     (story, context) => {
-      const locale  = context.globals.locale  ?? 'id'
-
-      // @ts-ignore
-      i18n.global.locale.value = locale as 'id' | 'en' | 'zh'
+      applyThemeMode(resolveThemeMode())
+      const locale = resolveLocale(context.globals.locale)
+      setI18nLocale(locale)
+      document.documentElement.setAttribute('lang', locale)
+      document.documentElement.setAttribute('data-locale', locale)
 
       return {
         template: `<story />`,

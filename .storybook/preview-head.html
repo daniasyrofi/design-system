@@ -26,7 +26,7 @@ body {
   font-family: var(--font-display), sans-serif !important;
   font-size: 34px !important;
   font-weight: 700 !important;
-  color: var(--color-text-heading) !important;
+  color: var(--color-text-heading, #111827) !important;
   letter-spacing: -0.02em !important;
   border-bottom: none !important;
 }
@@ -34,7 +34,7 @@ body {
   font-family: var(--font-display), sans-serif !important;
   font-size: 22px !important;
   font-weight: 600 !important;
-  color: var(--color-text-heading) !important;
+  color: var(--color-text-heading, #111827) !important;
   margin-top: 32px !important;
   border-bottom: none !important;
 }
@@ -42,11 +42,16 @@ body {
   font-family: var(--font-display), sans-serif !important;
   font-size: 17px !important;
   font-weight: 600 !important;
-  color: var(--color-text-heading) !important;
+  color: var(--color-text-heading, #111827) !important;
+}
+.sbdocs-subtitle,
+.sbdocs-story > h3,
+.sbdocs-story h3 {
+  color: var(--color-text-secondary, #6b7280) !important;
 }
 .sbdocs-p {
   font-family: var(--font-ui), sans-serif !important;
-  color: var(--color-text-secondary) !important;
+  color: var(--color-text-secondary, #6b7280) !important;
   line-height: 1.65 !important;
 }
 
@@ -68,9 +73,158 @@ body {
 /* "Show code" / "Copy code" links — scoped to preview bar only */
 .sbdocs-preview > div:last-child button,
 .sbdocs-preview > div:last-child a {
-  color: var(--color-text-secondary) !important;
+  color: var(--color-text-secondary, #6b7280) !important;
   background: transparent !important;
   border: none !important;
+  border-radius: var(--radius-sm, 6px) !important;
+  transition:
+    color var(--duration-fast, 120ms) var(--ease-default, ease),
+    background-color var(--duration-fast, 120ms) var(--ease-default, ease) !important;
+}
+
+/* Keep preview action icons synced with text color */
+.sbdocs-preview-actions svg,
+.sbdocs-preview-actions svg *,
+.sbdocs-preview > div:last-child button svg,
+.sbdocs-preview > div:last-child button svg *,
+.sbdocs-preview > div:last-child a svg,
+.sbdocs-preview > div:last-child a svg * {
+  color: inherit !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
+:root[data-theme='dark'] .sbdocs-subtitle,
+:root[data-theme='dark'] .sbdocs-story > h3,
+:root[data-theme='dark'] .sbdocs-story h3,
+body[data-theme='dark'] .sbdocs-subtitle,
+body[data-theme='dark'] .sbdocs-story > h3,
+body[data-theme='dark'] .sbdocs-story h3,
+.dark .sbdocs-subtitle,
+.dark .sbdocs-story > h3,
+.dark .sbdocs-story h3,
+.sb-main-dark .sbdocs-subtitle,
+.sb-main-dark .sbdocs-story > h3,
+.sb-main-dark .sbdocs-story h3,
+:root[data-theme='dark'] .docs-story h1,
+:root[data-theme='dark'] .docs-story h2,
+:root[data-theme='dark'] .docs-story h3,
+body[data-theme='dark'] .docs-story h1,
+body[data-theme='dark'] .docs-story h2,
+body[data-theme='dark'] .docs-story h3,
+.dark .docs-story h1,
+.dark .docs-story h2,
+.dark .docs-story h3,
+.sb-main-dark .docs-story h1,
+.sb-main-dark .docs-story h2,
+.sb-main-dark .docs-story h3 {
+  color: #ffffff !important;
+}
+
+:root[data-theme='dark'] .sbdocs-preview > div:last-child button,
+:root[data-theme='dark'] .sbdocs-preview > div:last-child a,
+body[data-theme='dark'] .sbdocs-preview > div:last-child button,
+body[data-theme='dark'] .sbdocs-preview > div:last-child a,
+.dark .sbdocs-preview > div:last-child button,
+.dark .sbdocs-preview > div:last-child a,
+.sb-main-dark .sbdocs-preview > div:last-child button,
+.sb-main-dark .sbdocs-preview > div:last-child a,
+:root[data-theme='dark'] .sbdocs-preview-actions,
+:root[data-theme='dark'] .sbdocs-preview-actions *,
+body[data-theme='dark'] .sbdocs-preview-actions,
+body[data-theme='dark'] .sbdocs-preview-actions *,
+.dark .sbdocs-preview-actions,
+.dark .sbdocs-preview-actions *,
+.sb-main-dark .sbdocs-preview-actions,
+.sb-main-dark .sbdocs-preview-actions * {
+  color: var(--color-text-secondary, #a3a9b4) !important;
+}
+
+:root[data-theme='dark'] .sbdocs-h2,
+:root[data-theme='dark'] .sbdocs-h3,
+body[data-theme='dark'] .sbdocs-h2,
+body[data-theme='dark'] .sbdocs-h3,
+.dark .sbdocs-h2,
+.dark .sbdocs-h3,
+.sb-main-dark .sbdocs-h2,
+.sb-main-dark .sbdocs-h3 {
+  color: #ffffff !important;
+}
+
+/* Backup override for default Storybook Docs blocks (Stories + Subheadings + actions) */
+:root[data-theme='dark'] .sbdocs-content h2,
+:root[data-theme='dark'] .sbdocs-content h3,
+:root[data-theme='dark'] .sbdocs-content h4,
+body[data-theme='dark'] .sbdocs-content h2,
+body[data-theme='dark'] .sbdocs-content h3,
+body[data-theme='dark'] .sbdocs-content h4,
+.dark .sbdocs-content h2,
+.dark .sbdocs-content h3,
+.dark .sbdocs-content h4,
+.sb-main-dark .sbdocs-content h2,
+.sb-main-dark .sbdocs-content h3,
+.sb-main-dark .sbdocs-content h4 {
+  color: #ffffff !important;
+}
+
+:root[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions,
+:root[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions *,
+:root[data-theme='dark'] .sbdocs-content .sbdocs-preview button,
+:root[data-theme='dark'] .sbdocs-content .sbdocs-preview a,
+body[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions,
+body[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions *,
+body[data-theme='dark'] .sbdocs-content .sbdocs-preview button,
+body[data-theme='dark'] .sbdocs-content .sbdocs-preview a,
+.dark .sbdocs-content .sbdocs-preview-actions,
+.dark .sbdocs-content .sbdocs-preview-actions *,
+.dark .sbdocs-content .sbdocs-preview button,
+.dark .sbdocs-content .sbdocs-preview a,
+.sb-main-dark .sbdocs-content .sbdocs-preview-actions,
+.sb-main-dark .sbdocs-content .sbdocs-preview-actions *,
+.sb-main-dark .sbdocs-content .sbdocs-preview button,
+.sb-main-dark .sbdocs-content .sbdocs-preview a {
+  color: var(--color-text-secondary, #a3a9b4) !important;
+  background-color: transparent !important;
+}
+
+:root[data-theme='light'] .sbdocs-preview > div:last-child button:hover,
+:root[data-theme='light'] .sbdocs-preview > div:last-child a:hover,
+body[data-theme='light'] .sbdocs-preview > div:last-child button:hover,
+body[data-theme='light'] .sbdocs-preview > div:last-child a:hover,
+:root[data-theme='light'] .sbdocs-content .sbdocs-preview-actions button:hover,
+:root[data-theme='light'] .sbdocs-content .sbdocs-preview-actions a:hover,
+body[data-theme='light'] .sbdocs-content .sbdocs-preview-actions button:hover,
+body[data-theme='light'] .sbdocs-content .sbdocs-preview-actions a:hover,
+:root[data-theme='light'] .sbdocs-content .sbdocs-preview-actions button:focus-visible,
+:root[data-theme='light'] .sbdocs-content .sbdocs-preview-actions a:focus-visible,
+body[data-theme='light'] .sbdocs-content .sbdocs-preview-actions button:focus-visible,
+body[data-theme='light'] .sbdocs-content .sbdocs-preview-actions a:focus-visible,
+:root[data-theme='dark'] .sbdocs-preview > div:last-child button:hover,
+:root[data-theme='dark'] .sbdocs-preview > div:last-child a:hover,
+body[data-theme='dark'] .sbdocs-preview > div:last-child button:hover,
+body[data-theme='dark'] .sbdocs-preview > div:last-child a:hover,
+.dark .sbdocs-preview > div:last-child button:hover,
+.dark .sbdocs-preview > div:last-child a:hover,
+.sb-main-dark .sbdocs-preview > div:last-child button:hover,
+.sb-main-dark .sbdocs-preview > div:last-child a:hover,
+:root[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions button:hover,
+:root[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions a:hover,
+body[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions button:hover,
+body[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions a:hover,
+.dark .sbdocs-content .sbdocs-preview-actions button:hover,
+.dark .sbdocs-content .sbdocs-preview-actions a:hover,
+.sb-main-dark .sbdocs-content .sbdocs-preview-actions button:hover,
+.sb-main-dark .sbdocs-content .sbdocs-preview-actions a:hover,
+:root[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions button:focus-visible,
+:root[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions a:focus-visible,
+body[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions button:focus-visible,
+body[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions a:focus-visible,
+.dark .sbdocs-content .sbdocs-preview-actions button:focus-visible,
+.dark .sbdocs-content .sbdocs-preview-actions a:focus-visible,
+.sb-main-dark .sbdocs-content .sbdocs-preview-actions button:focus-visible,
+.sb-main-dark .sbdocs-content .sbdocs-preview-actions a:focus-visible {
+  color: var(--color-secondary, #e53a71) !important;
+  background-color: var(--color-secondary-light, rgba(255, 115, 150, 0.18)) !important;
 }
 
 /* ── Story wrapper — no extra bg ── */
@@ -178,3 +332,169 @@ body {
 /* ── Footer ── */
 .sbdocs-footer { display: none !important; }
 </style>
+
+<script>
+(() => {
+  const TOKENS = {
+    nameUpper:      { en: 'NAME',               id: 'NAMA',                               zh: '名称' },
+    descUpper:      { en: 'DESCRIPTION',        id: 'DESKRIPSI',                          zh: '描述' },
+    defaultUpper:   { en: 'DEFAULT',            id: 'DEFAULT',                            zh: '默认值' },
+    controlUpper:   { en: 'CONTROL',            id: 'KONTROL',                            zh: '控件' },
+    propsUpper:     { en: 'PROPS',              id: 'PROPERTI',                           zh: '属性' },
+    eventsUpper:    { en: 'EVENTS',             id: 'EVENT',                              zh: '事件' },
+    slotsUpper:     { en: 'SLOTS',              id: 'SLOT',                               zh: '插槽' },
+    hideProps:      { en: 'Hide props items',   id: 'Sembunyikan item properti',          zh: '隐藏属性项' },
+    hideEvents:     { en: 'Hide events items',  id: 'Sembunyikan item event',             zh: '隐藏事件项' },
+    hideSlots:      { en: 'Hide slots items',   id: 'Sembunyikan item slot',              zh: '隐藏插槽项' },
+    chooseOption:   { en: 'Choose option...',   id: 'Pilih opsi...',                      zh: '选择选项...' },
+    setObject:      { en: 'Set object',         id: 'Atur objek',                         zh: '设置对象' },
+    showCode:       { en: 'Show code',         id: 'Tampilkan kode',                     zh: '显示代码' },
+    hideCode:       { en: 'Hide code',         id: 'Sembunyikan kode',                   zh: '隐藏代码' },
+    copyCode:       { en: 'Copy code',         id: 'Salin kode',                         zh: '复制代码' },
+    storiesHeading: { en: 'Stories',           id: 'Cerita',                             zh: '故事' },
+    storyDefault:   { en: 'Default',           id: 'Bawaan',                             zh: '默认' },
+    storyWithImage: { en: 'With Image',        id: 'Dengan Gambar',                      zh: '带图片' },
+    storyInitials:  { en: 'Initials',          id: 'Inisial',                            zh: '姓名缩写' },
+    storyIconFallback:{ en: 'Icon Fallback',   id: 'Cadangan Ikon',                      zh: '图标回退' },
+    storyAllVariants: { en: 'All Variants',    id: 'Semua Varian',                       zh: '所有变体' },
+    storyAllStyles: { en: 'All Styles',        id: 'Semua Gaya',                         zh: '所有样式' },
+    storyAllSizes:  { en: 'All Sizes',         id: 'Semua Ukuran',                       zh: '所有尺寸' },
+    storyAllStatuses:{ en: 'All Statuses',     id: 'Semua Status',                       zh: '所有状态' },
+    storyShapes:    { en: 'Shapes',            id: 'Bentuk',                             zh: '形状' },
+    storyAvatarGroup:{ en: 'Avatar Group',     id: 'Grup Avatar',                        zh: '头像组' },
+    storyWithIcon:  { en: 'With Icon',         id: 'Dengan Ikon',                        zh: '带图标' },
+    storyWithDot:   { en: 'With Dot',          id: 'Dengan Titik',                       zh: '带圆点' },
+    storyRemovable: { en: 'Removable',         id: 'Dapat Dihapus',                      zh: '可移除' },
+    storyFullMatrix:{ en: 'Full Matrix',       id: 'Matriks Lengkap',                    zh: '完整矩阵' },
+  }
+
+  const normalize = (text) => text.replace(/\s+/g, ' ').trim()
+
+  const getLocale = () => {
+    const fromData = document.documentElement.getAttribute('data-locale')
+    if (fromData === 'id' || fromData === 'zh' || fromData === 'en') return fromData
+    const fromLang = document.documentElement.lang
+    if (fromLang === 'id' || fromLang === 'zh' || fromLang === 'en') return fromLang
+    return 'en'
+  }
+
+  const findTokenKey = (text) => {
+    for (const [key, variants] of Object.entries(TOKENS)) {
+      if (Object.values(variants).includes(text)) return key
+    }
+    return null
+  }
+
+  const translateNode = (textNode, locale) => {
+    const current = textNode.nodeValue
+    if (!current) return
+    const trimmed = normalize(current)
+    if (!trimmed) return
+
+    const tokenKey = findTokenKey(trimmed)
+    if (!tokenKey) return
+
+    const target = TOKENS[tokenKey][locale]
+    if (!target || target === trimmed) return
+
+    textNode.nodeValue = current.replace(trimmed, target)
+  }
+
+  const translateDocsTable = () => {
+    const locale = getLocale()
+    const tables = document.querySelectorAll('.docblock-argstable')
+    for (const table of tables) {
+      const walker = document.createTreeWalker(table, NodeFilter.SHOW_TEXT)
+      let node = walker.nextNode()
+      while (node) {
+        translateNode(node, locale)
+        node = walker.nextNode()
+      }
+    }
+  }
+
+  const translateTextInElements = (selector) => {
+    const locale = getLocale()
+    const targets = document.querySelectorAll(selector)
+    for (const target of targets) {
+      const walker = document.createTreeWalker(target, NodeFilter.SHOW_TEXT)
+      let node = walker.nextNode()
+      while (node) {
+        translateNode(node, locale)
+        node = walker.nextNode()
+      }
+    }
+  }
+
+  const isDarkMode = () => {
+    const html = document.documentElement
+    const body = document.body
+    return html.getAttribute('data-theme') === 'dark'
+      || body?.getAttribute('data-theme') === 'dark'
+      || html.classList.contains('dark')
+      || body?.classList.contains('dark')
+      || html.classList.contains('sb-main-dark')
+      || body?.classList.contains('sb-main-dark')
+  }
+
+  const applyContrast = () => {
+    const dark = isDarkMode()
+
+    const headingTargets = document.querySelectorAll(
+      '.sbdocs-subtitle, .sbdocs-h2, .sbdocs-h3, .docs-story h1, .docs-story h2, .docs-story h3',
+    )
+    for (const node of headingTargets) {
+      const el = node
+      if (dark) {
+        el.style.setProperty('color', '#ffffff', 'important')
+      } else {
+        el.style.removeProperty('color')
+      }
+    }
+
+  }
+
+  const applyRuntimePatches = () => {
+    translateDocsTable()
+    translateTextInElements('.sbdocs-preview > div:last-child, .sbdocs-preview-actions')
+    translateTextInElements('.sbdocs-story > h3, .sbdocs-story h3, .sbdocs-content h2, .sbdocs-content h3, .sbdocs-content h4')
+    applyContrast()
+  }
+
+  const schedulePatches = () => requestAnimationFrame(applyRuntimePatches)
+
+  const bodyObserver = new MutationObserver(() => schedulePatches())
+  const attrObserver = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.type === 'attributes') {
+        schedulePatches()
+        break
+      }
+    }
+  })
+
+  const start = () => {
+    applyRuntimePatches()
+    if (document.body) {
+      bodyObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+      })
+      attrObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['data-theme', 'class'],
+      })
+    }
+    attrObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-locale', 'lang', 'data-theme', 'class'],
+    })
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true })
+  } else {
+    start()
+  }
+})()
+</script>

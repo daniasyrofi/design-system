@@ -118,4 +118,22 @@ export interface MessageSchema {
     success: string
     failed: string
   }
+  welcome: {
+    welcome_title: string
+    welcome_subtitle: string
+    welcome_tech: string
+    visual_title: string
+    visual_desc: string
+    i18n_title: string
+    i18n_desc: string
+    guide_title: string
+    atomic_title: string
+    atomic_desc: string
+    controls_title: string
+    controls_desc: string
+    theme_title: string
+    theme_desc: string
+    a11y_title: string
+    a11y_desc: string
+  }
 }

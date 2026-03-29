@@ -61,9 +61,9 @@ export const darkTheme = create({
 
   textColor:        '#F2F2F2',
   textInverseColor: '#22231F',
-  textMutedColor:   '#8F9489',
+  textMutedColor:   '#FFFFFF',
 
-  barTextColor:     '#8F9489',
+  barTextColor:     '#FFFFFF',
   barSelectedColor: '#FF7396',
   barHoverColor:    '#FF7396',
   barBg:            '#1C1C1A',

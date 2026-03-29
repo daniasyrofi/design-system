@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, type Component } from 'vue'
+import { computed, type Component } from 'vue'
 import * as RemixIcons from '@remixicon/vue'
 
 type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
