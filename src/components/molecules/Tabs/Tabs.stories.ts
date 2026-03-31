@@ -390,57 +390,24 @@ export const AllVariants: Story = {
   render: () => ({
     components: { Tabs, TabsList, TabsTrigger, TabsContent },
     setup() {
-      const line  = ref('a')
-      const pill  = ref('a')
-      const boxed = ref('a')
-      return { line, pill, boxed, copy: useCopy() }
+      const models = ref({ line: 'a', pill: 'a', boxed: 'a' })
+      const variants = ['line', 'pill', 'boxed'] as const
+      return { models, variants, copy: useCopy() }
     },
     template: `
-      <div style="display:flex;flex-direction:column;gap:40px;padding:16px;max-width:600px;">
-        <div>
-          <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);display:block;margin-bottom:12px;">{{ copy.variants.line.label }}</span>
-          <Tabs variant="line" v-model="line">
+      <div style="display:flex;flex-direction:column;gap:40px;padding:16px;max-width:600px;width:100%;">
+        <div v-for="variant in variants" :key="variant">
+          <p style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:12px;">{{ copy.variants[variant].label }}</p>
+          <Tabs :variant="variant" v-model="models[variant]">
             <TabsList>
-              <TabsTrigger value="a">{{ copy.variants.line.tabs.a }}</TabsTrigger>
-              <TabsTrigger value="b">{{ copy.variants.line.tabs.b }}</TabsTrigger>
-              <TabsTrigger value="c">{{ copy.variants.line.tabs.c }}</TabsTrigger>
+              <TabsTrigger value="a">{{ copy.variants[variant].tabs.a }}</TabsTrigger>
+              <TabsTrigger value="b">{{ copy.variants[variant].tabs.b }}</TabsTrigger>
+              <TabsTrigger value="c">{{ copy.variants[variant].tabs.c }}</TabsTrigger>
             </TabsList>
             <div style="padding-top:16px;">
-              <TabsContent value="a"><p style="font-size:14px;color:var(--color-text-secondary);">{{ copy.variants.line.panels.a }}</p></TabsContent>
-              <TabsContent value="b"><p style="font-size:14px;color:var(--color-text-secondary);">{{ copy.variants.line.panels.b }}</p></TabsContent>
-              <TabsContent value="c"><p style="font-size:14px;color:var(--color-text-secondary);">{{ copy.variants.line.panels.c }}</p></TabsContent>
-            </div>
-          </Tabs>
-        </div>
-
-        <div>
-          <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);display:block;margin-bottom:12px;">{{ copy.variants.pill.label }}</span>
-          <Tabs variant="pill" v-model="pill">
-            <TabsList>
-              <TabsTrigger value="a">{{ copy.variants.pill.tabs.a }}</TabsTrigger>
-              <TabsTrigger value="b">{{ copy.variants.pill.tabs.b }}</TabsTrigger>
-              <TabsTrigger value="c">{{ copy.variants.pill.tabs.c }}</TabsTrigger>
-            </TabsList>
-            <div style="padding-top:16px;">
-              <TabsContent value="a"><p style="font-size:14px;color:var(--color-text-secondary);">{{ copy.variants.pill.panels.a }}</p></TabsContent>
-              <TabsContent value="b"><p style="font-size:14px;color:var(--color-text-secondary);">{{ copy.variants.pill.panels.b }}</p></TabsContent>
-              <TabsContent value="c"><p style="font-size:14px;color:var(--color-text-secondary);">{{ copy.variants.pill.panels.c }}</p></TabsContent>
-            </div>
-          </Tabs>
-        </div>
-
-        <div>
-          <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);display:block;margin-bottom:12px;">{{ copy.variants.boxed.label }}</span>
-          <Tabs variant="boxed" v-model="boxed">
-            <TabsList>
-              <TabsTrigger value="a">{{ copy.variants.boxed.tabs.a }}</TabsTrigger>
-              <TabsTrigger value="b">{{ copy.variants.boxed.tabs.b }}</TabsTrigger>
-              <TabsTrigger value="c">{{ copy.variants.boxed.tabs.c }}</TabsTrigger>
-            </TabsList>
-            <div style="padding-top:16px;">
-              <TabsContent value="a"><p style="font-size:14px;color:var(--color-text-secondary);">{{ copy.variants.boxed.panels.a }}</p></TabsContent>
-              <TabsContent value="b"><p style="font-size:14px;color:var(--color-text-secondary);">{{ copy.variants.boxed.panels.b }}</p></TabsContent>
-              <TabsContent value="c"><p style="font-size:14px;color:var(--color-text-secondary);">{{ copy.variants.boxed.panels.c }}</p></TabsContent>
+              <TabsContent value="a"><p style="font-size:14px;color:var(--color-text-secondary);">{{ copy.variants[variant].panels.a }}</p></TabsContent>
+              <TabsContent value="b"><p style="font-size:14px;color:var(--color-text-secondary);">{{ copy.variants[variant].panels.b }}</p></TabsContent>
+              <TabsContent value="c"><p style="font-size:14px;color:var(--color-text-secondary);">{{ copy.variants[variant].panels.c }}</p></TabsContent>
             </div>
           </Tabs>
         </div>
@@ -456,40 +423,19 @@ export const AllSizes: Story = {
   render: () => ({
     components: { Tabs, TabsList, TabsTrigger, TabsContent },
     setup() {
-      const sm = ref('a')
-      const md = ref('a')
-      const lg = ref('a')
-      return { sm, md, lg, copy: useCopy() }
+      const models = ref({ sm: 'a', md: 'a', lg: 'a' })
+      const sizes = ['sm', 'md', 'lg'] as const
+      return { models, sizes, copy: useCopy() }
     },
     template: `
-      <div style="display:flex;flex-direction:column;gap:32px;padding:16px;max-width:500px;">
-        <div>
-          <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);display:block;margin-bottom:12px;">{{ copy.sizes.sm.label }}</span>
-          <Tabs variant="pill" size="sm" v-model="sm">
+      <div style="display:flex;flex-direction:column;gap:32px;padding:16px;max-width:500px;width:100%;">
+        <div v-for="size in sizes" :key="size">
+          <p style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:12px;">{{ copy.sizes[size].label }}</p>
+          <Tabs variant="pill" :size="size" v-model="models[size]">
             <TabsList>
-              <TabsTrigger value="a">{{ copy.sizes.sm.tabs.a }}</TabsTrigger>
-              <TabsTrigger value="b">{{ copy.sizes.sm.tabs.b }}</TabsTrigger>
-              <TabsTrigger value="c">{{ copy.sizes.sm.tabs.c }}</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-        <div>
-          <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);display:block;margin-bottom:12px;">{{ copy.sizes.md.label }}</span>
-          <Tabs variant="pill" size="md" v-model="md">
-            <TabsList>
-              <TabsTrigger value="a">{{ copy.sizes.md.tabs.a }}</TabsTrigger>
-              <TabsTrigger value="b">{{ copy.sizes.md.tabs.b }}</TabsTrigger>
-              <TabsTrigger value="c">{{ copy.sizes.md.tabs.c }}</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-        <div>
-          <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);display:block;margin-bottom:12px;">{{ copy.sizes.lg.label }}</span>
-          <Tabs variant="pill" size="lg" v-model="lg">
-            <TabsList>
-              <TabsTrigger value="a">{{ copy.sizes.lg.tabs.a }}</TabsTrigger>
-              <TabsTrigger value="b">{{ copy.sizes.lg.tabs.b }}</TabsTrigger>
-              <TabsTrigger value="c">{{ copy.sizes.lg.tabs.c }}</TabsTrigger>
+              <TabsTrigger value="a">{{ copy.sizes[size].tabs.a }}</TabsTrigger>
+              <TabsTrigger value="b">{{ copy.sizes[size].tabs.b }}</TabsTrigger>
+              <TabsTrigger value="c">{{ copy.sizes[size].tabs.c }}</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>

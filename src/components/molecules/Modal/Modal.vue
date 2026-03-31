@@ -188,7 +188,8 @@ const panelClasses = computed(() =>
             <!-- Header -->
             <div
               v-if="$slots.header || $slots.title || closable"
-              class="flex items-start gap-4 px-6 pt-6 pb-3 relative border-b border-[--color-border]"
+              class="flex items-start gap-4 px-6 pt-6 pb-3 relative border-b"
+              style="border-color: var(--color-border-subtle);"
             >
               <slot name="header">
                 <div class="flex-1 min-w-0 flex flex-col gap-1">
@@ -241,7 +242,8 @@ const panelClasses = computed(() =>
             <!-- Footer -->
             <div
               v-if="$slots.footer"
-              class="flex items-center justify-end gap-3 px-6 py-3 border-t border-[--color-border] bg-[--color-bg-subtle]"
+              class="flex items-center justify-end gap-3 px-6 py-3 border-t"
+              style="border-color: var(--color-border-subtle); background-color: var(--color-neutral-light); border-bottom-left-radius: inherit; border-bottom-right-radius: inherit;"
             >
               <slot name="footer" />
             </div>
@@ -256,7 +258,6 @@ const panelClasses = computed(() =>
 .ds-modal-panel {
   background-color: var(--color-surface);
   border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-2xl), inset 0 0 0 1px var(--color-border);
-  overflow: hidden;
+  box-shadow: var(--shadow-2xl), inset 0 0 0 1px var(--color-border-subtle);
 }
 </style>

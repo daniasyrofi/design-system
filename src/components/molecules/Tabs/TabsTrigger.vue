@@ -23,13 +23,14 @@ const isActive = computed(() => ctx.activeTab.value === props.value)
 
 const sizePadding = {
   line:  { sm: 'px-3 py-1.5 text-xs', md: 'px-4 py-2 text-sm',  lg: 'px-5 py-2.5 text-base' },
-  pill:  { sm: 'px-3 py-1   text-xs', md: 'px-4 py-1.5 text-sm', lg: 'px-5 py-2 text-base' },
+  pill:  { sm: 'h-6 px-2.5 text-[10px]', md: 'h-7 px-3 text-xs', lg: 'h-8 px-3.5 text-xs' },
   boxed: { sm: 'px-3 py-1.5 text-xs', md: 'px-4 py-2 text-sm',  lg: 'px-5 py-2.5 text-base' },
 }
 
 const classes = computed(() => {
   const { variant, size } = ctx
   const active  = isActive.value
+  const isVertical = ctx.orientation === 'vertical'
   const base = [
     'relative inline-flex items-center justify-center gap-1.5 whitespace-nowrap',
     'font-medium cursor-pointer select-none',
@@ -43,8 +44,17 @@ const classes = computed(() => {
       ...base,
       sizePadding.line[size],
       active
-        ? 'text-[--color-text-primary] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-[--color-text-primary] after:rounded-t-full'
-        : 'text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-neutral-light] rounded-t-lg',
+        ? [
+            'text-[--color-text-primary] bg-[--color-surface] z-10',
+            isVertical
+              ? 'border border-[--color-border] border-r-[--color-surface] rounded-l-lg mr-[-1px] shadow-[-1px_1px_2px_oklch(0.20_0_0_/_0.04)]'
+              : 'border border-[--color-border] border-b-[--color-surface] rounded-t-lg mb-[-1px] shadow-[0_-1px_2px_oklch(0.20_0_0_/_0.04)]'
+          ]
+        : [
+            'text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-neutral-light]',
+            'border border-transparent',
+            isVertical ? 'rounded-l-lg' : 'rounded-t-lg'
+          ]
     )
   }
 
@@ -52,10 +62,10 @@ const classes = computed(() => {
     return cn(
       ...base,
       sizePadding.pill[size],
-      'rounded-xl',
+      'rounded-full',
       active
-        ? 'ds-tab-trigger--pill-active bg-[--color-surface] text-[--color-text-primary]'
-        : 'text-[--color-text-secondary] hover:text-[--color-text-primary]',
+        ? 'ds-tab-trigger--pill-active'
+        : 'text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-neutral-light]',
     )
   }
 
@@ -63,7 +73,7 @@ const classes = computed(() => {
     return cn(
       ...base,
       sizePadding.boxed[size],
-      'ds-tab-trigger--boxed-separator last:border-r-0',
+      isVertical ? 'border-b border-[--color-border] last:border-b-0' : 'border-r border-[--color-border] last:border-r-0',
       active
         ? 'ds-tab-trigger--boxed-active text-[--color-text-primary] font-medium'
         : 'bg-transparent text-[--color-text-secondary] hover:text-[--color-text-primary] ds-tab-trigger--boxed-hover',
@@ -134,10 +144,28 @@ function handleKeydown(e: KeyboardEvent) {
 
 <style scoped>
 .ds-tab-trigger--pill-active {
-  box-shadow: 0 1px 3px oklch(0.20 0 0 / 0.08), inset 0 0 0 1px var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  box-shadow:
+    0 6px 12px -10px oklch(0.2 0 0 / 0.25),
+    0 1px 2px oklch(0.2 0 0 / 0.10),
+    inset 0 0 0 1px var(--color-border);
+  animation: ds-tab-activate 220ms var(--ease-out);
 }
-.ds-tab-trigger--boxed-separator {
-  border-right: 1px solid var(--color-border);
+@keyframes ds-tab-activate {
+  0% {
+    box-shadow:
+      0 0 0 0 oklch(0.2 0 0 / 0),
+      inset 0 0 0 1px var(--color-border);
+    filter: saturate(0.95);
+  }
+  100% {
+    box-shadow:
+      0 6px 12px -10px oklch(0.2 0 0 / 0.25),
+      0 1px 2px oklch(0.2 0 0 / 0.10),
+      inset 0 0 0 1px var(--color-border);
+    filter: saturate(1);
+  }
 }
 .ds-tab-trigger--boxed-active {
   background-color: var(--color-neutral-light);

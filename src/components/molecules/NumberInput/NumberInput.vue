@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import { cn } from '@/lib/utils'
 import { RiAddLine, RiSubtractLine } from '@remixicon/vue'
-import Button from '@/components/atoms/Button/Button.vue'
 
 type Size = 'sm' | 'md' | 'lg'
 
@@ -66,10 +65,10 @@ const iconPx: Record<Size, string> = {
   lg: '18',
 }
 
-const btnSize: Record<Size, 'xs' | 'sm' | 'md'> = {
-  sm: 'xs',
-  md: 'sm',
-  lg: 'md',
+const btnWidthClass: Record<Size, string> = {
+  sm: 'w-8',
+  md: 'w-10',
+  lg: 'w-12',
 }
 </script>
 
@@ -77,7 +76,7 @@ const btnSize: Record<Size, 'xs' | 'sm' | 'md'> = {
   <div class="flex flex-col gap-1.5 w-full">
     <label
       v-if="label"
-      class="text-sm font-medium"
+      :class="cn('text-sm font-medium select-none', disabled && 'opacity-50')"
       style="color: var(--color-text-heading);"
     >
       {{ label }}
@@ -86,26 +85,28 @@ const btnSize: Record<Size, 'xs' | 'sm' | 'md'> = {
     <div
       :class="cn(
         'ds-number-input',
-        'flex items-center rounded-[var(--radius-lg)] border overflow-hidden',
-        'transition-all duration-200 ease-out',
+        'flex items-stretch rounded-[var(--radius-lg)] border overflow-hidden',
+        'transition-colors duration-200 ease-out',
         heightClass[size],
-        disabled && 'opacity-50 cursor-not-allowed',
+        disabled && 'ds-number-input--disabled',
       )"
     >
       <!-- Decrement -->
-      <Button
-        variant="ghost"
-        icon-only
-        :size="btnSize[size]"
+      <button
+        type="button"
         :disabled="disabled || !canDecrement"
-        class="shrink-0 rounded-none! border-none!"
+        :class="cn(
+          'ds-number-btn ds-number-btn--left',
+          'shrink-0 flex items-center justify-center',
+          'transition-all duration-200 ease-out',
+          'active:scale-[0.97]',
+          btnWidthClass[size],
+        )"
         aria-label="Decrease value"
         @click="decrement"
       >
-        <template #icon>
-          <RiSubtractLine :size="iconPx[size]" />
-        </template>
-      </Button>
+        <RiSubtractLine :size="iconPx[size]" />
+      </button>
 
       <!-- Value display -->
       <input
@@ -124,30 +125,33 @@ const btnSize: Record<Size, 'xs' | 'sm' | 'md'> = {
       />
 
       <!-- Increment -->
-      <Button
-        variant="ghost"
-        icon-only
-        :size="btnSize[size]"
+      <button
+        type="button"
         :disabled="disabled || !canIncrement"
-        class="shrink-0 rounded-none! border-none!"
+        :class="cn(
+          'ds-number-btn ds-number-btn--right',
+          'shrink-0 flex items-center justify-center',
+          'transition-all duration-200 ease-out',
+          'active:scale-[0.97]',
+          btnWidthClass[size],
+        )"
         aria-label="Increase value"
         @click="increment"
       >
-        <template #icon>
-          <RiAddLine :size="iconPx[size]" />
-        </template>
-      </Button>
+        <RiAddLine :size="iconPx[size]" />
+      </button>
     </div>
   </div>
 </template>
 
 <style scoped>
+/* ── Container ── */
 .ds-number-input {
   background-color: var(--color-surface);
   border-color: var(--color-border);
 }
 
-.ds-number-input:hover:not([class*="opacity-50"]) {
+.ds-number-input:hover:not(.ds-number-input--disabled):not(:focus-within) {
   border-color: var(--color-border-strong);
 }
 
@@ -156,11 +160,22 @@ const btnSize: Record<Size, 'xs' | 'sm' | 'md'> = {
   box-shadow: 0 0 0 1px var(--color-text-primary);
 }
 
+.ds-number-input--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Value input ── */
 .ds-number-input__value {
   color: var(--color-text-primary);
 }
 
-/* Hide native spinner */
+.ds-number-input__value:focus,
+.ds-number-input__value:focus-visible {
+  outline: none;
+}
+
 .ds-number-input__value::-webkit-outer-spin-button,
 .ds-number-input__value::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -169,5 +184,38 @@ const btnSize: Record<Size, 'xs' | 'sm' | 'md'> = {
 
 .ds-number-input__value[type="number"] {
   -moz-appearance: textfield;
+}
+
+/* ── Buttons (ghost style, mirroring Button atom's ghost variant) ── */
+.ds-number-btn {
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border: none;
+  cursor: pointer;
+}
+
+.ds-number-btn:hover:not(:disabled) {
+  background-color: var(--color-neutral-light);
+  color: var(--color-text-heading);
+}
+
+.ds-number-btn:focus,
+.ds-number-btn:focus-visible {
+  outline: none;
+}
+
+.ds-number-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+
+/* Rounded corners matching the container radius */
+.ds-number-btn--left {
+  border-radius: calc(var(--radius-lg) - 1px) 0 0 calc(var(--radius-lg) - 1px);
+}
+
+.ds-number-btn--right {
+  border-radius: 0 calc(var(--radius-lg) - 1px) calc(var(--radius-lg) - 1px) 0;
 }
 </style>

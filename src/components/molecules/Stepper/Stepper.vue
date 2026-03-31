@@ -52,6 +52,7 @@ function stepState(index: number): 'completed' | 'active' | 'upcoming' {
           <div
             :class="cn(
               'ds-stepper-circle',
+              'relative z-10',
               'flex items-center justify-center shrink-0',
               'w-8 h-8 rounded-full text-sm font-semibold',
               'transition-all duration-200 ease-out',
@@ -77,13 +78,16 @@ function stepState(index: number): 'completed' | 'active' | 'upcoming' {
           class="flex items-center w-full"
         >
           <div
-            v-if="index > 0"
             class="ds-stepper-connector flex-1 h-0.5"
-            :class="stepState(index - 1) === 'completed' ? 'ds-stepper-connector--done' : ''"
+            :class="[
+              index === 0 ? 'opacity-0' : '',
+              index > 0 && stepState(index - 1) === 'completed' ? 'ds-stepper-connector--done' : ''
+            ]"
           />
           <div
             :class="cn(
               'ds-stepper-circle',
+              'relative z-10',
               'flex items-center justify-center shrink-0',
               'w-8 h-8 rounded-full text-sm font-semibold',
               'transition-all duration-200 ease-out',
@@ -96,9 +100,11 @@ function stepState(index: number): 'completed' | 'active' | 'upcoming' {
             <span v-else>{{ index + 1 }}</span>
           </div>
           <div
-            v-if="index < steps.length - 1"
             class="ds-stepper-connector flex-1 h-0.5"
-            :class="stepState(index) === 'completed' ? 'ds-stepper-connector--done' : ''"
+            :class="[
+              index === steps.length - 1 ? 'opacity-0' : '',
+              index < steps.length - 1 && stepState(index) === 'completed' ? 'ds-stepper-connector--done' : ''
+            ]"
           />
         </div>
 

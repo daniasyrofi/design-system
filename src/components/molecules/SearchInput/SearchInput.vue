@@ -2,6 +2,7 @@
 import { ref, watch, onBeforeUnmount } from 'vue'
 import { RiSearchLine } from '@remixicon/vue'
 import Input from '@/components/atoms/Input/Input.vue'
+import Spinner from '@/components/atoms/Spinner/Spinner.vue'
 
 type SearchSize = 'sm' | 'md' | 'lg'
 
@@ -63,12 +64,18 @@ const iconSizePx: Record<SearchSize, number> = {
   md: 16,
   lg: 18,
 }
+
+const spinnerSize: Record<SearchSize, 'xs' | 'sm'> = {
+  sm: 'xs',
+  md: 'sm',
+  lg: 'sm',
+}
 </script>
 
 <template>
   <Input
     :model-value="internalValue"
-    type="search"
+    type="text"
     :size="size"
     :placeholder="placeholder"
     :disabled="disabled"
@@ -80,19 +87,9 @@ const iconSizePx: Record<SearchSize, number> = {
     <template #leading>
       <RiSearchLine :size="String(iconSizePx[size])" />
     </template>
-    
-    <template #trailing v-if="loading">
-      <svg
-        class="shrink-0 animate-spin text-[--color-text-tertiary]"
-        :class="size === 'sm' ? 'size-3.5' : 'size-4'"
-        viewBox="0 0 24 24"
-        fill="none"
-        aria-label="Loading"
-        role="status"
-      >
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-      </svg>
+
+    <template v-if="loading" #trailing>
+      <Spinner :size="spinnerSize[size]" color="var(--color-text-tertiary)" />
     </template>
   </Input>
 </template>

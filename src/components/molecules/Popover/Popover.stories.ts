@@ -225,10 +225,8 @@ export const Default: Story = {
           <template #trigger>
             <Button variant="secondary">{{ copy.default.trigger }}</Button>
           </template>
-          <div style="font-size:14px;color:var(--color-text-primary);">
-            <p style="font-weight:600;margin-bottom:4px;">{{ copy.default.title }}</p>
-            <p style="color:var(--color-text-secondary);">{{ copy.default.body }}</p>
-          </div>
+          <template #title>{{ copy.default.title }}</template>
+          <div style="font-size:14px;color:var(--color-text-secondary);line-height:1.5;">{{ copy.default.body }}</div>
         </Popover>
       </div>
     `,
@@ -247,24 +245,24 @@ export const AllPlacements: Story = {
         <div />
         <Popover placement="top" trigger="click">
           <template #trigger><Button variant="secondary" size="sm">{{ copy.placements.top.trigger }}</Button></template>
-          <p style="font-size:14px;color:var(--color-text-primary);">{{ copy.placements.top.body }}</p>
+          <div style="font-size:13px;color:var(--color-text-secondary);white-space:nowrap;">{{ copy.placements.top.body }}</div>
         </Popover>
         <div />
 
         <Popover placement="left" trigger="click">
           <template #trigger><Button variant="secondary" size="sm">{{ copy.placements.left.trigger }}</Button></template>
-          <p style="font-size:14px;color:var(--color-text-primary);">{{ copy.placements.left.body }}</p>
+          <div style="font-size:13px;color:var(--color-text-secondary);white-space:nowrap;">{{ copy.placements.left.body }}</div>
         </Popover>
         <div />
         <Popover placement="right" trigger="click">
           <template #trigger><Button variant="secondary" size="sm">{{ copy.placements.right.trigger }}</Button></template>
-          <p style="font-size:14px;color:var(--color-text-primary);">{{ copy.placements.right.body }}</p>
+          <div style="font-size:13px;color:var(--color-text-secondary);white-space:nowrap;">{{ copy.placements.right.body }}</div>
         </Popover>
 
         <div />
         <Popover placement="bottom" trigger="click">
           <template #trigger><Button variant="secondary" size="sm">{{ copy.placements.bottom.trigger }}</Button></template>
-          <p style="font-size:14px;color:var(--color-text-primary);">{{ copy.placements.bottom.body }}</p>
+          <div style="font-size:13px;color:var(--color-text-secondary);white-space:nowrap;">{{ copy.placements.bottom.body }}</div>
         </Popover>
         <div />
       </div>
@@ -292,12 +290,15 @@ export const WithForm: Story = {
           <template #trigger>
             <Button>{{ copy.form.trigger }}</Button>
           </template>
+          <template #title>{{ copy.form.title }}</template>
           <form @submit.prevent="handleSubmit" style="display:flex;flex-direction:column;gap:12px;">
-            <p style="font-size:14px;font-weight:600;color:var(--color-text-primary);">{{ copy.form.title }}</p>
             <Input v-model="name" :label="copy.form.nameLabel" :placeholder="copy.form.namePlaceholder" size="sm" />
             <Input v-model="email" :label="copy.form.emailLabel" type="email" :placeholder="copy.form.emailPlaceholder" size="sm" />
-            <Button type="submit" size="sm" fullWidth>{{ copy.form.submit }}</Button>
           </form>
+          <template #footer>
+            <Button variant="ghost" size="sm">Cancel</Button>
+            <Button type="submit" size="sm" @click="handleSubmit">{{ copy.form.submit }}</Button>
+          </template>
         </Popover>
       </div>
     `,
@@ -317,10 +318,8 @@ export const ClickTrigger: Story = {
           <template #trigger>
             <Button variant="secondary">{{ copy.clickTrigger.trigger }}</Button>
           </template>
-          <div style="font-size:14px;color:var(--color-text-primary);">
-            <p style="font-weight:600;margin-bottom:4px;">{{ copy.clickTrigger.title }}</p>
-            <p style="color:var(--color-text-secondary);">{{ copy.clickTrigger.body }}</p>
-          </div>
+          <template #title>{{ copy.clickTrigger.title }}</template>
+          <div style="font-size:14px;color:var(--color-text-secondary);line-height:1.5;">{{ copy.clickTrigger.body }}</div>
         </Popover>
       </div>
     `,
@@ -340,11 +339,39 @@ export const HoverTrigger: Story = {
           <template #trigger>
             <Button variant="secondary">{{ copy.hoverTrigger.trigger }}</Button>
           </template>
-          <div style="font-size:14px;color:var(--color-text-primary);">
-            <p style="font-weight:600;margin-bottom:4px;">{{ copy.hoverTrigger.title }}</p>
-            <p style="color:var(--color-text-secondary);">{{ copy.hoverTrigger.body }}</p>
-            <a href="#" style="color:var(--color-primary);text-decoration:underline;font-size:12px;margin-top:4px;display:inline-block;">{{ copy.hoverTrigger.link }}</a>
+          <template #title>{{ copy.hoverTrigger.title }}</template>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--color-text-secondary);line-height:1.5;">
+            <span>{{ copy.hoverTrigger.body }}</span>
+            <a href="#" style="color:var(--color-primary);font-weight:500;text-decoration:none;">{{ copy.hoverTrigger.link }}</a>
           </div>
+        </Popover>
+      </div>
+    `,
+  }),
+}
+
+export const Confirmation: Story = {
+  get name() {
+    return 'Confirmation'
+  },
+  render: () => ({
+    components: { Popover, Button },
+    template: `
+      <div style="display:flex;align-items:center;justify-content:center;padding:80px;">
+        <Popover placement="top" width="280px">
+          <template #trigger>
+            <Button variant="danger">Delete Data</Button>
+          </template>
+          <template #title>Are you absolutely sure?</template>
+          <div style="font-size:14px;color:var(--color-text-secondary);line-height:1.5;">
+            This action cannot be undone. This will permanently delete your file and data.
+          </div>
+          <template #footer>
+            <div style="display:flex;gap:8px;width:100%;">
+              <Button variant="ghost" size="sm" style="flex:1;">Cancel</Button>
+              <Button variant="danger" size="sm" style="flex:1;">Delete</Button>
+            </div>
+          </template>
         </Popover>
       </div>
     `,

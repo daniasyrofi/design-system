@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import Select from './Select.vue'
-import { computed } from 'vue'
 import { getI18nLocale, resolveLocale, type SupportedLocale } from '@/i18n'
 
 type Locale = SupportedLocale
@@ -243,7 +242,7 @@ export const Default: Story = {
       return { value, args, copy: useCopy() }
     },
     template: `
-      <div style="max-width:320px;">
+      <div style="width:320px;">
         <Select
           v-bind="args"
           v-model="value"
@@ -268,7 +267,7 @@ export const Multiple: Story = {
       return { value, copy: useCopy() }
     },
     template: `
-      <div style="max-width:320px;">
+      <div style="width:320px;">
         <Select
           v-model="value"
           :label="copy.multiple.label"
@@ -293,7 +292,7 @@ export const Searchable: Story = {
       return { value, copy: useCopy() }
     },
     template: `
-      <div style="max-width:320px;">
+      <div style="width:320px;">
         <Select
           v-model="value"
           :label="copy.searchable.label"
@@ -317,7 +316,7 @@ export const WithGroups: Story = {
       return { value, copy: useCopy() }
     },
     template: `
-      <div style="max-width:320px;">
+      <div style="width:320px;">
         <Select
           v-model="value"
           :label="copy.grouped.label"
@@ -341,7 +340,7 @@ export const Clearable: Story = {
       return { value, copy: useCopy() }
     },
     template: `
-      <div style="max-width:320px;">
+      <div style="width:320px;">
         <Select
           v-model="value"
           :label="copy.clearable.label"
@@ -365,7 +364,7 @@ export const Disabled: Story = {
       return { value, copy: useCopy() }
     },
     template: `
-      <div style="max-width:320px;">
+      <div style="width:320px;">
         <Select
           v-model="value"
           :label="copy.disabled.label"
@@ -390,7 +389,7 @@ export const AllSizes: Story = {
       return { sm, md, lg, copy: useCopy() }
     },
     template: `
-      <div style="display:flex;flex-direction:column;gap:16px;max-width:320px;">
+      <div style="display:flex;flex-direction:column;gap:16px;width:320px;">
         <Select v-model="sm" size="sm" :label="copy.sizes.small" :options="copy.fruitOptions" :placeholder="copy.sizePlaceholders.small" />
         <Select v-model="md" size="md" :label="copy.sizes.medium" :options="copy.fruitOptions" :placeholder="copy.sizePlaceholders.medium" />
         <Select v-model="lg" size="lg" :label="copy.sizes.large" :options="copy.fruitOptions" :placeholder="copy.sizePlaceholders.large" />

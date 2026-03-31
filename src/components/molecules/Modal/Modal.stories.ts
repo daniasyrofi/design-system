@@ -3,6 +3,10 @@ import { computed, ref } from 'vue'
 import Modal from './Modal.vue'
 import Button from '@/components/atoms/Button/Button.vue'
 import Input from '@/components/atoms/Input/Input.vue'
+import Checkbox from '@/components/atoms/Checkbox/Checkbox.vue'
+import DropdownMenu from '@/components/molecules/DropdownMenu/DropdownMenu.vue'
+import Toggle from '@/components/atoms/Toggle/Toggle.vue'
+import { RiMagicLine, RiPencilLine, RiArrowDownSLine } from '@remixicon/vue'
 import Textarea from '@/components/atoms/Textarea/Textarea.vue'
 import { getI18nLocale, resolveLocale, type SupportedLocale } from '@/i18n'
 
@@ -235,7 +239,7 @@ export const Default: Story = {
     return getStoryName('default')
   },
   render: (args) => ({
-    components: { Modal, Button },
+    components: { Modal, Button, Input, DropdownMenu, Toggle, RiMagicLine, RiPencilLine, RiArrowDownSLine },
     setup() {
       const open = ref(false)
       return { open, args, copy: useCopy() }
@@ -243,26 +247,58 @@ export const Default: Story = {
     template: `
       <div>
         <Button @click="open = true">{{ copy.default.trigger }}</Button>
-        <Modal v-bind="args" v-model="open" size="md">
+        <Modal v-bind="args" v-model="open" size="md" scroll-behavior="outside">
           <template #title>{{ copy.default.title }}</template>
           <template #description>{{ copy.default.description }}</template>
           <div style="display:flex;flex-direction:column;gap:12px;">
             <div style="display:flex;flex-direction:column;gap:6px;">
-              <label style="font-size:13px;font-weight:600;color:var(--color-text-primary);">Start by</label>
-              <div style="height:38px;border:1px solid var(--color-border);border-radius:10px;background:var(--color-surface);padding:0 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
-                <span style="font-size:14px;color:var(--color-text-primary);">Taking new captures</span>
-                <span style="font-size:12px;color:var(--color-text-tertiary);">▾</span>
+              <span style="font-size:14px;font-weight:500;color:var(--color-text-primary);">Start by</span>
+              <DropdownMenu
+                :items="[
+                  {label: 'Taking new captures'},
+                  {label: 'Upload screenshots'},
+                  {label: 'Start from templates'},
+                  {label: 'Duplicate existing project'}
+                ]"
+                width="100%"
+                style="width: 100%; display: flex;"
+              >
+                <template #trigger>
+                  <div style="height:36px;border:1px solid var(--color-border);border-radius:8px;background:var(--color-surface);padding:0 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;width:100%;box-sizing:border-box;">
+                    <span style="font-size:14px;color:var(--color-text-primary);">Taking new captures</span>
+                    <RiArrowDownSLine size="16" style="color:var(--color-text-tertiary);" />
+                  </div>
+                </template>
+              </DropdownMenu>
+            </div>
+            <Input
+              label="App URL"
+              modelValue="https://mobbin.com/"
+            />
+
+            <div style="display:flex;align-items:center;gap:8px;padding:12px;border:1px solid var(--color-border-subtle);border-radius:12px;background:var(--color-surface);">
+              <span style="font-size:13px;color:var(--color-text-secondary);">Use</span>
+              <span style="display:flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:var(--color-text-primary);">
+                <RiMagicLine size="14" style="color:var(--color-primary);" /> Copilot
+              </span>
+              <span style="font-size:13px;color:var(--color-text-secondary);">to write demo content for</span>
+              <div style="flex:1">
+                <DropdownMenu
+                  :items="[{label: 'Marketing'}, {label: 'Sales'}, {label: 'Support'}]"
+                >
+                  <template #trigger>
+                    <div style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;padding:4px 0;">
+                      <span style="font-size:13px;font-weight:600;color:var(--color-text-primary);">Marketing</span>
+                      <RiArrowDownSLine size="14" style="color:var(--color-text-tertiary);" />
+                    </div>
+                  </template>
+                </DropdownMenu>
               </div>
+              <RiPencilLine size="16" style="color:var(--color-text-tertiary);cursor:pointer;" />
+              <Toggle :modelValue="true" />
             </div>
 
-            <div style="display:flex;flex-direction:column;gap:6px;">
-              <label style="font-size:13px;font-weight:600;color:var(--color-text-primary);">App URL</label>
-              <div style="height:38px;border:1px solid var(--color-border);border-radius:10px;background:var(--color-surface);padding:0 12px;display:flex;align-items:center;">
-                <span style="font-size:14px;color:var(--color-text-primary);">https://mobbin.com/</span>
-              </div>
-            </div>
-
-            <div style="border:1px solid var(--color-border);border-radius:12px;padding:12px;background:var(--color-bg);">
+            <div style="border:1px solid var(--color-border-subtle);border-radius:12px;padding:12px;background:transparent;">
               <p style="font-size:14px;font-weight:600;color:var(--color-text-primary);margin:0 0 8px;">First time instructions</p>
               <ol style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;">
                 <li style="font-size:13px;color:var(--color-text-secondary);line-height:1.4;">Open your app URL in a new tab.</li>
@@ -342,6 +378,7 @@ export const WithForm: Story = {
             <Textarea :label="copy.form.bio" :rows="3" modelValue="Product designer with 8 years of experience." />
           </form>
           <template #footer>
+            <Button variant="outline" class="mr-auto" @click="open = false">Save as draft</Button>
             <Button variant="ghost" @click="open = false">{{ $t('common.cancel') }}</Button>
             <Button @click="open = false">{{ $t('common.save') }}</Button>
           </template>
@@ -356,7 +393,7 @@ export const PreventClose: Story = {
     return getStoryName('preventClose')
   },
   render: () => ({
-    components: { Modal, Button },
+    components: { Modal, Button, Checkbox },
     setup() {
       const open = ref(false)
       const confirmed = ref(false)
@@ -369,13 +406,12 @@ export const PreventClose: Story = {
           <template #title>{{ copy.preventClose.title }}</template>
           <template #description>{{ copy.preventClose.description }}</template>
           <div style="display:flex;align-items:flex-start;gap:12px;">
-            <input
+            <Checkbox
               id="confirm-check"
-              type="checkbox"
               v-model="confirmed"
-              style="margin-top:2px;accent-color:var(--color-danger);"
+              color="danger"
             />
-            <label for="confirm-check" style="font-size:14px;color:var(--color-text-secondary);line-height:1.5;">{{ copy.preventClose.checkbox }}</label>
+            <label for="confirm-check" style="flex:1;font-size:14px;color:var(--color-text-secondary);line-height:1.5;cursor:pointer;">{{ copy.preventClose.checkbox }}</label>
           </div>
           <template #footer>
             <Button variant="ghost" @click="open = false">{{ $t('common.cancel') }}</Button>
