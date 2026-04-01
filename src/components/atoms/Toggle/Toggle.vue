@@ -24,6 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>()
 const inputId = useId()
+const labelId = useId() // used by <label> + aria-labelledby on the button
 
 function toggle() {
   if (!props.disabled && !props.readonly) emit('update:modelValue', !props.modelValue)
@@ -74,12 +75,16 @@ const trackClasses = computed(() =>
   )
 )
 
+// Component-level CSS override tokens:
+//   --toggle-bg-on   (default: var(--color-{color}))
+//   --toggle-bg-off  (default: var(--color-border-strong))
+//   --toggle-thumb   (default: var(--color-surface))
 const trackStyle = computed(() => ({
   backgroundColor: props.modelValue
-    ? `var(--color-${props.color})`
-    : 'var(--color-border-strong)',
+    ? `var(--toggle-bg-on, var(--color-${props.color}))`
+    : 'var(--toggle-bg-off, var(--color-border-strong))',
   borderRadius: 'var(--radius-full)',
-  '--focus-ring-color': `var(--color-${props.color})`,
+  '--focus-ring-color': `var(--toggle-bg-on, var(--color-${props.color}))`,
 }))
 
 const thumbClasses = computed(() =>
@@ -93,7 +98,7 @@ const thumbClasses = computed(() =>
 )
 
 const thumbStyle = {
-  backgroundColor: 'var(--color-surface)',
+  backgroundColor: 'var(--toggle-thumb, var(--color-surface))',
   borderRadius: 'var(--radius-full)',
   boxShadow: 'var(--shadow-sm)',
 }
@@ -117,8 +122,10 @@ const thumbStyle = {
       :class="trackClasses"
       :style="trackStyle"
       class="ds-toggle-track focus-visible:outline-none"
-      :aria-checked="modelValue"
       role="switch"
+      :aria-checked="modelValue"
+      :aria-labelledby="label ? labelId : undefined"
+      :aria-label="!label ? (label || 'Toggle') : undefined"
       :tabindex="disabled ? -1 : 0"
       @click="toggle"
       @keydown.space.prevent="toggle"
@@ -129,6 +136,7 @@ const thumbStyle = {
 
     <label
       v-if="label"
+      :id="labelId"
       :for="inputId"
       :class="cn(
         labelTextClass[size],

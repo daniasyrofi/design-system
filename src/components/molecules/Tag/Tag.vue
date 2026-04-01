@@ -48,10 +48,14 @@ const colorMap: Record<TagVariant, ColorTokens> = {
 
 const tokens = computed(() => colorMap[props.variant])
 
+// Component-level CSS override tokens:
+//   --tag-bg      overrides background
+//   --tag-border  overrides border color
+//   --tag-text    overrides text color
 const inlineStyle = computed(() => ({
-  backgroundColor: tokens.value.bg,
-  borderColor:     tokens.value.border,
-  color:           tokens.value.text,
+  backgroundColor: `var(--tag-bg, ${tokens.value.bg})`,
+  borderColor:     `var(--tag-border, ${tokens.value.border})`,
+  color:           `var(--tag-text, ${tokens.value.text})`,
 }))
 
 // ── Size classes ──────────────────────────────────────────────────────────────

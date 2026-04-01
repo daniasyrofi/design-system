@@ -1,432 +1,353 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { computed } from 'vue'
-import Table from './Table.vue'
-import Badge from '../../atoms/Badge/Badge.vue'
-import { getI18nLocale, resolveLocale, type SupportedLocale } from '@/i18n'
+import { ref, computed } from 'vue'
+import { userEvent, within, expect } from 'storybook/test'
+import Table   from './Table.vue'
+import Badge   from '../../atoms/Badge/Badge.vue'
+import Avatar  from '../../atoms/Avatar/Avatar.vue'
+import SearchInput from '../../molecules/SearchInput/SearchInput.vue'
+import Tag     from '../../molecules/Tag/Tag.vue'
 
-type Locale = SupportedLocale
+// ── Shared data ──────────────────────────────────────────────────────────────
 
-type LocaleText = {
-  emptyText: string
-  columns: Array<{ key: string; label: string; sortable: boolean; align?: 'left' | 'center' | 'right' }>
-  data: Record<string, any>[]
-  statusVariant: Record<string, string>
-  storyNames: {
-    default: string
-    withSorting: string
-    selectable: string
-    loading: string
-    empty: string
-    customCells: string
-    striped: string
-    stickyHeader: string
-  }
-  docs: {
-    categoryProps: string
-    propNames: {
-      loading: string
-      selectable: string
-      hoverable: string
-      striped: string
-      stickyHeader: string
-      emptyText: string
-    }
-    descriptions: {
-      loading: string
-      selectable: string
-      hoverable: string
-      striped: string
-      stickyHeader: string
-      emptyText: string
-    }
-  }
+const COLUMNS = [
+  { key: 'name',       label: 'Name',        sortable: true  },
+  { key: 'company',    label: 'Company',      sortable: true  },
+  { key: 'status',     label: 'Status',       sortable: true  },
+  { key: 'role',       label: 'Role',         sortable: false },
+  { key: 'lastActive', label: 'Last Active',  sortable: true, align: 'right' as const },
+]
+
+const ROWS = [
+  { name: 'Olivia Martin',    email: 'olivia@acme.com',    company: 'Acme Inc.',      status: 'Active',   role: 'Admin',   lastActive: '2 min ago'  },
+  { name: 'James Chen',       email: 'james@vortex.io',    company: 'Vortex IO',      status: 'Active',   role: 'Member',  lastActive: '1 hr ago'   },
+  { name: 'Sophia Rodriguez', email: 'sophia@nova.co',     company: 'Nova Co.',       status: 'Inactive', role: 'Member',  lastActive: '3 days ago' },
+  { name: 'Liam Patel',       email: 'liam@brightlab.dev', company: 'BrightLab',      status: 'Active',   role: 'Editor',  lastActive: '5 min ago'  },
+  { name: 'Emma Wilson',      email: 'emma@mesh.xyz',      company: 'Mesh XYZ',       status: 'Pending',  role: 'Member',  lastActive: '2 days ago' },
+  { name: 'Noah Kim',         email: 'noah@stackflow.app', company: 'Stackflow',      status: 'Active',   role: 'Admin',   lastActive: 'just now'   },
+  { name: 'Ava Thompson',     email: 'ava@prismdata.io',   company: 'PrismData',      status: 'Inactive', role: 'Member',  lastActive: '1 week ago' },
+  { name: 'Mason Garcia',     email: 'mason@loopfx.com',   company: 'LoopFX',         status: 'Active',   role: 'Editor',  lastActive: '30 min ago' },
+]
+
+const STATUS_VARIANT: Record<string, 'success' | 'warning' | 'danger'> = {
+  Active:   'success',
+  Pending:  'warning',
+  Inactive: 'danger',
 }
 
-const localeText: Record<Locale, LocaleText> = {
-  en: {
-    emptyText: 'No data',
-    columns: [
-      { key: 'name', label: 'Name', sortable: true },
-      { key: 'email', label: 'Email', sortable: true },
-      { key: 'status', label: 'Status', sortable: true },
-      { key: 'rsvp', label: 'RSVP', sortable: false },
-      { key: 'date', label: 'Date Added', sortable: true, align: 'right' },
-    ],
-    data: [
-      { name: 'Olivia Martin', email: 'olivia@example.com', status: 'Active', rsvp: 'Accepted', date: '2026-01-15' },
-      { name: 'James Chen', email: 'james@example.com', status: 'Active', rsvp: 'Pending', date: '2026-01-18' },
-      { name: 'Sophia Rodriguez', email: 'sophia@example.com', status: 'Inactive', rsvp: 'Declined', date: '2026-02-02' },
-      { name: 'Liam Patel', email: 'liam@example.com', status: 'Active', rsvp: 'Accepted', date: '2026-02-10' },
-      { name: 'Emma Wilson', email: 'emma@example.com', status: 'Pending', rsvp: 'Pending', date: '2026-02-14' },
-      { name: 'Noah Kim', email: 'noah@example.com', status: 'Active', rsvp: 'Accepted', date: '2026-03-01' },
-      { name: 'Ava Thompson', email: 'ava@example.com', status: 'Inactive', rsvp: 'Declined', date: '2026-03-05' },
-      { name: 'Mason Garcia', email: 'mason@example.com', status: 'Active', rsvp: 'Accepted', date: '2026-03-12' },
-    ],
-    statusVariant: {
-      Active: 'success',
-      Inactive: 'danger',
-      Pending: 'warning',
-      Accepted: 'success',
-      Declined: 'danger',
-    },
-    storyNames: {
-      default: 'Default',
-      withSorting: 'With Sorting',
-      selectable: 'Selectable',
-      loading: 'Loading',
-      empty: 'Empty',
-      customCells: 'Custom Cells (Status Badge)',
-      striped: 'Striped',
-      stickyHeader: 'Sticky Header',
-    },
-    docs: {
-      categoryProps: 'Props',
-      propNames: {
-        loading: 'loading',
-        selectable: 'selectable',
-        hoverable: 'hoverable',
-        striped: 'striped',
-        stickyHeader: 'stickyHeader',
-        emptyText: 'emptyText',
-      },
-      descriptions: {
-        loading: 'Show a loading overlay',
-        selectable: 'Show row selection checkboxes',
-        hoverable: 'Highlight rows on hover',
-        striped: 'Apply alternating row backgrounds',
-        stickyHeader: 'Keep the header visible while scrolling',
-        emptyText: 'Text shown when the table has no rows',
-      },
-    },
-  },
-  id: {
-    emptyText: 'Tidak ada data',
-    columns: [
-      { key: 'name', label: 'Nama', sortable: true },
-      { key: 'email', label: 'Email', sortable: true },
-      { key: 'status', label: 'Status', sortable: true },
-      { key: 'rsvp', label: 'RSVP', sortable: false },
-      { key: 'date', label: 'Tanggal Ditambahkan', sortable: true, align: 'right' },
-    ],
-    data: [
-      { name: 'Alya Putri', email: 'alya@contoh.com', status: 'Aktif', rsvp: 'Diterima', date: '2026-01-15' },
-      { name: 'Budi Santoso', email: 'budi@contoh.com', status: 'Aktif', rsvp: 'Tertunda', date: '2026-01-18' },
-      { name: 'Citra Lestari', email: 'citra@contoh.com', status: 'Nonaktif', rsvp: 'Ditolak', date: '2026-02-02' },
-      { name: 'Dewa Pratama', email: 'dewa@contoh.com', status: 'Aktif', rsvp: 'Diterima', date: '2026-02-10' },
-      { name: 'Eka Wulandari', email: 'eka@contoh.com', status: 'Tertunda', rsvp: 'Tertunda', date: '2026-02-14' },
-      { name: 'Fajar Nugraha', email: 'fajar@contoh.com', status: 'Aktif', rsvp: 'Diterima', date: '2026-03-01' },
-      { name: 'Gita Maharani', email: 'gita@contoh.com', status: 'Nonaktif', rsvp: 'Ditolak', date: '2026-03-05' },
-      { name: 'Hadi Saputra', email: 'hadi@contoh.com', status: 'Aktif', rsvp: 'Diterima', date: '2026-03-12' },
-    ],
-    statusVariant: {
-      Aktif: 'success',
-      Nonaktif: 'danger',
-      Tertunda: 'warning',
-      Diterima: 'success',
-      Ditolak: 'danger',
-    },
-    storyNames: {
-      default: 'Bawaan',
-      withSorting: 'Dengan Pengurutan',
-      selectable: 'Dapat Dipilih',
-      loading: 'Memuat',
-      empty: 'Kosong',
-      customCells: 'Sel Kustom (Lencana Status)',
-      striped: 'Bergaris',
-      stickyHeader: 'Header Menempel',
-    },
-    docs: {
-      categoryProps: 'Properti',
-      propNames: {
-        loading: 'memuat',
-        selectable: 'dapatDipilih',
-        hoverable: 'dapatDihover',
-        striped: 'bergaris',
-        stickyHeader: 'headerMenempel',
-        emptyText: 'teksKosong',
-      },
-      descriptions: {
-        loading: 'Tampilkan lapisan muat',
-        selectable: 'Tampilkan kotak centang pilihan baris',
-        hoverable: 'Sorot baris saat di-hover',
-        striped: 'Terapkan latar belakang baris selang-seling',
-        stickyHeader: 'Tetap tampilkan header saat menggulir',
-        emptyText: 'Teks yang ditampilkan saat tabel tidak memiliki baris',
-      },
-    },
-  },
-  zh: {
-    emptyText: '没有数据',
-    columns: [
-      { key: 'name', label: '姓名', sortable: true },
-      { key: 'email', label: '电子邮件', sortable: true },
-      { key: 'status', label: '状态', sortable: true },
-      { key: 'rsvp', label: '回复', sortable: false },
-      { key: 'date', label: '添加日期', sortable: true, align: 'right' },
-    ],
-    data: [
-      { name: '王小明', email: 'wang@example.com', status: '活跃', rsvp: '已接受', date: '2026-01-15' },
-      { name: '李华', email: 'li@example.com', status: '活跃', rsvp: '待处理', date: '2026-01-18' },
-      { name: '张敏', email: 'zhang@example.com', status: '未激活', rsvp: '已拒绝', date: '2026-02-02' },
-      { name: '赵强', email: 'zhao@example.com', status: '活跃', rsvp: '已接受', date: '2026-02-10' },
-      { name: '陈静', email: 'chen@example.com', status: '待处理', rsvp: '待处理', date: '2026-02-14' },
-      { name: '刘洋', email: 'liu@example.com', status: '活跃', rsvp: '已接受', date: '2026-03-01' },
-      { name: '周婷', email: 'zhou@example.com', status: '未激活', rsvp: '已拒绝', date: '2026-03-05' },
-      { name: '黄磊', email: 'huang@example.com', status: '活跃', rsvp: '已接受', date: '2026-03-12' },
-    ],
-    statusVariant: {
-      活跃: 'success',
-      未激活: 'danger',
-      待处理: 'warning',
-      已接受: 'success',
-      已拒绝: 'danger',
-    },
-    storyNames: {
-      default: '默认',
-      withSorting: '带排序',
-      selectable: '可选择',
-      loading: '加载中',
-      empty: '空状态',
-      customCells: '自定义单元格（状态徽章）',
-      striped: '斑马纹',
-      stickyHeader: '固定表头',
-    },
-    docs: {
-      categoryProps: '属性',
-      propNames: {
-        loading: '加载中',
-        selectable: '可选择',
-        hoverable: '可悬停',
-        striped: '斑马纹',
-        stickyHeader: '固定表头',
-        emptyText: '空文本',
-      },
-      descriptions: {
-        loading: '显示加载遮罩',
-        selectable: '显示行选择复选框',
-        hoverable: '悬停时高亮行',
-        striped: '应用交替行背景',
-        stickyHeader: '滚动时保持表头可见',
-        emptyText: '表格没有行时显示的文本',
-      },
-    },
-  },
-}
-
-const getLocale = (): Locale => resolveLocale(getI18nLocale())
-const useCopy = () => computed(() => localeText[getLocale()])
-const getStoryName = (key: keyof LocaleText['storyNames']) => localeText[getLocale()].storyNames[key]
-
-const buildArgTypes = (locale: Locale): NonNullable<Meta<typeof Table>['argTypes']> => {
-  const copy = localeText[locale]
-  return {
-    loading: {
-      name: copy.docs.propNames.loading,
-      description: copy.docs.descriptions.loading,
-      control: 'boolean',
-      table: { category: copy.docs.categoryProps },
-    },
-    selectable: {
-      name: copy.docs.propNames.selectable,
-      description: copy.docs.descriptions.selectable,
-      control: 'boolean',
-      table: { category: copy.docs.categoryProps },
-    },
-    hoverable: {
-      name: copy.docs.propNames.hoverable,
-      description: copy.docs.descriptions.hoverable,
-      control: 'boolean',
-      table: { category: copy.docs.categoryProps },
-    },
-    striped: {
-      name: copy.docs.propNames.striped,
-      description: copy.docs.descriptions.striped,
-      control: 'boolean',
-      table: { category: copy.docs.categoryProps },
-    },
-    stickyHeader: {
-      name: copy.docs.propNames.stickyHeader,
-      description: copy.docs.descriptions.stickyHeader,
-      control: 'boolean',
-      table: { category: copy.docs.categoryProps },
-    },
-    emptyText: {
-      name: copy.docs.propNames.emptyText,
-      description: copy.docs.descriptions.emptyText,
-      control: 'text',
-      table: { category: copy.docs.categoryProps },
-    },
-  }
-}
+// ── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<typeof Table> = {
-  title: 'Organisms/Table',
+  title:     'Organisms/Table',
   component: Table,
-  tags: ['autodocs'],
-  decorators: [
-    (story, context) => {
-      const locale = resolveLocale(context.globals.locale)
-      ;(context as { argTypes: Record<string, unknown> }).argTypes = {
-        ...(context.argTypes as Record<string, unknown>),
-        ...(buildArgTypes(locale) as Record<string, unknown>),
-      }
-      return story()
-    },
-  ],
-  argTypes: buildArgTypes('en'),
+  tags:      ['autodocs'],
+  parameters: { layout: 'padded' },
+  argTypes: {
+    loading:      { control: 'boolean', description: 'Show loading overlay' },
+    selectable:   { control: 'boolean', description: 'Enable row checkboxes' },
+    hoverable:    { control: 'boolean', description: 'Highlight rows on hover' },
+    striped:      { control: 'boolean', description: 'Alternating row backgrounds' },
+    stickyHeader: { control: 'boolean', description: 'Pin header while scrolling' },
+    filterBy:     { control: 'text',    description: 'Global filter string' },
+    virtual:      { control: 'boolean', description: 'Enable virtual scrolling' },
+    emptyText:    { control: 'text',    description: 'Empty-state message' },
+  },
   args: {
-    loading:      false,
-    selectable:   false,
-    hoverable:    true,
-    striped:      false,
+    columns:   COLUMNS,
+    data:      ROWS,
+    loading:   false,
+    selectable: false,
+    hoverable:  true,
+    striped:    false,
     stickyHeader: false,
-    emptyText:    '',
+    filterBy:   '',
+    virtual:    false,
+    emptyText:  'No results found',
   },
 }
 export default meta
 type Story = StoryObj<typeof Table>
 
-export const Default: Story = {
-  get name() {
-    return getStoryName('default')
-  },
-  render: (args) => ({
-    components: { Table },
-    setup: () => {
-      const copy = useCopy()
-      const resolvedArgs = computed(() => ({
-        ...args,
-        emptyText: args.emptyText || copy.value.emptyText,
-      }))
-      return { copy, resolvedArgs }
-    },
-    template: '<Table v-bind="resolvedArgs" :columns="copy.columns" :data="copy.data" />',
-  }),
-}
+// ── Stories ───────────────────────────────────────────────────────────────────
 
-export const WithSorting: Story = {
-  get name() {
-    return getStoryName('withSorting')
-  },
+/** Default table — no frills. */
+export const Default: Story = {}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Search + filter toolbar wired to `filterBy`.
+ * Mirrors the common CRM / admin list pattern shown in production apps.
+ */
+export const WithSearchAndFilter: Story = {
+  name: 'Search & Filter',
+  parameters: { layout: 'padded' },
   render: () => ({
-    components: { Table },
-    setup: () => {
-      const copy = useCopy()
-      return {
-        copy,
-        handleSort(payload: { key: string; direction: string }) {
-          console.log('Sort:', payload)
-        },
+    components: { Table, SearchInput, Tag, Badge },
+    setup() {
+      const query       = ref('')
+      const activeFilter = ref<string | null>(null)
+      const statuses    = ['Active', 'Pending', 'Inactive'] as const
+
+      const filterBy = computed(() =>
+        activeFilter.value ? activeFilter.value : query.value,
+      )
+
+      function toggleFilter(status: string) {
+        activeFilter.value = activeFilter.value === status ? null : status
+        query.value        = ''
       }
-    },
-    template: '<Table :columns="copy.columns" :data="copy.data" @sort="handleSort" />',
-  }),
-}
-
-export const Selectable: Story = {
-  get name() {
-    return getStoryName('selectable')
-  },
-  render: () => ({
-    components: { Table },
-    setup: () => {
-      const copy = useCopy()
-      return {
-        copy,
-        handleSelect(rows: Record<string, any>[]) {
-          console.log('Selected:', rows.length, 'rows')
-        },
+      function clearAll() {
+        activeFilter.value = null
+        query.value        = ''
       }
-    },
-    template: '<Table :columns="copy.columns" :data="copy.data" selectable @select="handleSelect" />',
-  }),
-}
 
-export const Loading: Story = {
-  get name() {
-    return getStoryName('loading')
-  },
-  render: () => ({
-    components: { Table },
-    setup: () => {
-      const copy = useCopy()
-      return { copy }
-    },
-    template: '<Table :columns="copy.columns" :data="copy.data" loading />',
-  }),
-}
-
-export const Empty: Story = {
-  get name() {
-    return getStoryName('empty')
-  },
-  render: () => ({
-    components: { Table },
-    setup: () => {
-      const copy = useCopy()
-      return { copy }
-    },
-    template: '<Table :columns="copy.columns" :data="[]" :empty-text="copy.emptyText" />',
-  }),
-}
-
-export const CustomCells: Story = {
-  get name() {
-    return getStoryName('customCells')
-  },
-  render: () => ({
-    components: { Table, Badge },
-    setup: () => {
-      const copy = useCopy()
-      return { copy }
+      return { query, activeFilter, statuses, filterBy, toggleFilter, clearAll, COLUMNS, ROWS, STATUS_VARIANT }
     },
     template: `
-      <Table :columns="copy.columns" :data="copy.data">
-        <template #cell-status="{ value }">
-          <Badge :variant="copy.statusVariant[value]" size="sm" dot>{{ value }}</Badge>
-        </template>
-        <template #cell-rsvp="{ value }">
-          <Badge
-            :variant="copy.statusVariant[value]"
-            badge-style="outline"
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <!-- Toolbar -->
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <SearchInput
+            v-model="query"
+            placeholder="Search name, company…"
             size="sm"
+            style="width:220px;"
+            :disabled="!!activeFilter"
+          />
+
+          <!-- Status filter chips -->
+          <div style="display:flex;gap:6px;">
+            <Tag
+              v-for="s in statuses"
+              :key="s"
+              :variant="activeFilter === s ? STATUS_VARIANT[s] : 'neutral'"
+              clickable
+              :removable="activeFilter === s"
+              @click="toggleFilter(s)"
+              @remove="toggleFilter(s)"
+            >
+              {{ s }}
+            </Tag>
+          </div>
+
+          <button
+            v-if="activeFilter || query"
+            style="font-size:12px;color:var(--color-text-tertiary);cursor:pointer;background:none;border:none;padding:4px 6px;border-radius:var(--radius-sm);"
+            @click="clearAll"
           >
+            × Clear
+          </button>
+        </div>
+
+        <!-- Table -->
+        <Table
+          :columns="COLUMNS"
+          :data="ROWS"
+          :filter-by="filterBy"
+          empty-text="No visitors match your search."
+          hoverable
+        >
+          <template #cell-name="{ row }">
+            <div style="display:flex;flex-direction:column;line-height:1.3;">
+              <span style="font-weight:500;">{{ row.name }}</span>
+              <span style="font-size:12px;color:var(--color-text-tertiary);">{{ row.email }}</span>
+            </div>
+          </template>
+          <template #cell-status="{ value }">
+            <Badge :variant="STATUS_VARIANT[value]" badge-style="subtle" size="sm" dot>
+              {{ value }}
+            </Badge>
+          </template>
+        </Table>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Type a search query — only matching rows should remain
+    const input = canvas.getByRole('textbox')
+    await userEvent.type(input, 'olivia')
+    await expect(canvas.getByText('Olivia Martin')).toBeInTheDocument()
+    await expect(canvas.queryByText('James Chen')).not.toBeInTheDocument()
+
+    // Clear search
+    await userEvent.clear(input)
+    await expect(canvas.getByText('James Chen')).toBeInTheDocument()
+  },
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Click a column header to sort ascending; click again for descending.
+ * A third click resets to the original order.
+ */
+export const Sortable: Story = {
+  name: 'Sorting',
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // First click → ascending by Name
+    const nameHeader = canvas.getByRole('columnheader', { name: /name/i })
+    await userEvent.click(nameHeader)
+
+    const rows = canvas.getAllByRole('row')
+    // First data row (index 1, skip header) should be "Ava Thompson" (alphabetically first)
+    await expect(rows[1]).toHaveTextContent('Ava Thompson')
+
+    // Second click → descending
+    await userEvent.click(nameHeader)
+    await expect(rows[1]).toHaveTextContent('Sophia Rodriguez')
+  },
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Row checkboxes + select-all. Emits `select` with the selected row objects. */
+export const Selectable: Story = {
+  name: 'Row Selection',
+  args: { selectable: true },
+  play: async ({ canvasElement }) => {
+    const canvas  = within(canvasElement)
+    const checks  = canvas.getAllByRole('checkbox')
+    const selectAll = checks[0]
+    const firstRow  = checks[1]
+
+    // Select first row
+    await userEvent.click(firstRow)
+    await expect(firstRow).toBeChecked()
+
+    // Select all
+    await userEvent.click(selectAll)
+    checks.slice(1).forEach(c => expect(c).toBeChecked())
+
+    // Deselect all
+    await userEvent.click(selectAll)
+    checks.slice(1).forEach(c => expect(c).not.toBeChecked())
+  },
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * `cell-name` slot renders an Avatar + two-line text block.
+ * `cell-status` slot uses a Badge with semantic color.
+ */
+export const CustomCells: Story = {
+  name: 'Custom Cells',
+  render: () => ({
+    components: { Table, Badge, Avatar },
+    setup: () => ({ COLUMNS, ROWS, STATUS_VARIANT }),
+    template: `
+      <Table :columns="COLUMNS" :data="ROWS" hoverable>
+        <template #cell-name="{ row }">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <Avatar
+              :name="row.name"
+              size="sm"
+              shape="circle"
+            />
+            <div style="display:flex;flex-direction:column;line-height:1.3;">
+              <span style="font-weight:500;">{{ row.name }}</span>
+              <span style="font-size:12px;color:var(--color-text-tertiary);">{{ row.email }}</span>
+            </div>
+          </div>
+        </template>
+        <template #cell-status="{ value }">
+          <Badge :variant="STATUS_VARIANT[value]" badge-style="subtle" size="sm" dot>
             {{ value }}
           </Badge>
+        </template>
+        <template #cell-role="{ value }">
+          <Badge variant="neutral" badge-style="outline" size="sm">{{ value }}</Badge>
         </template>
       </Table>
     `,
   }),
 }
 
-export const Striped: Story = {
-  get name() {
-    return getStoryName('striped')
-  },
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Renders 500 rows efficiently using windowed rendering.
+ * Only ~12 rows are in the DOM at a time regardless of dataset size.
+ */
+export const VirtualScroll: Story = {
+  name: 'Virtual Scroll (500 rows)',
+  parameters: { layout: 'padded' },
   render: () => ({
     components: { Table },
-    setup: () => {
-      const copy = useCopy()
-      return { copy }
+    setup() {
+      const bigData = Array.from({ length: 500 }, (_, i) => ({
+        name:       `User ${String(i + 1).padStart(3, '0')}`,
+        company:    ['Acme Inc.', 'Vortex IO', 'Nova Co.', 'BrightLab'][i % 4],
+        status:     ['Active', 'Pending', 'Inactive'][i % 3],
+        role:       ['Admin', 'Member', 'Editor'][i % 3],
+        lastActive: `${(i % 59) + 1} min ago`,
+      }))
+      return { COLUMNS, bigData }
     },
-    template: '<Table :columns="copy.columns" :data="copy.data" striped :hoverable="false" />',
+    template: `
+      <Table
+        :columns="COLUMNS"
+        :data="bigData"
+        virtual
+        :row-height="52"
+        :container-height="420"
+        hoverable
+      />
+    `,
   }),
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Alternating row backgrounds — best for dense, read-heavy tables. */
+export const Striped: Story = {
+  args: { striped: true, hoverable: false },
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Header stays visible while the body scrolls. */
 export const StickyHeader: Story = {
-  get name() {
-    return getStoryName('stickyHeader')
-  },
+  name: 'Sticky Header',
   render: () => ({
     components: { Table },
-    setup: () => {
-      const copy = useCopy()
-      return { copy }
-    },
+    setup: () => ({ COLUMNS, ROWS: [...ROWS, ...ROWS, ...ROWS] }),
     template: `
-      <div style="height: 320px; overflow: auto;">
-        <Table :columns="copy.columns" :data="[...copy.data, ...copy.data, ...copy.data]" sticky-header />
+      <div style="height:320px;overflow:auto;">
+        <Table :columns="COLUMNS" :data="ROWS" sticky-header />
       </div>
     `,
   }),
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Loading state — spinner overlay blocks the table. */
+export const Loading: Story = {
+  args: { loading: true },
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Empty state — shown when `data` is an empty array. */
+export const Empty: Story = {
+  args: { data: [], emptyText: 'No visitors found. Try adjusting your filters.' },
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** All props wired to Storybook controls for live experimentation. */
+export const Playground: Story = {
+  name: '⚙ Playground',
+  args: {
+    selectable:   true,
+    striped:      false,
+    hoverable:    true,
+    stickyHeader: false,
+    filterBy:     '',
+  },
 }

@@ -293,10 +293,22 @@ const wrapperClasses = computed(() =>
 </template>
 
 <style scoped>
+/*
+ * Component-level CSS override tokens — set on the component root or any ancestor:
+ *   <Input style="--input-bg: #fafff4; --input-border-focus: green;" />
+ *
+ * --input-bg            default: var(--color-surface)
+ * --input-border        default: var(--color-border)
+ * --input-text          default: var(--color-text-primary)
+ * --input-placeholder   default: var(--color-text-tertiary)
+ * --input-border-focus  default: var(--color-text-primary)
+ * --input-border-error  default: var(--color-danger)
+ */
+
 /* ── Wrapper base ── */
 .ds-input-wrapper {
-  background-color: var(--color-surface);
-  border-color: var(--color-border);
+  background-color: var(--input-bg, var(--color-surface));
+  border-color: var(--input-border, var(--color-border));
 }
 
 .ds-input-wrapper:hover:not(.ds-input-wrapper--disabled):not(.ds-input-wrapper--readonly):not(:focus-within) {
@@ -304,17 +316,17 @@ const wrapperClasses = computed(() =>
 }
 
 .ds-input-wrapper:focus-within:not(.ds-input-wrapper--error) {
-  border-color: var(--color-text-primary);
-  box-shadow: 0 0 0 1px var(--color-text-primary);
+  border-color: var(--input-border-focus, var(--color-text-primary));
+  box-shadow: 0 0 0 1px var(--input-border-focus, var(--color-text-primary));
 }
 
 /* ── Error state ── */
 .ds-input-wrapper--error {
-  border-color: var(--color-danger);
+  border-color: var(--input-border-error, var(--color-danger));
 }
 
 .ds-input-wrapper--error:focus-within {
-  box-shadow: 0 0 0 1px var(--color-danger);
+  box-shadow: 0 0 0 1px var(--input-border-error, var(--color-danger));
 }
 
 /* ── Disabled state ── */
@@ -330,11 +342,11 @@ const wrapperClasses = computed(() =>
 
 /* ── Native input ── */
 .ds-input-native {
-  color: var(--color-text-primary);
+  color: var(--input-text, var(--color-text-primary));
 }
 
 .ds-input-native::placeholder {
-  color: var(--color-text-tertiary);
+  color: var(--input-placeholder, var(--color-text-tertiary));
 }
 
 .ds-input-native:focus,

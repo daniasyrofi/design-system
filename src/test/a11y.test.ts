@@ -84,13 +84,16 @@ describe('a11y: Radio', () => {
 })
 
 describe('a11y: Toggle', () => {
-  it('labelled toggle has no violations (excluding button-name on visual track)', async () => {
-    // The Toggle has a sr-only <input role="switch"> with aria-label AND a
-    // visual <button role="switch"> that currently lacks an explicit accessible
-    // name (tracked as a known improvement). We exclude button-name here until
-    // the visual track button receives aria-labelledby pointing to the label.
+  it('labelled toggle has no violations', async () => {
+    // The visual <button role="switch"> now carries aria-labelledby pointing to
+    // the <label> element, satisfying the button-name rule.
     const { element } = mount(Toggle, { props: { label: 'Notifications', modelValue: false } })
-    await axeCheck(element, { rules: { 'button-name': { enabled: false } } })
+    await axeCheck(element)
+  })
+
+  it('toggle without label prop uses aria-label fallback', async () => {
+    const { element } = mount(Toggle, { props: { modelValue: true } })
+    await axeCheck(element)
   })
 })
 

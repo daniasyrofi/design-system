@@ -24,6 +24,9 @@ export { useFocusTrap }       from './composables/useFocusTrap'
 export { useSpacing }         from './composables/useSpacing'
 export { useInvitationTheme } from './composables/useInvitationTheme'
 
+// ── Variant & Size Types ──────────────────────────────────────
+export type * from './types'
+
 // ── Design Tokens ─────────────────────────────────────────────
 export { primitives }         from './tokens/colors'
 export type { PrimitiveColor } from './tokens/colors'

@@ -123,4 +123,79 @@ describe('Table', () => {
     })
     expect(wrapper.text()).toContain('Custom')
   })
+
+  describe('filtering', () => {
+    it('shows only rows matching filterBy', () => {
+      const wrapper = mount(Table, { props: { columns, data, filterBy: 'alice' } })
+      expect(wrapper.text()).toContain('Alice')
+      expect(wrapper.text()).not.toContain('Bob')
+      expect(wrapper.text()).not.toContain('Carol')
+    })
+
+    it('filter is case-insensitive', () => {
+      const wrapper = mount(Table, { props: { columns, data, filterBy: 'ALICE' } })
+      expect(wrapper.text()).toContain('Alice')
+    })
+
+    it('shows empty state when filter matches nothing', () => {
+      const wrapper = mount(Table, { props: { columns, data, filterBy: 'xyz123', emptyText: 'Nothing found' } })
+      expect(wrapper.text()).toContain('Nothing found')
+    })
+
+    it('shows all rows when filterBy is empty string', () => {
+      const wrapper = mount(Table, { props: { columns, data, filterBy: '' } })
+      expect(wrapper.text()).toContain('Alice')
+      expect(wrapper.text()).toContain('Bob')
+      expect(wrapper.text()).toContain('Carol')
+    })
+
+    it('respects filterable=false column', () => {
+      const cols = [
+        { key: 'name', label: 'Name', filterable: false },
+        { key: 'role', label: 'Role' },
+      ]
+      const wrapper = mount(Table, { props: { columns: cols, data, filterBy: 'alice' } })
+      // 'alice' only appears in the name column (filterable=false), so no rows should show
+      expect(wrapper.text()).not.toContain('Alice')
+    })
+  })
+
+  describe('client-side sorting', () => {
+    it('sorts rows ascending by name after one click', async () => {
+      const wrapper = mount(Table, { props: { columns, data } })
+      const nameHeader = wrapper.findAll('th').find(th => th.text().includes('Name'))!
+      await nameHeader.trigger('click')
+      const rows = wrapper.find('tbody').findAll('tr')
+      expect(rows[0].text()).toContain('Alice')
+      expect(rows[1].text()).toContain('Bob')
+      expect(rows[2].text()).toContain('Carol')
+    })
+
+    it('sorts rows descending by name after two clicks', async () => {
+      const wrapper = mount(Table, { props: { columns, data } })
+      const nameHeader = wrapper.findAll('th').find(th => th.text().includes('Name'))!
+      await nameHeader.trigger('click')
+      await nameHeader.trigger('click')
+      const rows = wrapper.find('tbody').findAll('tr')
+      expect(rows[0].text()).toContain('Carol')
+      expect(rows[2].text()).toContain('Alice')
+    })
+  })
+
+  describe('virtual scrolling', () => {
+    it('renders visible rows in virtual mode', () => {
+      const bigData = Array.from({ length: 200 }, (_, i) => ({
+        name: `User ${i}`,
+        email: `user${i}@example.com`,
+        role: 'User',
+      }))
+      const wrapper = mount(Table, {
+        props: { columns, data: bigData, virtual: true, rowHeight: 48, containerHeight: 400 },
+      })
+      // Should not render all 200 rows — only the visible slice + overscan
+      const rows = wrapper.find('tbody').findAll('tr[class]')
+      expect(rows.length).toBeLessThan(200)
+      expect(rows.length).toBeGreaterThan(0)
+    })
+  })
 })

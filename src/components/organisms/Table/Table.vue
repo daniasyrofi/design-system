@@ -3,9 +3,10 @@ import { ref, computed, watch } from 'vue'
 import { cn } from '@/lib/utils'
 import { RiArrowUpSLine, RiArrowDownSLine } from '@remixicon/vue'
 import Checkbox from '../../atoms/Checkbox/Checkbox.vue'
-import Spinner from '../../atoms/Spinner/Spinner.vue'
+import Spinner  from '../../atoms/Spinner/Spinner.vue'
+import { useVirtualList } from '@/composables/useVirtualList'
 
-interface Column {
+export interface TableColumn {
   /** Unique key mapping to a property in each data row. */
   key:       string
   /** Display label for the column header. */
@@ -16,66 +17,137 @@ interface Column {
   width?:    string
   /** Text alignment within the column. @default 'left' */
   align?:    'left' | 'center' | 'right'
+  /** Include this column's value in global filter matching. @default true */
+  filterable?: boolean
 }
+
+export type TableSortDirection = 'asc' | 'desc'
 
 interface Props {
   /** Array of column definitions. */
-  columns:      Column[]
+  columns:       TableColumn[]
   /** Array of row data objects. Each key should match a column key. */
-  data:         Record<string, any>[]
+  data:          Record<string, unknown>[]
   /** Shows a loading overlay with a spinner. @default false */
-  loading?:     boolean
+  loading?:      boolean
   /** Adds row selection checkboxes and a select-all header. @default false */
-  selectable?:  boolean
+  selectable?:   boolean
   /** Highlights rows on hover. @default true */
-  hoverable?:   boolean
+  hoverable?:    boolean
   /** Applies alternating row background colors. @default false */
-  striped?:     boolean
+  striped?:      boolean
   /** Keeps the table header fixed while the body scrolls. @default false */
   stickyHeader?: boolean
   /** Text displayed when the data array is empty. @default 'No data' */
-  emptyText?:   string
+  emptyText?:    string
+  /**
+   * Global filter string — rows where no filterable column contains this value
+   * (case-insensitive) are hidden. Leave empty / undefined to show all rows.
+   */
+  filterBy?:     string
+  /**
+   * Enable virtual scrolling for large datasets.
+   * Requires `containerHeight` to be set. @default false
+   */
+  virtual?:      boolean
+  /** Height of each data row in pixels. Used only when `virtual` is true. @default 48 */
+  rowHeight?:    number
+  /** Height of the scrollable container in pixels. Used only when `virtual` is true. @default 400 */
+  containerHeight?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  loading:      false,
-  selectable:   false,
-  hoverable:    true,
-  striped:      false,
-  stickyHeader: false,
-  emptyText:    'No data',
+  loading:         false,
+  selectable:      false,
+  hoverable:       true,
+  striped:         false,
+  stickyHeader:    false,
+  emptyText:       'No data',
+  filterBy:        '',
+  virtual:         false,
+  rowHeight:       48,
+  containerHeight: 400,
 })
 
 const emit = defineEmits<{
-  sort:   [payload: { key: string; direction: 'asc' | 'desc' }]
-  select: [selectedRows: Record<string, any>[]]
+  sort:   [payload: { key: string; direction: TableSortDirection }]
+  select: [selectedRows: Record<string, unknown>[]]
 }>()
 
-// ── Sort state ───────────────────────────────────────────────────────────────
+// ── Sort state ────────────────────────────────────────────────────────────────
 
 const sortKey       = ref<string | null>(null)
-const sortDirection = ref<'asc' | 'desc'>('asc')
+const sortDirection = ref<TableSortDirection>('asc')
 
-function handleSort(column: Column) {
+function handleSort(column: TableColumn) {
   if (!column.sortable) return
 
   if (sortKey.value === column.key) {
     sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
   } else {
-    sortKey.value = column.key
+    sortKey.value      = column.key
     sortDirection.value = 'asc'
   }
 
   emit('sort', { key: sortKey.value!, direction: sortDirection.value })
 }
 
-// ── Selection state ──────────────────────────────────────────────────────────
+// ── Filter + Sort (client-side) ───────────────────────────────────────────────
+
+const filterableKeys = computed(() =>
+  props.columns
+    .filter(c => c.filterable !== false)
+    .map(c => c.key),
+)
+
+const processedData = computed<Record<string, unknown>[]>(() => {
+  let rows = props.data
+
+  // 1. Filter
+  const term = props.filterBy?.trim().toLowerCase()
+  if (term) {
+    rows = rows.filter(row =>
+      filterableKeys.value.some(key => {
+        const val = row[key]
+        return val != null && String(val).toLowerCase().includes(term)
+      }),
+    )
+  }
+
+  // 2. Sort
+  if (sortKey.value) {
+    const key = sortKey.value
+    const dir = sortDirection.value === 'asc' ? 1 : -1
+    rows = [...rows].sort((a, b) => {
+      const va = a[key] ?? ''
+      const vb = b[key] ?? ''
+      if (va < vb) return -dir
+      if (va > vb) return  dir
+      return 0
+    })
+  }
+
+  return rows
+})
+
+// ── Virtual scrolling ─────────────────────────────────────────────────────────
+
+const { visibleItems, totalHeight, offsetTop, onScroll } = useVirtualList(
+  processedData,
+  {
+    get itemHeight()      { return props.rowHeight! },
+    get containerHeight() { return props.containerHeight! },
+  },
+)
+
+// ── Selection state ───────────────────────────────────────────────────────────
 
 const selectedRowIndices = ref<Set<number>>(new Set())
 
 const selectAllState = computed<boolean | 'indeterminate'>(() => {
-  if (props.data.length === 0 || selectedRowIndices.value.size === 0) return false
-  if (selectedRowIndices.value.size === props.data.length) return true
+  const total = processedData.value.length
+  if (total === 0 || selectedRowIndices.value.size === 0) return false
+  if (selectedRowIndices.value.size === total) return true
   return 'indeterminate'
 })
 
@@ -83,7 +155,7 @@ function handleSelectAll(_: boolean | 'indeterminate') {
   if (selectAllState.value === true) {
     selectedRowIndices.value = new Set()
   } else {
-    selectedRowIndices.value = new Set(props.data.map((_, i) => i))
+    selectedRowIndices.value = new Set(processedData.value.map((_, i) => i))
   }
   emitSelection()
 }
@@ -100,16 +172,16 @@ function handleSelectRow(index: number, _: boolean | 'indeterminate') {
 }
 
 function emitSelection() {
-  const rows = [...selectedRowIndices.value].map(i => props.data[i])
+  const rows = [...selectedRowIndices.value].map(i => processedData.value[i])
   emit('select', rows)
 }
 
-// Reset selection when data changes
-watch(() => props.data, () => {
+// Reset selection when data or filter changes
+watch([() => props.data, () => props.filterBy], () => {
   selectedRowIndices.value = new Set()
 })
 
-// ── Alignment class ──────────────────────────────────────────────────────────
+// ── Alignment class ───────────────────────────────────────────────────────────
 
 const alignClass: Record<string, string> = {
   left:   'text-left',
@@ -136,7 +208,12 @@ const alignClass: Record<string, string> = {
     </div>
 
     <!-- Table wrapper -->
-    <div class="w-full overflow-x-auto">
+    <div
+      class="w-full overflow-x-auto"
+      :class="virtual ? 'overflow-y-auto' : 'overflow-y-visible'"
+      :style="virtual ? { height: `${containerHeight}px` } : undefined"
+      @scroll="virtual ? onScroll($event) : undefined"
+    >
       <table class="w-full border-collapse">
         <!-- Header -->
         <thead>
@@ -177,7 +254,7 @@ const alignClass: Record<string, string> = {
                 :class="cn(
                   'inline-flex items-center gap-1',
                   col.align === 'center' && 'justify-center',
-                  col.align === 'right' && 'justify-end',
+                  col.align === 'right'  && 'justify-end',
                 )"
               >
                 {{ col.label }}
@@ -214,18 +291,21 @@ const alignClass: Record<string, string> = {
 
         <!-- Body -->
         <tbody>
-          <template v-if="data.length > 0">
+          <!-- Virtual mode: spacer + visible slice -->
+          <template v-if="virtual && processedData.length > 0">
+            <!-- Top spacer -->
+            <tr aria-hidden="true" :style="{ height: `${offsetTop}px` }" />
+
             <tr
-              v-for="(row, rowIndex) in data"
+              v-for="{ item: row, index: rowIndex } in visibleItems"
               :key="rowIndex"
               :class="cn(
                 'transition-colors duration-[--duration-fast]',
                 hoverable && 'hover:bg-[--color-neutral-subtle]',
-                striped && 'even:bg-[--color-bg-subtle]',
+                striped   && rowIndex % 2 === 1 && 'bg-[--color-bg-subtle]',
                 selectedRowIndices.has(rowIndex) && 'bg-[--color-primary-subtle]',
               )"
             >
-              <!-- Row checkbox -->
               <td
                 v-if="selectable"
                 class="w-12 px-4 py-3 border-b border-[--color-border]"
@@ -237,8 +317,52 @@ const alignClass: Record<string, string> = {
                   @update:model-value="handleSelectRow(rowIndex, $event)"
                 />
               </td>
+              <td
+                v-for="col in columns"
+                :key="col.key"
+                :style="{ height: `${rowHeight}px` }"
+                :class="cn(
+                  'px-4 border-b border-[--color-border]',
+                  'text-sm text-[--color-text-primary]',
+                  alignClass[col.align ?? 'left'],
+                )"
+              >
+                <slot :name="`cell-${col.key}`" :row="row" :value="row[col.key]">
+                  {{ row[col.key] }}
+                </slot>
+              </td>
+            </tr>
 
-              <!-- Data cells -->
+            <!-- Bottom spacer -->
+            <tr
+              aria-hidden="true"
+              :style="{ height: `${totalHeight - offsetTop - visibleItems.length * rowHeight}px` }"
+            />
+          </template>
+
+          <!-- Normal mode -->
+          <template v-else-if="!virtual && processedData.length > 0">
+            <tr
+              v-for="(row, rowIndex) in processedData"
+              :key="rowIndex"
+              :class="cn(
+                'transition-colors duration-[--duration-fast]',
+                hoverable && 'hover:bg-[--color-neutral-subtle]',
+                striped   && 'even:bg-[--color-bg-subtle]',
+                selectedRowIndices.has(rowIndex) && 'bg-[--color-primary-subtle]',
+              )"
+            >
+              <td
+                v-if="selectable"
+                class="w-12 px-4 py-3 border-b border-[--color-border]"
+              >
+                <Checkbox
+                  :model-value="selectedRowIndices.has(rowIndex)"
+                  size="sm"
+                  :aria-label="`Select row ${rowIndex + 1}`"
+                  @update:model-value="handleSelectRow(rowIndex, $event)"
+                />
+              </td>
               <td
                 v-for="col in columns"
                 :key="col.key"

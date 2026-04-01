@@ -39,33 +39,37 @@ const colorMap: Record<Variant, ColorTokens> = {
 }
 
 // ── Computed inline styles based on variant + badgeStyle ────────────────────
+// Component-level CSS override tokens (set via :style or a wrapping CSS rule):
+//   --badge-bg      overrides background color
+//   --badge-text    overrides text color
+//   --badge-border  overrides border color (outline style only)
 const badgeInlineStyle = computed(() => {
   const tokens = colorMap[props.variant]
 
   switch (props.badgeStyle) {
     case 'subtle':
       return {
-        backgroundColor: tokens.light,
-        color: tokens.text,
+        backgroundColor: `var(--badge-bg, ${tokens.light})`,
+        color:           `var(--badge-text, ${tokens.text})`,
       }
     case 'solid':
       return {
-        backgroundColor: tokens.bg,
-        color: 'var(--color-text-inverse)',
+        backgroundColor: `var(--badge-bg, ${tokens.bg})`,
+        color:           `var(--badge-text, var(--color-text-inverse))`,
       }
     case 'outline':
       return {
         backgroundColor: 'transparent',
-        color: tokens.text,
-        borderWidth: '1px',
-        borderStyle: 'solid',
-        borderColor: tokens.bg,
+        color:           `var(--badge-text, ${tokens.text})`,
+        borderWidth:     '1px',
+        borderStyle:     'solid',
+        borderColor:     `var(--badge-border, ${tokens.bg})`,
       }
   }
 })
 
 const dotInlineStyle = computed(() => ({
-  backgroundColor: colorMap[props.variant].bg,
+  backgroundColor: `var(--badge-bg, ${colorMap[props.variant].bg})`,
 }))
 
 // ── Size classes (layout only, no color) ────────────────────────────────────

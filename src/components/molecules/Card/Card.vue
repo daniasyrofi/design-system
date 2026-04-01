@@ -152,6 +152,13 @@ const hasStructuredSlots = computed(() =>
 </template>
 
 <style scoped>
+/*
+ * Component-level CSS override tokens:
+ *   --card-bg      default: var(--color-surface)
+ *   --card-border  default: var(--color-border)
+ *   --card-shadow  default: (depends on variant)
+ */
+
 /* ── Radius ── */
 .ds-card--radius-sm { border-radius: var(--radius-md); }
 .ds-card--radius-md { border-radius: var(--radius-lg); }
@@ -160,24 +167,27 @@ const hasStructuredSlots = computed(() =>
 
 /* ── Variants ── */
 .ds-card--default {
-  box-shadow: var(--shadow-md), inset 0 0 0 1px var(--color-border);
+  background-color: var(--card-bg, var(--color-surface));
+  box-shadow: var(--card-shadow, var(--shadow-md)), inset 0 0 0 1px var(--card-border, var(--color-border));
 }
 .ds-card--outlined {
-  box-shadow: inset 0 0 0 1px var(--color-border);
+  background-color: var(--card-bg, var(--color-surface));
+  box-shadow: inset 0 0 0 1px var(--card-border, var(--color-border));
 }
 .ds-card--elevated {
-  box-shadow: var(--shadow-2xl), inset 0 0 0 1px var(--color-border);
+  background-color: var(--card-bg, var(--color-surface));
+  box-shadow: var(--card-shadow, var(--shadow-2xl)), inset 0 0 0 1px var(--card-border, var(--color-border));
 }
 .ds-card--glass {
-  background: var(--color-surface-glass, rgba(255,255,255,0.7));
+  background: var(--card-bg, var(--color-surface-glass, rgba(255,255,255,0.7)));
   backdrop-filter: blur(20px);
-  box-shadow: var(--shadow-xl), inset 0 0 0 1px var(--color-border);
+  box-shadow: var(--card-shadow, var(--shadow-xl)), inset 0 0 0 1px var(--card-border, var(--color-border));
 }
 .ds-card--hoverable:hover,
 .ds-card--clickable:hover {
-  box-shadow: var(--shadow-xl), inset 0 0 0 1px var(--color-border);
+  box-shadow: var(--card-shadow-hover, var(--shadow-xl)), inset 0 0 0 1px var(--card-border, var(--color-border));
 }
 .ds-card--clickable:focus-visible {
-  box-shadow: 0 0 0 2px var(--color-primary), inset 0 0 0 1px var(--color-border);
+  box-shadow: 0 0 0 2px var(--color-primary), inset 0 0 0 1px var(--card-border, var(--color-border));
 }
 </style>

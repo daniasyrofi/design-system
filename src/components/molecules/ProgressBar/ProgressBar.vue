@@ -35,13 +35,20 @@ const trackPx: Record<Size, number> = {
   lg: 14,
 }
 
+// Component-level CSS override tokens:
+//   --progress-fill   overrides the fill/bar color (default: variant color)
+//   --progress-track  overrides the track background (default: theme track)
 const variantColor: Record<Variant, string> = {
   primary: 'var(--color-primary)',
   success: 'var(--color-success)',
   warning: 'var(--color-warning)',
-  danger: 'var(--color-danger)',
-  info: 'var(--color-info)',
+  danger:  'var(--color-danger)',
+  info:    'var(--color-info)',
 }
+
+const fillColor = computed(() =>
+  `var(--progress-fill, ${variantColor[props.variant]})`
+)
 </script>
 
 <template>
@@ -83,14 +90,14 @@ const variantColor: Record<Variant, string> = {
         class="h-full rounded-full transition-all duration-500 ease-out"
         :style="{
           width: `${clamped}%`,
-          backgroundColor: variantColor[variant],
+          backgroundColor: fillColor,
         }"
       />
       <!-- Indeterminate shimmer -->
       <div
         v-else
         class="ds-progress-indeterminate h-full rounded-full"
-        :style="{ backgroundColor: variantColor[variant] }"
+        :style="{ backgroundColor: fillColor }"
       />
     </div>
   </div>
@@ -114,7 +121,7 @@ const variantColor: Record<Variant, string> = {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background-color: var(--color-text-primary);
+  background-color: var(--progress-track, var(--color-text-primary));
   opacity: 0.12;
 }
 
