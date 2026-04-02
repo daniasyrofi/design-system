@@ -248,6 +248,11 @@ const hasError = computed(() => !!props.error)
 
 // ── Click outside ─────────────────────────────────────────────────────────────
 
+function clearRange() {
+  emit('update:modelValue', { start: null, end: null })
+  isOpen.value = false
+}
+
 function handleClickOutside(e: MouseEvent) {
   if (containerRef.value && !containerRef.value.contains(e.target as Node)) {
     isOpen.value = false
@@ -495,7 +500,7 @@ function cellClass(cell: CalCell) {
             type="button"
             class="ds-drp-clear-btn text-xs"
             :disabled="!modelValue.start && !modelValue.end"
-            @click="emit('update:modelValue', { start: null, end: null }); isOpen = false"
+            @click="clearRange"
           >
             Clear
           </button>

@@ -29,13 +29,14 @@ jobs:
 
       - run: npm ci
 
-      # Creates a PR bumping versions when changesets are present,
-      # or publishes directly if the version PR was merged.
+      # Creates a "Version Packages" PR when changesets are present.
+      # When that PR is merged, publishes to npm.
       - uses: changesets/action@v1
         with:
           publish: npm run release
-          title: "chore: version packages"
-          commit: "chore: version packages"
+          title: 'chore: version packages'
+          commit: 'chore: version packages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        continue-on-error: true
