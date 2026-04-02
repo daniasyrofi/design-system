@@ -1,0 +1,14 @@
+/**
+ * Abadikan DS — Library build stylesheet
+ * Scoped to only the component and composable source files
+ * so Tailwind generates only the utilities actually used.
+ */
+@import './fonts.css';
+@import 'tailwindcss';
+
+/* Only scan DS source files — keeps output small */
+@source '../components/**/*.vue';
+@source '../composables/**/*.ts';
+
+/* Declare layer order */
+@layer ds.tokens, ds.base, ds.components;

@@ -32,7 +32,8 @@
       "import": "./dist/tokens.mjs",
       "require": "./dist/tokens.cjs"
     },
-    "./styles": "./dist/style.css"
+    "./styles": "./dist/style.css",
+    "./style.css": "./dist/style.css"
   },
   "files": [
     "dist"
