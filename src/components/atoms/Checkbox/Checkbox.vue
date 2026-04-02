@@ -12,6 +12,7 @@ interface Props {
   size?:        CheckboxSize
   color?:       CheckboxColor
   disabled?:    boolean
+  readonly?:    boolean
   label?:       string
   description?: string
   error?:       string
@@ -23,6 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   size:     'md',
   color:    'primary',
   disabled: false,
+  readonly: false,
 })
 
 const emit = defineEmits<{ 'update:modelValue': [value: CheckboxValue] }>()
@@ -35,6 +37,7 @@ const isActive        = computed(() => isChecked.value || isIndeterminate.value)
 const hasError        = computed(() => !!props.error)
 
 function handleChange(e: Event) {
+  if (props.readonly) return
   const target = e.target as HTMLInputElement
   if (props.modelValue === 'indeterminate') {
     emit('update:modelValue', true)
@@ -123,7 +126,7 @@ const focusRingVar = computed(() =>
     <label
       :class="cn(
         'checkbox-label relative flex items-start gap-2.5',
-        disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+        disabled ? 'cursor-not-allowed' : readonly ? 'cursor-default' : 'cursor-pointer',
       )"
       :data-active="isActive || undefined"
       :data-error="hasError || undefined"

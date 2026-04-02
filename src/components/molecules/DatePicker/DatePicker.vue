@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount, useId } from 'vue'
 import { cn } from '@/lib/utils'
 import {
   RiCalendarLine,
@@ -47,6 +47,7 @@ const emit = defineEmits<{
 
 const isOpen = ref(false)
 const containerRef = ref<HTMLElement | null>(null)
+const triggerId = useId()
 
 // Calendar view state
 const viewYear = ref(new Date().getFullYear())
@@ -277,6 +278,7 @@ const triggerClasses = computed(() =>
     <!-- Label -->
     <label
       v-if="label"
+      :for="triggerId"
       :class="cn(
         'text-sm font-medium text-[--color-text-primary]',
         disabled && 'opacity-50',
@@ -287,6 +289,7 @@ const triggerClasses = computed(() =>
 
     <!-- Trigger -->
     <button
+      :id="triggerId"
       type="button"
       :class="triggerClasses"
       :disabled="disabled"

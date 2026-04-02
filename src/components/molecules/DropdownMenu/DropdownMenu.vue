@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils'
 type Placement = 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'
 
 export interface DropdownMenuItem {
+  /** Text label of the menu item. Required unless separator is true. */
+  label?: string
   /** Text label of the menu item. */
   label: string
   /** Component or icon element to render on the left. */

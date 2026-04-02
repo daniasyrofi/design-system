@@ -8,6 +8,8 @@ interface Props {
   name: string
   size?: IconSize
   color?: string
+  /** Accessible label. When provided, the icon is treated as informative (not decorative). */
+  label?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -37,7 +39,9 @@ const iconComponent = computed<Component | null>(() => {
     v-if="iconComponent"
     :size="pixelSize"
     :color="color"
-    aria-hidden="true"
+    :aria-hidden="!label || undefined"
+    :aria-label="label"
+    :role="label ? 'img' : undefined"
   />
   <span
     v-else

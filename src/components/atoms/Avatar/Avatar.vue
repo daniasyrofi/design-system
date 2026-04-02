@@ -178,6 +178,7 @@ const containerStyle = computed(() => {
     <!-- Status dot -->
     <span
       v-if="status"
+      role="img"
       :class="cn(
         'absolute bottom-0 right-0 rounded-full',
         statusSizeClass[size],

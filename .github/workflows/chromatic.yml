@@ -1,0 +1,42 @@
+name: Chromatic Visual Regression
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: chromatic-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chromatic:
+    name: Visual Regression (Chromatic)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full git history required for Chromatic's TurboSnap baseline detection
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Publish to Chromatic — auto-accept on main, review on PRs
+      - name: Publish to Chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          # Only fail the build on PRs (no auto-accept)
+          autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }}
+          # Exit with non-zero code if there are unapproved changes on PRs
+          exitZeroOnChanges: ${{ github.event_name != 'pull_request' }}
+          # Skip unchanged stories via TurboSnap (faster CI)
+          onlyChanged: true
+          # Build Storybook fresh (don't reuse stale artifacts)
+          buildScriptName: build-storybook

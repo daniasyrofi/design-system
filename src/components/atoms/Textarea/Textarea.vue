@@ -19,6 +19,7 @@ interface Props {
   readonly?:   boolean
   counter?:    boolean
   maxlength?:  number
+  required?:   boolean
   resize?:     TextareaResize
 }
 
@@ -28,6 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
   autoResize: true,
   disabled:   false,
   readonly:   false,
+  required:   false,
   counter:    false,
   resize:     'none',
 })
@@ -127,12 +129,18 @@ const textareaClasses = computed(() =>
       v-if="label"
       :for="textareaId"
       :class="cn(
-        'text-sm font-medium select-none',
+        'text-sm font-medium select-none flex items-center',
         disabled && 'opacity-50',
       )"
       :style="{ color: 'var(--color-text-heading)' }"
     >
       {{ label }}
+      <span
+        v-if="required"
+        class="ml-1 font-bold inline-block"
+        :style="{ color: 'var(--color-danger)' }"
+        aria-hidden="true"
+      >*</span>
     </label>
 
     <!-- Textarea wrapper -->
@@ -145,6 +153,7 @@ const textareaClasses = computed(() =>
         :rows="rows"
         :disabled="disabled"
         :readonly="readonly"
+        :required="required"
         :maxlength="maxlength"
         :style="resizeStyle"
         :aria-invalid="hasError || undefined"

@@ -8,12 +8,16 @@ const { toasts, dismiss } = useToast()
 
 <template>
   <Teleport to="body">
+    <!-- Outer live region so AT discovers new toasts even when injected via Teleport -->
     <div
       :class="cn(
         'fixed top-4 right-4 z-50',
         'flex flex-col gap-3',
         'pointer-events-none',
       )"
+      aria-live="polite"
+      aria-label="Notifications"
+      role="region"
     >
       <TransitionGroup
         enter-active-class="transition duration-[--duration-normal] ease-[--ease-default]"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useId } from 'vue'
 import { cn } from '@/lib/utils'
 import { RiAddLine, RiSubtractLine } from '@remixicon/vue'
 
@@ -18,6 +18,8 @@ interface Props {
   size?: Size
   /** Disables the input and buttons. @default false */
   disabled?: boolean
+  /** Shows value but prevents editing. @default false */
+  readonly?: boolean
   /** Optional label text displayed above the input. */
   label?: string
 }
@@ -28,6 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
   step: 1,
   size: 'md',
   disabled: false,
+  readonly: false,
 })
 
 const emit = defineEmits<{
@@ -38,16 +41,17 @@ const canDecrement = computed(() => props.modelValue - props.step >= props.min)
 const canIncrement = computed(() => props.modelValue + props.step <= props.max)
 
 function decrement() {
-  if (!canDecrement.value || props.disabled) return
+  if (!canDecrement.value || props.disabled || props.readonly) return
   emit('update:modelValue', Math.max(props.min, props.modelValue - props.step))
 }
 
 function increment() {
-  if (!canIncrement.value || props.disabled) return
+  if (!canIncrement.value || props.disabled || props.readonly) return
   emit('update:modelValue', Math.min(props.max, props.modelValue + props.step))
 }
 
 function handleInput(e: Event) {
+  if (props.readonly) return
   const val = parseFloat((e.target as HTMLInputElement).value)
   if (!isNaN(val)) {
     emit('update:modelValue', Math.max(props.min, Math.min(props.max, val)))
@@ -72,6 +76,8 @@ const iconPx: Record<Size, string> = {
   lg: '18',
 }
 
+const inputId = useId()
+
 const btnWidthClass: Record<Size, string> = {
   sm: 'w-8',
   md: 'w-10',
@@ -83,6 +89,7 @@ const btnWidthClass: Record<Size, string> = {
   <div class="flex flex-col gap-1.5 w-full">
     <label
       v-if="label"
+      :for="inputId"
       :class="cn('text-sm font-medium select-none', disabled && 'opacity-50')"
       style="color: var(--color-text-heading);"
     >
@@ -96,11 +103,13 @@ const btnWidthClass: Record<Size, string> = {
         'transition-colors duration-200 ease-out',
         heightClass[size],
         disabled && 'ds-number-input--disabled',
+        readonly && 'ds-number-input--readonly',
       )"
     >
       <!-- Decrement -->
       <button
         type="button"
+        :disabled="disabled || readonly || !canDecrement"
         :disabled="disabled || !canDecrement"
         :class="cn(
           'ds-number-btn ds-number-btn--left',
@@ -117,16 +126,19 @@ const btnWidthClass: Record<Size, string> = {
 
       <!-- Value display -->
       <input
+        :id="inputId"
         type="number"
         :value="modelValue"
         :min="min"
         :max="max === Infinity ? undefined : max"
         :step="step"
         :disabled="disabled"
+        :readonly="readonly"
         :class="cn(
           'ds-number-input__value flex-1 min-w-0 text-center font-semibold bg-transparent outline-none border-none tabular-nums',
           textClass[size],
           disabled && 'cursor-not-allowed',
+          readonly && 'cursor-default select-none',
         )"
         @input="handleInput"
       />
@@ -134,6 +146,7 @@ const btnWidthClass: Record<Size, string> = {
       <!-- Increment -->
       <button
         type="button"
+        :disabled="disabled || readonly || !canIncrement"
         :disabled="disabled || !canIncrement"
         :class="cn(
           'ds-number-btn ds-number-btn--right',
@@ -171,6 +184,10 @@ const btnWidthClass: Record<Size, string> = {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
+}
+
+.ds-number-input--readonly {
+  background-color: var(--color-bg-subtle);
 }
 
 /* ── Value input ── */

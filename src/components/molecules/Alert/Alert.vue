@@ -87,8 +87,10 @@ const isHeadingOnly = computed(() => Boolean(props.title) && !hasBody.value && !
 </script>
 
 <template>
+  <!-- role="alert" (assertive) for urgent variants; role="status" (polite) for info/success -->
   <div
-    role="alert"
+    :role="variant === 'danger' || variant === 'warning' ? 'alert' : 'status'"
+    aria-atomic="true"
     :class="cn('relative flex items-start w-full')"
     :style="{
       padding:         s.p,

@@ -11,6 +11,7 @@ interface Props {
   size?:        RadioSize
   color?:       RadioColor
   disabled?:    boolean
+  readonly?:    boolean
   label?:       string
   description?: string
   error?:       string
@@ -21,6 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
   size:     'md',
   color:    'primary',
   disabled: false,
+  readonly: false,
 })
 
 const emit = defineEmits<{ 'update:modelValue': [value: string | number] }>()
@@ -30,7 +32,7 @@ const isChecked = computed(() => props.modelValue === props.value)
 const hasError  = computed(() => !!props.error)
 
 function handleChange() {
-  if (!props.disabled) {
+  if (!props.disabled && !props.readonly) {
     emit('update:modelValue', props.value)
   }
 }
@@ -131,9 +133,10 @@ const focusRingVar = computed(() =>
 <template>
   <div :class="cn('inline-flex flex-col gap-1', disabled && 'cursor-not-allowed')">
     <label
+      :for="inputId"
       :class="cn(
         'relative flex items-start gap-2.5',
-        disabled ? 'cursor-not-allowed' : 'cursor-pointer group',
+        disabled ? 'cursor-not-allowed' : readonly ? 'cursor-default' : 'cursor-pointer group',
       )"
     >
       <!-- Hidden native input -->
@@ -153,10 +156,7 @@ const focusRingVar = computed(() =>
       <!-- Visual radio button -->
       <span
         :class="outerClasses"
-        :style="[
-          outerStyle,
-          { '--tw-ring-color': focusRingVar } as any,
-        ]"
+        :style="[outerStyle, { '--focus-ring': focusRingVar }]"
         aria-hidden="true"
       >
         <span :class="innerClasses" :style="innerStyle" />
@@ -204,6 +204,6 @@ const focusRingVar = computed(() =>
 <style scoped>
 .peer:focus-visible ~ span {
   outline: none;
-  box-shadow: var(--tw-ring-color, 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary));
+  box-shadow: var(--focus-ring, 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary));
 }
 </style>

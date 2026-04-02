@@ -1,6 +1,9 @@
 @import './fonts.css';
 @import 'tailwindcss';
 
+/* Declare layer order: tokens < base < components. Consumer utilities win by default (unlayered). */
+@layer ds.tokens, ds.base, ds.components;
+
 @theme {
   --spacing-0: var(--space-0);
   --spacing-px: var(--space-px);
@@ -92,13 +95,51 @@
   --radius-2xl:  20px;
   --radius-full: 9999px;
 
-  /* ── Transitions ──────────────────────────────────────────── */
-  --duration-fast:   100ms;
-  --duration-normal: 200ms;
-  --duration-slow:   300ms;
-  --ease-default:    cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-in:         cubic-bezier(0.4, 0, 1, 1);
-  --ease-out:        cubic-bezier(0, 0, 0.2, 1);
+  /* ── Motion: duration ─────────────────────────────────────── */
+  --duration-instant: 50ms;
+  --duration-fast:    100ms;
+  --duration-normal:  200ms;
+  --duration-slow:    300ms;
+  --duration-enter:   200ms;  /* elements entering the screen */
+  --duration-exit:    150ms;  /* elements leaving — slightly faster */
+  --duration-expand:  280ms;  /* height expansions (Collapsible, Accordion) */
+  --duration-page:    400ms;  /* full-page transitions */
+
+  /* ── Motion: easing ───────────────────────────────────────── */
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in:      cubic-bezier(0.4, 0, 1, 1);
+  --ease-out:     cubic-bezier(0, 0, 0.2, 1);
+  --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);  /* overshoot spring */
+  --ease-bounce:  cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-sharp:   cubic-bezier(0.4, 0, 0.6, 1);       /* material sharp */
+
+  /* ── Typography: font-size scale ──────────────────────────── */
+  --text-2xs:  0.625rem;   /* 10px */
+  --text-xs:   0.75rem;    /* 12px */
+  --text-sm:   0.875rem;   /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg:   1.125rem;   /* 18px */
+  --text-xl:   1.25rem;    /* 20px */
+  --text-2xl:  1.5rem;     /* 24px */
+  --text-3xl:  1.875rem;   /* 30px */
+  --text-4xl:  2.25rem;    /* 36px */
+  --text-5xl:  3rem;       /* 48px */
+
+  /* ── Typography: line-height scale ────────────────────────── */
+  --leading-none:    1;
+  --leading-tight:   1.25;
+  --leading-snug:    1.375;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose:   2;
+
+  /* ── Typography: letter-spacing scale ─────────────────────── */
+  --tracking-tighter: -0.05em;
+  --tracking-tight:   -0.025em;
+  --tracking-normal:   0em;
+  --tracking-wide:     0.025em;
+  --tracking-wider:    0.05em;
+  --tracking-widest:   0.1em;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -106,271 +147,354 @@
    These swap between light/dark mode.
    Components MUST only reference these tokens.
 ═══════════════════════════════════════════════════════════════ */
-:root {
-  /* Spacing system: default = 4px grid, comfortable density */
-  --space-0:   0px;
-  --space-px:  1px;
-  --space-0-5: 2px;
-  --space-1:   4px;
-  --space-1-5: 6px;
-  --space-2:   8px;
-  --space-2-5: 10px;
-  --space-3:   12px;
-  --space-4:   16px;
-  --space-5:   20px;
-  --space-6:   24px;
-  --space-8:   32px;
-  --space-10:  40px;
-  --space-12:  48px;
-  --space-16:  64px;
-  --space-20:  80px;
-  --space-24:  96px;
+@layer ds.tokens {
+  :root {
+    /* Light-mode color scheme */
+    color-scheme: light;
 
-  /* ── Colors: Light mode ───────────────────────────────────── */
-  --color-bg:             var(--primitive-neutral-50);
-  --color-bg-subtle:      var(--primitive-neutral-100);
-  --color-surface:        #ffffff;
-  --color-surface-raised: #ffffff;
-  --color-surface-overlay:#ffffff;
+    /* Spacing system: default = 4px grid, comfortable density */
+    --space-0:   0px;
+    --space-px:  1px;
+    --space-0-5: 2px;
+    --space-1:   4px;
+    --space-1-5: 6px;
+    --space-2:   8px;
+    --space-2-5: 10px;
+    --space-3:   12px;
+    --space-4:   16px;
+    --space-5:   20px;
+    --space-6:   24px;
+    --space-8:   32px;
+    --space-10:  40px;
+    --space-12:  48px;
+    --space-16:  64px;
+    --space-20:  80px;
+    --space-24:  96px;
 
-  --color-border:         var(--primitive-neutral-200);
-  --color-border-subtle:  color-mix(in oklch, var(--primitive-neutral-200) 50%, transparent);
-  --color-border-strong:  var(--primitive-neutral-300);
+    /* ── Colors: Light mode ───────────────────────────────────── */
+    --color-bg:             var(--primitive-neutral-50);
+    --color-bg-subtle:      var(--primitive-neutral-100);
+    --color-surface:        #ffffff;
+    --color-surface-raised: #ffffff;
+    --color-surface-overlay:#ffffff;
 
-  --color-text-heading:   var(--primitive-neutral-900);
-  --color-text-primary:   var(--primitive-neutral-700);
-  --color-text-secondary: var(--primitive-neutral-500);
-  --color-text-tertiary:  var(--primitive-neutral-400);
-  --color-text-muted:     var(--primitive-neutral-400);
-  --color-text-disabled:  var(--primitive-neutral-300);
-  --color-text-inverse:   #ffffff;
+    --color-border:         var(--primitive-neutral-200);
+    --color-border-subtle:  color-mix(in oklch, var(--primitive-neutral-200) 50%, transparent);
+    --color-border-strong:  var(--primitive-neutral-300);
 
-  --color-primary:        var(--primitive-red-base);
-  --color-primary-hover:  var(--primitive-red-dark);
-  --color-primary-light:  var(--primitive-red-light);
-  --color-primary-text:   #ffffff;
+    --color-text-heading:   var(--primitive-neutral-900);
+    --color-text-primary:   var(--primitive-neutral-700);
+    --color-text-secondary: var(--primitive-neutral-500);
+    --color-text-tertiary:  var(--primitive-neutral-400);
+    --color-text-muted:     var(--primitive-neutral-400);
+    --color-text-disabled:  var(--primitive-neutral-300);
+    --color-text-inverse:   #ffffff;
 
-  --color-secondary:      var(--primitive-pink-base);
-  --color-secondary-hover:var(--primitive-pink-dark);
-  --color-secondary-light:var(--primitive-pink-light);
+    --color-primary:        var(--primitive-red-base);
+    --color-primary-hover:  var(--primitive-red-dark);
+    --color-primary-light:  var(--primitive-red-light);
+    --color-primary-text:   #ffffff;
 
-  --color-neutral:        var(--primitive-neutral-900);
-  --color-neutral-hover:  var(--primitive-neutral-800);
-  --color-neutral-light:  var(--primitive-neutral-100);
+    --color-secondary:      var(--primitive-pink-base);
+    --color-secondary-hover:var(--primitive-pink-dark);
+    --color-secondary-light:var(--primitive-pink-light);
 
-  --color-success:        var(--primitive-success-base);
-  --color-success-hover:  var(--primitive-success-dark);
-  --color-success-light:  var(--primitive-success-light);
+    --color-neutral:        var(--primitive-neutral-900);
+    --color-neutral-hover:  var(--primitive-neutral-800);
+    --color-neutral-light:  var(--primitive-neutral-100);
 
-  --color-warning:        var(--primitive-warning-base);
-  --color-warning-hover:  var(--primitive-warning-dark);
-  --color-warning-light:  var(--primitive-warning-light);
+    --color-success:        var(--primitive-success-base);
+    --color-success-hover:  var(--primitive-success-dark);
+    --color-success-light:  var(--primitive-success-light);
 
-  --color-info:           var(--primitive-info-base);
-  --color-info-hover:     var(--primitive-info-dark);
-  --color-info-light:     var(--primitive-info-light);
+    --color-warning:        var(--primitive-warning-base);
+    --color-warning-hover:  var(--primitive-warning-dark);
+    --color-warning-light:  var(--primitive-warning-light);
 
-  --color-danger:         var(--primitive-danger-base);
-  --color-danger-hover:   var(--primitive-danger-dark);
-  --color-danger-light:   var(--primitive-danger-light);
+    --color-info:           var(--primitive-info-base);
+    --color-info-hover:     var(--primitive-info-dark);
+    --color-info-light:     var(--primitive-info-light);
 
-  /* ── Shadows: Light mode (warm-tinted for palette harmony) ── */
-  --shadow-xs:  0 1px 2px oklch(0.20 0.005 80 / 0.06);
-  --shadow-sm:  0 1px 2px oklch(0.20 0.005 80 / 0.06), 0 2px 4px oklch(0.20 0.005 80 / 0.04);
-  --shadow-md:  0 2px 4px oklch(0.20 0.005 80 / 0.05), 0 6px 12px oklch(0.20 0.005 80 / 0.07);
-  --shadow-lg:  0 4px 6px oklch(0.20 0.005 80 / 0.05), 0 10px 20px oklch(0.20 0.005 80 / 0.10), 0 20px 40px oklch(0.20 0.005 80 / 0.06);
-  --shadow-xl:  0 8px 12px oklch(0.20 0.005 80 / 0.07), 0 20px 40px oklch(0.20 0.005 80 / 0.13), 0 40px 80px oklch(0.20 0.005 80 / 0.08);
-  --shadow-2xl: 0 12px 24px oklch(0.20 0.005 80 / 0.10), 0 32px 64px oklch(0.20 0.005 80 / 0.16), 0 64px 96px oklch(0.20 0.005 80 / 0.10);
-  --shadow-inset: inset 0 1px 3px oklch(0.20 0.005 80 / 0.12), inset 0 1px 1px oklch(0.20 0.005 80 / 0.08);
-  --shadow-highlight: inset 0 1px 0 oklch(1 0 0 / 0.12);
-  --ring-primary: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary);
-  --ring-danger:  0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-danger);
+    --color-danger:         var(--primitive-danger-base);
+    --color-danger-hover:   var(--primitive-danger-dark);
+    --color-danger-light:   var(--primitive-danger-light);
 
-  /* ── Glass surface ────────────────────────────────────────── */
-  --color-surface-glass: oklch(1 0 0 / 0.72);
-  --glass-border: oklch(1 0 0 / 0.20);
-  --glass-blur: blur(16px) saturate(180%);
+    /* ── Shadows: Light mode (warm-tinted for palette harmony) ── */
+    --shadow-xs:  0 1px 2px oklch(0.20 0.005 80 / 0.06);
+    --shadow-sm:  0 1px 2px oklch(0.20 0.005 80 / 0.06), 0 2px 4px oklch(0.20 0.005 80 / 0.04);
+    --shadow-md:  0 2px 4px oklch(0.20 0.005 80 / 0.05), 0 6px 12px oklch(0.20 0.005 80 / 0.07);
+    --shadow-lg:  0 4px 6px oklch(0.20 0.005 80 / 0.05), 0 10px 20px oklch(0.20 0.005 80 / 0.10), 0 20px 40px oklch(0.20 0.005 80 / 0.06);
+    --shadow-xl:  0 8px 12px oklch(0.20 0.005 80 / 0.07), 0 20px 40px oklch(0.20 0.005 80 / 0.13), 0 40px 80px oklch(0.20 0.005 80 / 0.08);
+    --shadow-2xl: 0 12px 24px oklch(0.20 0.005 80 / 0.10), 0 32px 64px oklch(0.20 0.005 80 / 0.16), 0 64px 96px oklch(0.20 0.005 80 / 0.10);
+    --shadow-inset: inset 0 1px 3px oklch(0.20 0.005 80 / 0.12), inset 0 1px 1px oklch(0.20 0.005 80 / 0.08);
+    --shadow-highlight: inset 0 1px 0 oklch(1 0 0 / 0.12);
+    --ring-primary: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary);
+    --ring-danger:  0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-danger);
 
-  /* ── Avatar initials lightness (hue comes from JS) ────────── */
-  --avatar-bg-l:   0.88;
-  --avatar-text-l: 0.38;
+    /* ── Glass surface ────────────────────────────────────────── */
+    --color-surface-glass: oklch(1 0 0 / 0.72);
+    --glass-border: oklch(1 0 0 / 0.20);
+    --glass-blur: blur(16px) saturate(180%);
+
+    /* ── Elevation: semantic surface levels ─────────────────────
+       Use these instead of raw shadow-* to convey depth hierarchy.
+       elevation-0 = flat (inline element, tag pill on colored bg)
+       elevation-1 = raised (card, input field, button)
+       elevation-2 = floating (dropdown, popover, hover card)
+       elevation-3 = dialog (modal, drawer, alert dialog)
+       elevation-4 = notification (toast, command palette)
+    ─────────────────────────────────────────────────────────── */
+    --elevation-0: none;
+    --elevation-1: var(--shadow-xs);
+    --elevation-2: var(--shadow-md);
+    --elevation-3: var(--shadow-lg);
+    --elevation-4: var(--shadow-xl);
+
+    /* ── Avatar initials lightness (hue comes from JS) ────────── */
+    --avatar-bg-l:   0.88;
+    --avatar-text-l: 0.38;
+  }
+
+  /* ── Dark Mode ────────────────────────────────────────────────── */
+  [data-theme='dark'], .dark, .sb-main-dark {
+    color-scheme: dark;
+
+    --color-bg:             oklch(0.15 0.005 80);
+    --color-bg-subtle:      oklch(0.18 0.006 80);
+    --color-surface:        oklch(0.20 0.008 80);
+    --color-surface-raised: oklch(0.25 0.008 80);
+    --color-surface-overlay:oklch(0.22 0.008 80);
+
+    --color-border:         oklch(0.30 0.010 80);
+    --color-border-subtle:  oklch(0.25 0.010 80);
+    --color-border-strong:  oklch(0.35 0.010 80);
+
+    --color-text-heading:   oklch(0.96 0.005 80);
+    --color-text-primary:   oklch(0.90 0.005 80);
+    --color-text-secondary: oklch(0.70 0.005 80);
+    --color-text-tertiary:  oklch(0.55 0.005 80);
+    --color-text-muted:     oklch(0.55 0.005 80);
+    --color-text-disabled:  oklch(0.40 0.005 80);
+    --color-text-inverse:   oklch(0.15 0.005 80);
+
+    --color-primary:        oklch(0.65 0.20 18);
+    --color-primary-hover:  oklch(0.70 0.20 18);
+    --color-primary-light:  oklch(0.25 0.06 18);
+
+    --color-secondary:      oklch(0.68 0.16 350);
+    --color-secondary-hover:oklch(0.73 0.16 350);
+    --color-secondary-light:oklch(0.25 0.05 350);
+
+    --color-neutral:        oklch(0.90 0.005 80);
+    --color-neutral-hover:  oklch(0.96 0.005 80);
+    --color-neutral-light:  oklch(0.25 0.008 80);
+
+    --color-danger:         oklch(0.60 0.22 28);
+    --color-danger-hover:   oklch(0.65 0.22 28);
+    --color-danger-light:   oklch(0.30 0.06 28);
+
+    /* ── Shadows: Dark mode (multi-layer, higher opacity) ───────── */
+    --shadow-xs:  0 1px 2px oklch(0.05 0 0 / 0.25);
+    --shadow-sm:  0 1px 2px oklch(0.05 0 0 / 0.25), 0 2px 4px oklch(0.05 0 0 / 0.20);
+    --shadow-md:  0 2px 4px oklch(0.05 0 0 / 0.25), 0 6px 12px oklch(0.05 0 0 / 0.30);
+    --shadow-lg:  0 4px 6px oklch(0.05 0 0 / 0.25), 0 12px 24px oklch(0.05 0 0 / 0.35), 0 24px 48px oklch(0.05 0 0 / 0.20);
+    --shadow-xl:  0 8px 10px oklch(0.05 0 0 / 0.25), 0 20px 40px oklch(0.05 0 0 / 0.40), 0 40px 80px oklch(0.05 0 0 / 0.25);
+    --shadow-inset: inset 0 1px 3px oklch(0.05 0 0 / 0.30), inset 0 1px 1px oklch(0.05 0 0 / 0.20);
+    --shadow-highlight: inset 0 1px 0 oklch(1 0 0 / 0.06);
+    --ring-primary: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary);
+    --ring-danger:  0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-danger);
+
+    /* ── Glass surface: Dark variant ─────────────────────────── */
+    --color-surface-glass: oklch(0.20 0.008 80 / 0.75);
+    --glass-border: oklch(1 0 0 / 0.08);
+
+    /* ── Avatar initials lightness: dark mode variant ────────── */
+    --avatar-bg-l:   0.28;
+    --avatar-text-l: 0.78;
+  }
 }
-
-/* ── Dark Mode ────────────────────────────────────────────────── */
-[data-theme='dark'], .dark, .sb-main-dark {
-  --color-bg:             oklch(0.15 0.005 80);
-  --color-bg-subtle:      oklch(0.18 0.006 80);
-  --color-surface:        oklch(0.20 0.008 80);
-  --color-surface-raised: oklch(0.25 0.008 80);
-  --color-surface-overlay:oklch(0.22 0.008 80);
-
-  --color-border:         oklch(0.30 0.010 80);
-  --color-border-subtle:  oklch(0.25 0.010 80);
-  --color-border-strong:  oklch(0.35 0.010 80);
-
-  --color-text-heading:   oklch(0.96 0.005 80);
-  --color-text-primary:   oklch(0.90 0.005 80);
-  --color-text-secondary: oklch(0.70 0.005 80);
-  --color-text-tertiary:  oklch(0.55 0.005 80);
-  --color-text-muted:     oklch(0.55 0.005 80);
-  --color-text-disabled:  oklch(0.40 0.005 80);
-  --color-text-inverse:   oklch(0.15 0.005 80);
-
-  --color-primary:        oklch(0.65 0.20 18);
-  --color-primary-hover:  oklch(0.70 0.20 18);
-  --color-primary-light:  oklch(0.25 0.06 18);
-
-  --color-secondary:      oklch(0.68 0.16 350);
-  --color-secondary-hover:oklch(0.73 0.16 350);
-  --color-secondary-light:oklch(0.25 0.05 350);
-
-  --color-neutral:        oklch(0.90 0.005 80);
-  --color-neutral-hover:  oklch(0.96 0.005 80);
-  --color-neutral-light:  oklch(0.25 0.008 80);
-
-  --color-danger:         oklch(0.60 0.22 28);
-  --color-danger-hover:   oklch(0.65 0.22 28);
-  --color-danger-light:   oklch(0.30 0.06 28);
-
-  /* ── Shadows: Dark mode (multi-layer, higher opacity) ───────── */
-  --shadow-xs:  0 1px 2px oklch(0.05 0 0 / 0.25);
-  --shadow-sm:  0 1px 2px oklch(0.05 0 0 / 0.25), 0 2px 4px oklch(0.05 0 0 / 0.20);
-  --shadow-md:  0 2px 4px oklch(0.05 0 0 / 0.25), 0 6px 12px oklch(0.05 0 0 / 0.30);
-  --shadow-lg:  0 4px 6px oklch(0.05 0 0 / 0.25), 0 12px 24px oklch(0.05 0 0 / 0.35), 0 24px 48px oklch(0.05 0 0 / 0.20);
-  --shadow-xl:  0 8px 10px oklch(0.05 0 0 / 0.25), 0 20px 40px oklch(0.05 0 0 / 0.40), 0 40px 80px oklch(0.05 0 0 / 0.25);
-  --shadow-inset: inset 0 1px 3px oklch(0.05 0 0 / 0.30), inset 0 1px 1px oklch(0.05 0 0 / 0.20);
-  --shadow-highlight: inset 0 1px 0 oklch(1 0 0 / 0.06);
-  --ring-primary: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary);
-  --ring-danger:  0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-danger);
-
-  /* ── Glass surface: Dark variant ─────────────────────────── */
-  --color-surface-glass: oklch(0.20 0.008 80 / 0.75);
-  --glass-border: oklch(1 0 0 / 0.08);
-
-  /* ── Avatar initials lightness: dark mode variant ────────── */
-  --avatar-bg-l:   0.28;
-  --avatar-text-l: 0.78;
-}
-
 
 /* ═══════════════════════════════════════════════════════════════
    BASE STYLES
 ═══════════════════════════════════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; }
+@layer ds.base {
+  *, *::before, *::after { box-sizing: border-box; }
 
-html {
-  font-family: var(--font-ui);
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--color-text-primary);
-  background-color: var(--color-bg);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
+  html {
+    font-family: var(--font-ui);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-text-primary);
+    background-color: var(--color-bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
 
-/* ── Typography utilities ─────────────────────────────────────── */
-.text-display {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 1rem + 2vw, 2.25rem);
-  line-height: 1.15;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-.text-h1 {
-  font-family: var(--font-display);
-  font-size: clamp(1.25rem, 0.9rem + 1.5vw, 1.875rem);
-  line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-}
-.text-h2 {
-  font-family: var(--font-display);
-  font-size: clamp(1.125rem, 0.9rem + 1vw, 1.5rem);
-  line-height: 1.25;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-.text-h3 {
-  font-family: var(--font-ui);
-  font-size: clamp(1rem, 0.95rem + 0.4vw, 1.25rem);
-  line-height: 1.35;
-  font-weight: 600;
-}
-.text-h4 {
-  font-family: var(--font-ui);
-  font-size: clamp(0.9375rem, 0.9rem + 0.25vw, 1.125rem);
-  line-height: 1.4;
-  font-weight: 600;
-}
-.text-body-lg { font-size: clamp(0.9375rem, 0.9rem + 0.25vw, 1.125rem); line-height: 1.6; }
-.text-body    { font-size: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);     line-height: 1.6; }
-.text-body-sm { font-size: clamp(0.8125rem, 0.8rem + 0.1vw, 0.875rem);  line-height: 1.5; }
-.text-caption { font-size: 0.75rem; line-height: 1.5; }
-.text-overline {
-  font-size: 0.75rem;
-  line-height: 1.5;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.text-code    { font-family: var(--font-mono); font-size: clamp(0.8125rem, 0.8rem + 0.1vw, 0.875rem); line-height: 1.6; }
-.text-code-sm { font-family: var(--font-mono); font-size: 0.75rem; line-height: 1.5; }
+  /* ── Typography utilities ─────────────────────────────────────── */
+  .text-display {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .text-h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 0.9rem + 1.5vw, 1.875rem);
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+  .text-h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.125rem, 0.9rem + 1vw, 1.5rem);
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .text-h3 {
+    font-family: var(--font-ui);
+    font-size: clamp(1rem, 0.95rem + 0.4vw, 1.25rem);
+    line-height: 1.35;
+    font-weight: 600;
+  }
+  .text-h4 {
+    font-family: var(--font-ui);
+    font-size: clamp(0.9375rem, 0.9rem + 0.25vw, 1.125rem);
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  .text-body-lg { font-size: clamp(0.9375rem, 0.9rem + 0.25vw, 1.125rem); line-height: 1.6; }
+  .text-body    { font-size: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);     line-height: 1.6; }
+  .text-body-sm { font-size: clamp(0.8125rem, 0.8rem + 0.1vw, 0.875rem);  line-height: 1.5; }
+  .text-caption { font-size: 0.75rem; line-height: 1.5; }
+  .text-overline {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .text-code    { font-family: var(--font-mono); font-size: clamp(0.8125rem, 0.8rem + 0.1vw, 0.875rem); line-height: 1.6; }
+  .text-code-sm { font-family: var(--font-mono); font-size: 0.75rem; line-height: 1.5; }
 
-/* ── Focus ring ───────────────────────────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
+  /* ── Focus ring ───────────────────────────────────────────────── */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
 
-/* ── Scrollbar ────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: var(--radius-full); }
-::-webkit-scrollbar-thumb:hover { background: var(--color-text-tertiary); }
+  /* ── Scrollbar ────────────────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: var(--radius-full); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-text-tertiary); }
+}
 
 /* ═══════════════════════════════════════════════════════════════
    KEYFRAME ANIMATIONS
    Used by components via Tailwind animate-[] or inline styles.
 ═══════════════════════════════════════════════════════════════ */
+@layer ds.components {
+  @keyframes shimmer {
+    from { background-position: -400px 0; }
+    to   { background-position:  400px 0; }
+  }
 
-@keyframes shimmer {
-  from { background-position: -400px 0; }
-  to   { background-position:  400px 0; }
+  .skel {
+    background: linear-gradient(
+      90deg,
+      var(--color-neutral-light) 25%,
+      var(--color-border)        50%,
+      var(--color-neutral-light) 75%
+    );
+    background-size: 800px 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0);   }
+  }
+
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0);     opacity: 0.5; }
+    30%            { transform: translateY(-4px);  opacity: 1;   }
+  }
+
+  @keyframes shake {
+    0%, 100%        { transform: translateX(0);    }
+    10%, 50%, 90%   { transform: translateX(-4px); }
+    30%, 70%        { transform: translateX(4px);  }
+  }
+
+  @keyframes scaleIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
+  @keyframes slideDown {
+    from { transform: translateY(-4px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  /* ── Transition presets ─────────────────────────────────────────
+     Vue <Transition name="ds-fade"> etc. — pair enter/leave classes
+     with the right duration tokens automatically.
+  ─────────────────────────────────────────────────────────────── */
+
+  /* Fade */
+  .ds-fade-enter-active  { transition: opacity var(--duration-enter) var(--ease-out); }
+  .ds-fade-leave-active  { transition: opacity var(--duration-exit)  var(--ease-in);  }
+  .ds-fade-enter-from,
+  .ds-fade-leave-to      { opacity: 0; }
+
+  /* Slide up (menus, dropdowns, popovers) */
+  .ds-slide-up-enter-active { transition: opacity var(--duration-enter) var(--ease-out), transform var(--duration-enter) var(--ease-out); }
+  .ds-slide-up-leave-active { transition: opacity var(--duration-exit)  var(--ease-in),  transform var(--duration-exit)  var(--ease-in);  }
+  .ds-slide-up-enter-from,
+  .ds-slide-up-leave-to     { opacity: 0; transform: translateY(6px); }
+
+  /* Slide down (from top, e.g. nav menus) */
+  .ds-slide-down-enter-active { transition: opacity var(--duration-enter) var(--ease-out), transform var(--duration-enter) var(--ease-out); }
+  .ds-slide-down-leave-active { transition: opacity var(--duration-exit)  var(--ease-in),  transform var(--duration-exit)  var(--ease-in);  }
+  .ds-slide-down-enter-from,
+  .ds-slide-down-leave-to     { opacity: 0; transform: translateY(-6px); }
+
+  /* Scale (modals, dialogs, popovers) */
+  .ds-scale-enter-active { transition: opacity var(--duration-enter) var(--ease-spring), transform var(--duration-enter) var(--ease-spring); }
+  .ds-scale-leave-active { transition: opacity var(--duration-exit)  var(--ease-in),     transform var(--duration-exit)  var(--ease-in);     }
+  .ds-scale-enter-from,
+  .ds-scale-leave-to     { opacity: 0; transform: scale(0.95); }
+
+  /* Collapse (Accordion, Collapsible — works with v-show height) */
+  .ds-collapse-enter-active { transition: opacity var(--duration-expand) var(--ease-out); }
+  .ds-collapse-leave-active { transition: opacity var(--duration-exit)   var(--ease-in);  }
+  .ds-collapse-enter-from,
+  .ds-collapse-leave-to     { opacity: 0; }
+
+  /* Toast slide-in from right */
+  .ds-toast-enter-active { transition: opacity var(--duration-enter) var(--ease-out), transform var(--duration-enter) var(--ease-spring); }
+  .ds-toast-leave-active { transition: opacity var(--duration-exit)  var(--ease-in),  transform var(--duration-exit)  var(--ease-in);     }
+  .ds-toast-enter-from   { opacity: 0; transform: translateX(100%) scale(0.9); }
+  .ds-toast-leave-to     { opacity: 0; transform: translateX(8px) scale(0.95); }
 }
 
-.skel {
-  background: linear-gradient(
-    90deg,
-    var(--color-neutral-light) 25%,
-    var(--color-border)        50%,
-    var(--color-neutral-light) 75%
-  );
-  background-size: 800px 100%;
-  animation: shimmer 1.4s ease-in-out infinite;
-}
+/* ═══════════════════════════════════════════════════════════════
+   REDUCED MOTION — WCAG 2.1 AA (2.3.3)
+   Users who set prefers-reduced-motion get no animations/transitions.
+═══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
+    scroll-behavior:           auto   !important;
+  }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0);   }
-}
-
-@keyframes typingBounce {
-  0%, 60%, 100% { transform: translateY(0);     opacity: 0.5; }
-  30%            { transform: translateY(-4px);  opacity: 1;   }
-}
-
-@keyframes shake {
-  0%, 100%        { transform: translateX(0);    }
-  10%, 50%, 90%   { transform: translateX(-4px); }
-  30%, 70%        { transform: translateX(4px);  }
-}
-
-@keyframes scaleIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to   { transform: scale(1);    opacity: 1; }
-}
-@keyframes slideDown {
-  from { transform: translateY(-4px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  /* Skeleton shimmer: replace with static bg so it doesn't flash */
+  .skel {
+    animation: none;
+    background: var(--color-neutral-light);
+  }
 }

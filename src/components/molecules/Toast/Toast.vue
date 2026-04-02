@@ -65,7 +65,12 @@ const wrapperStyle = {
 </script>
 
 <template>
-  <div :style="wrapperStyle" role="alert">
+  <!-- role="alert" (assertive) for urgent variants; role="status" (polite) for info/success -->
+  <div
+    :style="wrapperStyle"
+    :role="variant === 'danger' || variant === 'warning' ? 'alert' : 'status'"
+    aria-atomic="true"
+  >
     <!-- Squircle icon -->
     <span
       :style="{

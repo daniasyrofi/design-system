@@ -53,6 +53,13 @@
   /* Base transition */
   [data-ri-icon-box] { transition: background 0.15s, border-color 0.15s, color 0.15s; }
 
+  /* ── Remove browser default focus outline on sidebar items ── */
+  [data-item-id] button:focus-visible,
+  [data-item-id] a:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
   /* ── Hide original 4-dot icon box for our customized component items ── */
   /* Hide the SVG itself */
   [data-item-id^="atoms-"] svg[type="component"],

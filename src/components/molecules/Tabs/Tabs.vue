@@ -23,6 +23,18 @@ export interface TabsContext {
 import { provide, ref, watch, computed } from 'vue'
 import { cn } from '@/lib/utils'
 
+// Re-import types for use within this block (dual-script pattern)
+import type { TabsVariant as V, TabsOrientation as O, TabsSize as S, TabsContext as C } from './Tabs.vue'
+
+interface TabsProps {
+  /** The value of the currently active tab. Supports v-model. */
+  modelValue:   string
+  /** Visual style variant. @default 'line' */
+  variant?:     V
+  /** Layout orientation of the tabs. @default 'horizontal' */
+  orientation?: O
+  /** Visual size of the tab triggers. @default 'md' */
+  size?:        S
 interface Props {
   /** The value of the currently active tab. Supports v-model. */
   modelValue:   string
@@ -34,7 +46,7 @@ interface Props {
   size?:        TabsSize
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<TabsProps>(), {
   variant:     'line',
   orientation: 'horizontal',
   size:        'md',
@@ -65,7 +77,7 @@ function unregisterTab(value: string) {
   if (idx !== -1) tabs.value.splice(idx, 1)
 }
 
-provide<TabsContext>(TABS_KEY, {
+provide<C>(TABS_KEY, {
   activeTab,
   variant:     props.variant,
   orientation: props.orientation,

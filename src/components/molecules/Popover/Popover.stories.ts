@@ -279,10 +279,11 @@ export const WithForm: Story = {
     setup() {
       const name = ref('')
       const email = ref('')
+      const copy = useCopy()
       function handleSubmit() {
         console.log('Submitted:', { name: name.value, email: email.value })
       }
-      return { name, email, handleSubmit }
+      return { name, email, handleSubmit, copy }
     },
     template: `
       <div style="display:flex;align-items:center;justify-content:center;padding:80px;">

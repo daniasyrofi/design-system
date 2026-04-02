@@ -14,6 +14,8 @@ export interface InvitationTheme {
 }
 
 function loadGoogleFont(families: string[]) {
+  if (typeof document === 'undefined') return
+
   const existing = document.querySelector('#inv-google-fonts')
   existing?.remove()
 
