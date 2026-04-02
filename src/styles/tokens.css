@@ -4,8 +4,6 @@
  * Imported automatically via @abadikan/ds/style.css
  */
 
-@import './fonts.css';
-
 /* ── Primitive tokens (raw values) ──────────────────────────── */
 :root {
   /* Red (primary brand) */
@@ -153,14 +151,17 @@
   --shadow-xs: 0 1px 2px oklch(0.2 0.005 80 / 0.06);
   --shadow-sm: 0 1px 2px oklch(0.2 0.005 80 / 0.06), 0 2px 4px oklch(0.2 0.005 80 / 0.04);
   --shadow-md: 0 2px 4px oklch(0.2 0.005 80 / 0.05), 0 6px 12px oklch(0.2 0.005 80 / 0.07);
-  --shadow-lg: 0 4px 6px oklch(0.2 0.005 80 / 0.05), 0 10px 20px oklch(0.2 0.005 80 / 0.1),
+  --shadow-lg:
+    0 4px 6px oklch(0.2 0.005 80 / 0.05), 0 10px 20px oklch(0.2 0.005 80 / 0.1),
     0 20px 40px oklch(0.2 0.005 80 / 0.06);
-  --shadow-xl: 0 8px 12px oklch(0.2 0.005 80 / 0.07), 0 20px 40px oklch(0.2 0.005 80 / 0.13),
+  --shadow-xl:
+    0 8px 12px oklch(0.2 0.005 80 / 0.07), 0 20px 40px oklch(0.2 0.005 80 / 0.13),
     0 40px 80px oklch(0.2 0.005 80 / 0.08);
-  --shadow-2xl: 0 12px 24px oklch(0.2 0.005 80 / 0.1), 0 32px 64px oklch(0.2 0.005 80 / 0.16),
+  --shadow-2xl:
+    0 12px 24px oklch(0.2 0.005 80 / 0.1), 0 32px 64px oklch(0.2 0.005 80 / 0.16),
     0 64px 96px oklch(0.2 0.005 80 / 0.1);
-  --shadow-inset: inset 0 1px 3px oklch(0.2 0.005 80 / 0.12),
-    inset 0 1px 1px oklch(0.2 0.005 80 / 0.08);
+  --shadow-inset:
+    inset 0 1px 3px oklch(0.2 0.005 80 / 0.12), inset 0 1px 1px oklch(0.2 0.005 80 / 0.08);
   --shadow-highlight: inset 0 1px 0 oklch(1 0 0 / 0.12);
   --ring-primary: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary);
   --ring-danger: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-danger);
@@ -226,9 +227,11 @@
   --shadow-xs: 0 1px 2px oklch(0.05 0 0 / 0.25);
   --shadow-sm: 0 1px 2px oklch(0.05 0 0 / 0.25), 0 2px 4px oklch(0.05 0 0 / 0.2);
   --shadow-md: 0 2px 4px oklch(0.05 0 0 / 0.25), 0 6px 12px oklch(0.05 0 0 / 0.3);
-  --shadow-lg: 0 4px 6px oklch(0.05 0 0 / 0.25), 0 12px 24px oklch(0.05 0 0 / 0.35),
+  --shadow-lg:
+    0 4px 6px oklch(0.05 0 0 / 0.25), 0 12px 24px oklch(0.05 0 0 / 0.35),
     0 24px 48px oklch(0.05 0 0 / 0.2);
-  --shadow-xl: 0 8px 10px oklch(0.05 0 0 / 0.25), 0 20px 40px oklch(0.05 0 0 / 0.4),
+  --shadow-xl:
+    0 8px 10px oklch(0.05 0 0 / 0.25), 0 20px 40px oklch(0.05 0 0 / 0.4),
     0 40px 80px oklch(0.05 0 0 / 0.25);
   --shadow-inset: inset 0 1px 3px oklch(0.05 0 0 / 0.3), inset 0 1px 1px oklch(0.05 0 0 / 0.2);
   --shadow-highlight: inset 0 1px 0 oklch(1 0 0 / 0.06);
@@ -267,8 +270,12 @@ html {
 
 /* ── Animations ───────────────────────────────────────────────── */
 @keyframes shimmer {
-  from { background-position: -400px 0; }
-  to { background-position: 400px 0; }
+  from {
+    background-position: -400px 0;
+  }
+  to {
+    background-position: 400px 0;
+  }
 }
 
 .skel {
@@ -283,33 +290,89 @@ html {
 }
 
 @keyframes ds-fade-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Transition presets */
-.ds-fade-enter-active { transition: opacity var(--duration-enter) var(--ease-out); }
-.ds-fade-leave-active { transition: opacity var(--duration-exit) var(--ease-in); }
-.ds-fade-enter-from, .ds-fade-leave-to { opacity: 0; }
+.ds-fade-enter-active {
+  transition: opacity var(--duration-enter) var(--ease-out);
+}
+.ds-fade-leave-active {
+  transition: opacity var(--duration-exit) var(--ease-in);
+}
+.ds-fade-enter-from,
+.ds-fade-leave-to {
+  opacity: 0;
+}
 
-.ds-slide-up-enter-active { transition: opacity var(--duration-enter) var(--ease-out), transform var(--duration-enter) var(--ease-out); }
-.ds-slide-up-leave-active { transition: opacity var(--duration-exit) var(--ease-in), transform var(--duration-exit) var(--ease-in); }
-.ds-slide-up-enter-from, .ds-slide-up-leave-to { opacity: 0; transform: translateY(6px); }
+.ds-slide-up-enter-active {
+  transition:
+    opacity var(--duration-enter) var(--ease-out),
+    transform var(--duration-enter) var(--ease-out);
+}
+.ds-slide-up-leave-active {
+  transition:
+    opacity var(--duration-exit) var(--ease-in),
+    transform var(--duration-exit) var(--ease-in);
+}
+.ds-slide-up-enter-from,
+.ds-slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(6px);
+}
 
-.ds-scale-enter-active { transition: opacity var(--duration-enter) var(--ease-spring), transform var(--duration-enter) var(--ease-spring); }
-.ds-scale-leave-active { transition: opacity var(--duration-exit) var(--ease-in), transform var(--duration-exit) var(--ease-in); }
-.ds-scale-enter-from, .ds-scale-leave-to { opacity: 0; transform: scale(0.95); }
+.ds-scale-enter-active {
+  transition:
+    opacity var(--duration-enter) var(--ease-spring),
+    transform var(--duration-enter) var(--ease-spring);
+}
+.ds-scale-leave-active {
+  transition:
+    opacity var(--duration-exit) var(--ease-in),
+    transform var(--duration-exit) var(--ease-in);
+}
+.ds-scale-enter-from,
+.ds-scale-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
 
-.ds-toast-enter-active { transition: opacity var(--duration-enter) var(--ease-out), transform var(--duration-enter) var(--ease-spring); }
-.ds-toast-leave-active { transition: opacity var(--duration-exit) var(--ease-in), transform var(--duration-exit) var(--ease-in); }
-.ds-toast-enter-from { opacity: 0; transform: translateX(100%) scale(0.9); }
-.ds-toast-leave-to { opacity: 0; transform: translateX(8px) scale(0.95); }
+.ds-toast-enter-active {
+  transition:
+    opacity var(--duration-enter) var(--ease-out),
+    transform var(--duration-enter) var(--ease-spring);
+}
+.ds-toast-leave-active {
+  transition:
+    opacity var(--duration-exit) var(--ease-in),
+    transform var(--duration-exit) var(--ease-in);
+}
+.ds-toast-enter-from {
+  opacity: 0;
+  transform: translateX(100%) scale(0.9);
+}
+.ds-toast-leave-to {
+  opacity: 0;
+  transform: translateX(8px) scale(0.95);
+}
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .skel { animation: none; background: var(--color-neutral-light); }
+  .skel {
+    animation: none;
+    background: var(--color-neutral-light);
+  }
 }
