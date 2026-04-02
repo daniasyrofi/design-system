@@ -14,6 +14,9 @@
  *   import '@abadikan/ds/styles'
  */
 
+// ── Styles (tokens + base — no Tailwind dep) ──────────────────
+import './styles/tokens.css'
+
 // ── Components ────────────────────────────────────────────────
 export * from './components/index'
 
