@@ -1,0 +1,163 @@
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Docs/Do's and Don'ts" />
+
+# Do's and Don'ts
+
+Guidelines for using Abadikan DS correctly and consistently.
+
+---
+
+## Components
+
+### Do — use semantic variants
+
+```vue
+<!-- Destructive action → danger variant -->
+<Button variant="danger">Delete account</Button>
+
+<!-- Secondary action → ghost or outline -->
+<Button variant="ghost">Cancel</Button>
+```
+
+### Don't — fight the variant system with ad-hoc classes
+
+```vue
+<!-- Avoid — overriding semantic color with arbitrary Tailwind -->
+<Button class="bg-red-500 hover:bg-red-600">Delete</Button>
+```
+
+---
+
+### Do — use `v-model` for controlled inputs
+
+All form components (Input, Select, TagInput, PinInput, etc.) support `v-model`.
+Keep the source of truth in your component state.
+
+```vue
+<SearchInput v-model="query" clearable />
+```
+
+### Don't — read DOM values directly
+
+```vue
+<!-- Avoid — brittle and bypasses reactivity -->
+<input ref="el" @input="val = $refs.el.value" />
+```
+
+---
+
+### Do — compose with slots
+
+Prefer slots over prop drilling for content customisation:
+
+```vue
+<Card>
+  <template #media>
+    <img src="/cover.webp" alt="Cover" />
+  </template>
+  <p>Card body content here.</p>
+</Card>
+```
+
+### Don't — nest interactive elements inside clickable cards
+
+```vue
+<!-- Avoid — nested button inside role="button" div is invalid HTML -->
+<Card :clickable="true">
+  <Button>Click me</Button>
+</Card>
+```
+
+---
+
+## Accessibility
+
+### Do — always provide accessible labels
+
+Every interactive component without visible text needs an `aria-label`:
+
+```vue
+<Button icon-only aria-label="Close dialog">
+  <RiCloseLine />
+</Button>
+```
+
+### Don't — rely on colour alone to convey state
+
+Error states, success states, and disabled states should include both a colour
+change **and** a text/icon cue.
+
+---
+
+## Theming
+
+### Do — override semantic tokens
+
+```css
+:root {
+  --color-primary: oklch(0.55 0.22 160);
+}
+```
+
+### Don't — override primitive tokens for branding
+
+Primitives (`--blue-500`, `--gray-900`, …) are shared across many semantic
+aliases. Changing them has unpredictable side effects.
+
+---
+
+## Layout
+
+### Do — use Stack and Container for spacing
+
+```vue
+<Container size="md">
+  <Stack direction="col" gap="4">
+    <Heading>Title</Heading>
+    <p>Body content</p>
+  </Stack>
+</Container>
+```
+
+### Don't — add margin directly to DS components
+
+Components expose no external margin by design. Wrap them in a `Stack` or
+apply spacing via the parent layout instead.
+
+---
+
+## Forms
+
+### Do — use Form + FormField for consistent validation UX
+
+```vue
+<Form :schema="schema" v-model="data" @submit="handleSubmit">
+  <FormField name="email" label="Email">
+    <Input type="email" />
+  </FormField>
+</Form>
+```
+
+### Don't — show raw error strings outside of FormField
+
+Validation messages should appear in the designated error slot so they are
+announced by screen readers and visually consistent.
+
+---
+
+## Performance
+
+### Do — use sub-path imports in large apps
+
+```ts
+import { Button } from '@abadikan/ds/atoms'        // tree-shaken
+import { DataTable } from '@abadikan/ds/organisms'  // tree-shaken
+```
+
+### Don't — import everything from the barrel if you only need one component
+
+```ts
+// Avoid in large bundles — imports all atoms, molecules, and organisms
+import { Button } from '@abadikan/ds'
+```

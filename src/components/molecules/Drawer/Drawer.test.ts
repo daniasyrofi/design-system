@@ -65,12 +65,44 @@ describe('Drawer', () => {
   })
 
   it('does not emit close when preventClose is true', async () => {
-    // When preventClose=true, the close button is not rendered
     const wrapper = mount(Drawer, {
       props: { modelValue: true, closable: true, preventClose: true },
       global,
     })
     expect(wrapper.find('button[aria-label="Close drawer"]').exists()).toBe(false)
+    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+  })
+
+  it.each(['left', 'right', 'top', 'bottom'] as const)('renders placement %s', (placement) => {
+    const wrapper = mount(Drawer, { props: { modelValue: true, placement }, global })
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(true)
+  })
+
+  it.each(['sm', 'md', 'lg', 'xl', 'full'] as const)('renders size %s', (size) => {
+    const wrapper = mount(Drawer, { props: { modelValue: true, size }, global })
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(true)
+  })
+
+  it('emits close on overlay click when closeOnOverlay=true', async () => {
+    const wrapper = mount(Drawer, { props: { modelValue: true, closeOnOverlay: true }, global })
+    const overlay = wrapper.find('[aria-hidden="true"]')
+    if (overlay.exists()) {
+      await overlay.trigger('click')
+      expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([false])
+    }
+  })
+
+  it('emits close on Escape key', async () => {
+    const wrapper = mount(Drawer, { props: { modelValue: true }, global })
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    await new Promise(r => setTimeout(r, 10))
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([false])
+  })
+
+  it('does not emit on Escape when preventClose=true', async () => {
+    const wrapper = mount(Drawer, { props: { modelValue: true, preventClose: true }, global })
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    await new Promise(r => setTimeout(r, 10))
     expect(wrapper.emitted('update:modelValue')).toBeFalsy()
   })
 })

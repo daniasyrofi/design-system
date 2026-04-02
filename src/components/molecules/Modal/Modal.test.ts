@@ -81,4 +81,42 @@ describe('Modal', () => {
     const wrapper = mountModal({ modelValue: true, size })
     expect(wrapper.find('[role="dialog"]').exists()).toBe(true)
   })
+
+  it('emits close on overlay click when closeOnOverlay=true', async () => {
+    const wrapper = mountModal({ modelValue: true, closeOnOverlay: true })
+    // The backdrop/overlay is the first child element that isn't the dialog
+    const overlay = wrapper.find('[aria-hidden="true"]')
+    if (overlay.exists()) {
+      await overlay.trigger('click')
+      expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([false])
+    }
+  })
+
+  it('does not emit close on overlay click when closeOnOverlay=false', async () => {
+    const wrapper = mountModal({ modelValue: true, closeOnOverlay: false })
+    const overlay = wrapper.find('[aria-hidden="true"]')
+    if (overlay.exists()) {
+      await overlay.trigger('click')
+      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+    }
+  })
+
+  it('emits close on Escape key', async () => {
+    const wrapper = mountModal({ modelValue: true })
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    await new Promise(r => setTimeout(r, 10))
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([false])
+  })
+
+  it('does not emit close on Escape when preventClose=true', async () => {
+    const wrapper = mountModal({ modelValue: true, preventClose: true })
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    await new Promise(r => setTimeout(r, 10))
+    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+  })
+
+  it('renders scrollBehavior=outside without error', () => {
+    const wrapper = mountModal({ modelValue: true, scrollBehavior: 'outside' })
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(true)
+  })
 })

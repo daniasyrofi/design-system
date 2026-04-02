@@ -1,0 +1,83 @@
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Docs/Getting Started" />
+
+# Getting Started
+
+Abadikan DS is a Vue 3 component library built with Tailwind CSS and design tokens.
+
+## Installation
+
+```bash
+npm install @abadikan/ds
+```
+
+## Setup
+
+### 1. Import styles
+
+Add the stylesheet to your app entry (e.g. `main.ts`):
+
+```ts
+import '@abadikan/ds/style.css'
+```
+
+### 2. Register components
+
+You can import components individually for the best tree-shaking:
+
+```ts
+import { Button, Card, Input } from '@abadikan/ds'
+```
+
+Or use sub-path imports to keep bundles lean:
+
+```ts
+import { Button } from '@abadikan/ds/atoms'
+import { SearchInput, Modal } from '@abadikan/ds/molecules'
+import { Navbar, Table } from '@abadikan/ds/organisms'
+```
+
+### 3. Use in templates
+
+```vue
+<script setup>
+import { Button } from '@abadikan/ds'
+</script>
+
+<template>
+  <Button variant="primary" size="md" @click="handleClick">
+    Save changes
+  </Button>
+</template>
+```
+
+## Dark mode
+
+The library respects a `data-theme="dark"` attribute on any ancestor element.
+Apply it to `<html>` (or any container) to switch the entire subtree to dark mode:
+
+```ts
+// Toggle dark mode
+document.documentElement.dataset.theme = 'dark'
+
+// Or use the built-in composable
+import { useTheme } from '@abadikan/ds'
+const { toggleTheme, isDark } = useTheme()
+```
+
+You can also drop in the `<ThemeToggle>` component for a ready-made button.
+
+## TypeScript
+
+All components ship with full TypeScript types. Prop interfaces and union types are
+re-exported from the main entry so you can use them in your own code:
+
+```ts
+import type { ButtonVariant, ButtonSize } from '@abadikan/ds'
+```
+
+## Browser support
+
+Targets modern evergreen browsers. Uses CSS `@layer`, `oklch()`, and `color-mix()` —
+no IE or legacy Safari support.

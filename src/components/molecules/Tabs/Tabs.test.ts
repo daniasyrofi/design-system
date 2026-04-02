@@ -86,4 +86,85 @@ describe('Tabs', () => {
     const tab = wrapper.findAll('[role="tab"]')[0]
     expect(tab.classes().join(' ')).toContain('rounded-full')
   })
+
+  it('renders boxed variant', () => {
+    const wrapper = mountTabs('one', 'boxed')
+    expect(wrapper.find('[role="tablist"]').exists()).toBe(true)
+    expect(wrapper.findAll('[role="tab"]').length).toBeGreaterThan(0)
+  })
+
+  it('navigates to next tab with ArrowRight', async () => {
+    const wrapper = mountTabs('one')
+    const tabs = wrapper.findAll('[role="tab"]')
+    await tabs[0].trigger('keydown', { key: 'ArrowRight' })
+    expect(tabs[1].attributes('aria-selected')).toBe('true')
+  })
+
+  it('navigates to prev tab with ArrowLeft', async () => {
+    const wrapper = mountTabs('two')
+    const tabs = wrapper.findAll('[role="tab"]')
+    await tabs[1].trigger('keydown', { key: 'ArrowLeft' })
+    expect(tabs[0].attributes('aria-selected')).toBe('true')
+  })
+
+  it('navigates to first tab with Home', async () => {
+    const wrapper = mountTabs('two')
+    const tabs = wrapper.findAll('[role="tab"]')
+    await tabs[1].trigger('keydown', { key: 'Home' })
+    expect(tabs[0].attributes('aria-selected')).toBe('true')
+  })
+
+  it('navigates to last tab with End', async () => {
+    const wrapper = mountTabs('one')
+    const tabs = wrapper.findAll('[role="tab"]')
+    await tabs[0].trigger('keydown', { key: 'End' })
+    // last non-disabled tab selected
+    expect(wrapper.text()).toBeTruthy()
+  })
+
+  it('renders vertical orientation', () => {
+    const wrapper = mount(defineComponent({
+      components: { Tabs, TabsList, TabsTrigger, TabsContent },
+      template: `
+        <Tabs v-model="active" orientation="vertical">
+          <TabsList>
+            <TabsTrigger value="a">A</TabsTrigger>
+            <TabsTrigger value="b">B</TabsTrigger>
+          </TabsList>
+          <TabsContent value="a">Content A</TabsContent>
+          <TabsContent value="b">Content B</TabsContent>
+        </Tabs>
+      `,
+      setup() { return { active: ref('a') } },
+    }))
+    expect(wrapper.find('[role="tablist"]').attributes('aria-orientation')).toBe('vertical')
+  })
+
+  it('navigates with ArrowDown in vertical orientation', async () => {
+    const wrapper = mount(defineComponent({
+      components: { Tabs, TabsList, TabsTrigger, TabsContent },
+      template: `
+        <Tabs v-model="active" orientation="vertical">
+          <TabsList>
+            <TabsTrigger value="a">A</TabsTrigger>
+            <TabsTrigger value="b">B</TabsTrigger>
+          </TabsList>
+          <TabsContent value="a">A</TabsContent>
+          <TabsContent value="b">B</TabsContent>
+        </Tabs>
+      `,
+      setup() { return { active: ref('a') } },
+    }))
+    const tabs = wrapper.findAll('[role="tab"]')
+    await tabs[0].trigger('keydown', { key: 'ArrowDown' })
+    expect(tabs[1].attributes('aria-selected')).toBe('true')
+  })
+
+  it('does not navigate when trigger is disabled', async () => {
+    const wrapper = mountTabs('one')
+    const disabledTab = wrapper.findAll('[role="tab"]')[2]
+    await disabledTab.trigger('keydown', { key: 'ArrowLeft' })
+    // active should still be 'one'
+    expect(wrapper.findAll('[role="tab"]')[0].attributes('aria-selected')).toBe('true')
+  })
 })

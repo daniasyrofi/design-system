@@ -58,4 +58,22 @@ describe('SearchInput', () => {
     const wrapper = mount(SearchInput, { props: { modelValue: '', size } })
     expect(wrapper.find('input').exists()).toBe(true)
   })
+
+  it('emits search event after debounce', async () => {
+    const wrapper = mount(SearchInput, { props: { modelValue: '', debounce: 0 } })
+    await wrapper.find('input').setValue('query')
+    await new Promise(r => setTimeout(r, 10))
+    expect(wrapper.emitted('search')).toBeTruthy()
+  })
+
+  it('clears debounce on unmount', () => {
+    const wrapper = mount(SearchInput, { props: { modelValue: 'text', debounce: 500 } })
+    expect(() => wrapper.unmount()).not.toThrow()
+  })
+
+  it('syncs when external modelValue changes', async () => {
+    const wrapper = mount(SearchInput, { props: { modelValue: 'old' } })
+    await wrapper.setProps({ modelValue: 'new' })
+    expect(wrapper.find('input').element.value).toBe('new')
+  })
 })

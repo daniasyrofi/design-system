@@ -62,4 +62,15 @@ describe('Card', () => {
     const wrapper = mount(Card, { props: { hoverable: true } })
     expect(wrapper.classes().join(' ')).toMatch(/hover/)
   })
+
+  it('emits click on Enter key when clickable', async () => {
+    const wrapper = mount(Card, { props: { clickable: true } })
+    await wrapper.trigger('keydown.enter')
+    expect(wrapper.emitted('click')).toBeTruthy()
+  })
+
+  it('renders media slot', () => {
+    const wrapper = mount(Card, { slots: { media: '<img src="" alt="cover" />' } })
+    expect(wrapper.find('img').exists()).toBe(true)
+  })
 })

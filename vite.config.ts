@@ -20,8 +20,9 @@ export default defineConfig(({ command }) => ({
         include:      ['src'],
         exclude:      ['src/**/*.stories.ts', 'src/**/*.test.ts', 'src/test/**', 'src/main.ts'],
         outDir:       'dist',
-        rollupTypes:  true,
+        rollupTypes:  false,   // per-entry types — don't roll everything into one file
         insertTypesEntry: true,
+        entryRoot:    'src',
       }),
     ] : []),
   ],
@@ -35,18 +36,24 @@ export default defineConfig(({ command }) => ({
   ...(command === 'build' ? {
     build: {
       lib: {
-        entry:    path.resolve(dirname, './src/index.ts'),
-        name:     'AbadikanDS',
+        // Multiple entry points — one per category + full index
+        entry: {
+          index:     path.resolve(dirname, 'src/index.ts'),
+          atoms:     path.resolve(dirname, 'src/components/atoms/index.ts'),
+          molecules: path.resolve(dirname, 'src/components/molecules/index.ts'),
+          organisms: path.resolve(dirname, 'src/components/organisms/index.ts'),
+          tokens:    path.resolve(dirname, 'src/tokens/index.ts'),
+        },
         formats:  ['es', 'cjs'],
-        fileName: (format) => `index.${format === 'es' ? 'mjs' : 'cjs'}`,
+        fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'mjs' : 'cjs'}`,
       },
       rollupOptions: {
         // Peer dependencies — consuming app must provide these
         external: ['vue', 'vue-i18n', '@remixicon/vue'],
         output: {
           globals: {
-            'vue':          'Vue',
-            'vue-i18n':     'VueI18n',
+            'vue':            'Vue',
+            'vue-i18n':       'VueI18n',
             '@remixicon/vue': 'RemixiconVue',
           },
           // Preserve CSS alongside the JS bundle
@@ -77,13 +84,13 @@ export default defineConfig(({ command }) => ({
             reporter:  ['text', 'lcov', 'html'],
             all:       true,
             thresholds: {
-              statements: 70,
-              branches:   65,
-              functions:  70,
-              lines:      70,
+              statements: 80,
+              branches:   75,
+              functions:  80,
+              lines:      80,
             },
             include: ['src/components/**/*.vue', 'src/composables/**/*.ts'],
-            exclude: ['src/**/*.stories.ts', 'src/test/**'],
+            exclude: ['src/**/*.stories.ts', 'src/test/**', 'src/**/index.ts'],
           },
         },
       },

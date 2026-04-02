@@ -39,4 +39,41 @@ describe('HoverCard', () => {
     })
     expect(wrapper.exists()).toBe(true)
   })
+
+  it('card closes after mouseleave (after close delay)', async () => {
+    const wrapper = mount(HoverCard, {
+      props: { openDelay: 0, closeDelay: 0 },
+      slots: { trigger: '<button>x</button>', default: 'Card content' },
+    })
+    await wrapper.trigger('mouseenter')
+    await new Promise(r => setTimeout(r, 10))
+    await wrapper.trigger('mouseleave')
+    await new Promise(r => setTimeout(r, 50))
+    await nextTick()
+    expect(wrapper.find('[role="tooltip"]').exists()).toBe(false)
+  })
+
+  it('does not close when mouse moves to card content', async () => {
+    const wrapper = mount(HoverCard, {
+      props: { openDelay: 0, closeDelay: 100 },
+      slots: { trigger: '<button>x</button>', default: 'Card content' },
+    })
+    await wrapper.trigger('mouseenter')
+    await new Promise(r => setTimeout(r, 10))
+    // Mouse onto card — should cancel the close timer
+    const card = wrapper.find('[role="tooltip"]')
+    if (card.exists()) {
+      await card.trigger('mouseenter')
+      await new Promise(r => setTimeout(r, 50))
+      expect(wrapper.find('[role="tooltip"]').exists()).toBe(true)
+    }
+  })
+
+  it('cleans up timers on unmount', () => {
+    const wrapper = mount(HoverCard, {
+      props: { openDelay: 0 },
+      slots: { trigger: '<button>x</button>', default: 'content' },
+    })
+    expect(() => wrapper.unmount()).not.toThrow()
+  })
 })

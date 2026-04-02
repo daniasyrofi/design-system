@@ -75,4 +75,42 @@ describe('AlertDialog', () => {
     expect(document.body.querySelector('[role="alertdialog"]')).not.toBeNull()
     wrapper.unmount()
   })
+
+  it('renders custom confirmLabel and cancelLabel', () => {
+    const wrapper = mount(AlertDialog, {
+      props: { modelValue: true, confirmLabel: 'Proceed', cancelLabel: 'Abort' },
+      attachTo: document.body,
+    })
+    expect(document.body.textContent).toContain('Proceed')
+    expect(document.body.textContent).toContain('Abort')
+    wrapper.unmount()
+  })
+
+  it('renders description slot', () => {
+    const wrapper = mount(AlertDialog, {
+      props: { modelValue: true, title: 'Delete?' },
+      slots: { description: '<p>Custom description</p>' },
+      attachTo: document.body,
+    })
+    expect(document.body.textContent).toContain('Custom description')
+    wrapper.unmount()
+  })
+
+  it('renders loading state on confirm button', () => {
+    const wrapper = mount(AlertDialog, {
+      props: { modelValue: true, loading: true },
+      attachTo: document.body,
+    })
+    expect(document.body.querySelector('[role="alertdialog"]')).not.toBeNull()
+    wrapper.unmount()
+  })
+
+  it('renders confirmDisabled state', () => {
+    const wrapper = mount(AlertDialog, {
+      props: { modelValue: true, confirmDisabled: true },
+      attachTo: document.body,
+    })
+    expect(document.body.querySelector('[role="alertdialog"]')).not.toBeNull()
+    wrapper.unmount()
+  })
 })

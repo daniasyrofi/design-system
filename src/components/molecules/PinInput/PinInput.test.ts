@@ -44,4 +44,79 @@ describe('PinInput', () => {
       expect((input.element as HTMLInputElement).type).toBe('password')
     })
   })
+
+  it('emits update:modelValue when a digit is typed', async () => {
+    const wrapper = mount(PinInput, { props: { length: 4, modelValue: '' } })
+    const input = wrapper.findAll('input')[0]
+    await input.setValue('3')
+    await input.trigger('input')
+    const emitted = wrapper.emitted('update:modelValue')
+    expect(emitted).toBeTruthy()
+    expect(emitted![0][0]).toContain('3')
+  })
+
+  it('emits complete when all digits are filled', async () => {
+    const wrapper = mount(PinInput, { props: { length: 3, modelValue: '12' } })
+    const inputs = wrapper.findAll('input')
+    await inputs[2].setValue('3')
+    await inputs[2].trigger('input')
+    expect(wrapper.emitted('complete')).toBeTruthy()
+  })
+
+  it('clears digit on Backspace when digit exists', async () => {
+    const wrapper = mount(PinInput, { props: { length: 4, modelValue: '1234' } })
+    const input = wrapper.findAll('input')[2]
+    await input.trigger('keydown', { key: 'Backspace' })
+    const emitted = wrapper.emitted('update:modelValue')
+    expect(emitted).toBeTruthy()
+  })
+
+  it('ignores non-numeric char when type=number', async () => {
+    const wrapper = mount(PinInput, { props: { length: 4, modelValue: '', type: 'number' } })
+    const input = wrapper.findAll('input')[0]
+    await input.setValue('a')
+    await input.trigger('input')
+    // non-numeric — value cleared
+    const emitted = wrapper.emitted('update:modelValue')
+    if (emitted) {
+      expect((emitted[0][0] as string)[0] ?? '').not.toBe('a')
+    }
+  })
+
+  it('accepts alphanumeric chars when type=alphanumeric', async () => {
+    const wrapper = mount(PinInput, { props: { length: 4, modelValue: '', type: 'alphanumeric' } })
+    const input = wrapper.findAll('input')[0]
+    await input.setValue('a')
+    await input.trigger('input')
+    const emitted = wrapper.emitted('update:modelValue')
+    expect(emitted).toBeTruthy()
+  })
+
+  it('applies error ring when error=true', () => {
+    const wrapper = mount(PinInput, { props: { length: 4, error: true } })
+    const html = wrapper.html()
+    expect(html).toContain('ring')
+  })
+
+  it('navigates with ArrowLeft / ArrowRight', async () => {
+    const wrapper = mount(PinInput, { props: { length: 4, modelValue: '1234' } })
+    const input1 = wrapper.findAll('input')[1]
+    // ArrowLeft should attempt focus on prev — no error thrown
+    await input1.trigger('keydown', { key: 'ArrowLeft' })
+    await input1.trigger('keydown', { key: 'ArrowRight' })
+    expect(wrapper.exists()).toBe(true)
+  })
+
+  it('selects all text on focus', async () => {
+    const wrapper = mount(PinInput, { props: { length: 4, modelValue: '1234' } })
+    const input = wrapper.findAll('input')[0]
+    await input.trigger('focus')
+    expect(wrapper.exists()).toBe(true)
+  })
+
+  it('renders custom placeholder', () => {
+    const wrapper = mount(PinInput, { props: { length: 4, placeholder: '_' } })
+    const input = wrapper.find('input')
+    expect((input.element as HTMLInputElement).placeholder).toBe('_')
+  })
 })

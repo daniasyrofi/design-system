@@ -44,9 +44,39 @@ describe('Navbar', () => {
   })
 
   it('hides border when border=false', () => {
-    // When border=false the border class should not be present in the inner container
-    const withBorder = mount(Navbar, { props: { variant: 'default', border: true } })
+    const withBorder    = mount(Navbar, { props: { variant: 'default', border: true } })
     const withoutBorder = mount(Navbar, { props: { variant: 'default', border: false } })
     expect(withBorder.html()).not.toBe(withoutBorder.html())
+  })
+
+  it('renders sentinel element when floatingOnScroll + sticky', () => {
+    const wrapper = mount(Navbar, { props: { sticky: true, floatingOnScroll: true } })
+    // sentinel div is rendered for the IntersectionObserver
+    expect(wrapper.find('div.opacity-0').exists()).toBe(true)
+  })
+
+  it('does not render sentinel when floatingOnScroll=false', () => {
+    const wrapper = mount(Navbar, { props: { sticky: true, floatingOnScroll: false } })
+    expect(wrapper.find('div.opacity-0').exists()).toBe(false)
+  })
+
+  it('applies sticky class when sticky=true', () => {
+    const wrapper = mount(Navbar, { props: { sticky: true } })
+    expect(wrapper.find('header').classes().join(' ')).toMatch(/sticky/)
+  })
+
+  it('renders scoped isFloating slot prop', () => {
+    const wrapper = mount(Navbar, {
+      props: { sticky: true },
+      slots: {
+        start: `<template #start="{ isFloating }"><span class="float-state">{{ isFloating }}</span></template>`,
+      },
+    })
+    expect(wrapper.find('.float-state').exists()).toBe(true)
+  })
+
+  it('unmounts cleanly when floatingOnScroll=true', () => {
+    const wrapper = mount(Navbar, { props: { sticky: true, floatingOnScroll: true } })
+    expect(() => wrapper.unmount()).not.toThrow()
   })
 })

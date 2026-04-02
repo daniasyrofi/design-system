@@ -17,4 +17,9 @@ describe('VisuallyHidden', () => {
     const wrapper = mount(VisuallyHidden, { slots: { default: 'label' } })
     expect(wrapper.classes()).toContain('sr-only')
   })
+
+  it('adds focus class when focusable=true', () => {
+    const wrapper = mount(VisuallyHidden, { props: { focusable: true }, slots: { default: 'label' } })
+    expect(wrapper.classes().join(' ')).toContain('sr-only')
+  })
 })

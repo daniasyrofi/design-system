@@ -88,4 +88,68 @@ describe('Tooltip', () => {
     })
     expect(wrapper.exists()).toBe(true)
   })
+
+  it('shows tooltip on click (click trigger)', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { content: 'Click tip', trigger: 'click', delay: 0 },
+      slots: { default: '<button>Click me</button>' },
+    })
+    await wrapper.trigger('click')
+    await new Promise(r => setTimeout(r, 10))
+    expect(wrapper.find('[role="tooltip"]').exists()).toBe(true)
+  })
+
+  it('toggles tooltip off on second click (click trigger)', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { content: 'Click tip', trigger: 'click', delay: 0 },
+      slots: { default: '<button>Click me</button>' },
+    })
+    await wrapper.trigger('click')
+    await new Promise(r => setTimeout(r, 10))
+    await wrapper.trigger('click')
+    await new Promise(r => setTimeout(r, 150))
+    expect(wrapper.find('[role="tooltip"]').exists()).toBe(false)
+  })
+
+  it('shows tooltip on focusin (focus trigger)', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { content: 'Focus tip', trigger: 'focus', delay: 0 },
+      slots: { default: '<input />' },
+    })
+    await wrapper.trigger('focusin')
+    await new Promise(r => setTimeout(r, 10))
+    expect(wrapper.find('[role="tooltip"]').exists()).toBe(true)
+  })
+
+  it('hides tooltip on focusout (focus trigger)', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { content: 'Focus tip', trigger: 'focus', delay: 0 },
+      slots: { default: '<input />' },
+    })
+    await wrapper.trigger('focusin')
+    await new Promise(r => setTimeout(r, 10))
+    await wrapper.trigger('focusout')
+    await new Promise(r => setTimeout(r, 150))
+    expect(wrapper.find('[role="tooltip"]').exists()).toBe(false)
+  })
+
+  it('renders without arrow when arrow=false', async () => {
+    const wrapper = mount(Tooltip, {
+      props: { content: 'No arrow', arrow: false, delay: 0 },
+      slots: { default: '<span>x</span>' },
+    })
+    await wrapper.trigger('mouseenter')
+    await new Promise(r => setTimeout(r, 10))
+    // arrow span should not be present
+    const arrowEl = wrapper.find('[aria-hidden="true"]')
+    expect(arrowEl.exists()).toBe(false)
+  })
+
+  it('unmounts cleanly without errors', () => {
+    const wrapper = mount(Tooltip, {
+      props: { content: 'Tip', delay: 0 },
+      slots: { default: '<span>x</span>' },
+    })
+    expect(() => wrapper.unmount()).not.toThrow()
+  })
 })
