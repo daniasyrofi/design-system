@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, type Component } from 'vue'
 import { cn } from '@/lib/utils'
 import { Icons } from '@/lib/icons'
 
@@ -12,7 +12,7 @@ export interface SidebarItem {
   /** Display label text. */
   label: string
   /** SVG string or icon component rendered beside the label. */
-  icon?: any
+  icon?: Component | string
   /** Route path for navigation. */
   route?: string
   /** Badge text or number displayed next to the label. */

@@ -5,6 +5,9 @@
  *   import type { ButtonVariant, ButtonSize } from '@abadikan/ds'
  */
 
+import type { Component } from 'vue'
+export type { Component }
+
 // ── Atoms ──────────────────────────────────────────────────────────────────────
 
 // AspectRatio / Container / Stack / Center / KBD / VisuallyHidden (layout primitives)
@@ -89,7 +92,7 @@ export type BreadcrumbSeparator = 'chevron' | 'slash' | 'dot'
 export interface BreadcrumbItem {
   label: string
   href?: string
-  icon?: object
+  icon?: Component | string
 }
 
 // Card

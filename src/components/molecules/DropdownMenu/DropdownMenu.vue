@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, onBeforeUnmount, nextTick, type Component } from 'vue'
 import { cn } from '@/lib/utils'
 
 type Placement = 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'
@@ -8,7 +8,7 @@ export interface DropdownMenuItem {
   /** Text label of the menu item. Required unless separator is true. */
   label?: string
   /** Component or icon element to render on the left. */
-  icon?: any
+  icon?: Component | string
   /** Shortcut text displayed on the right. */
   shortcut?: string
   /** Disables the item. */

@@ -13,6 +13,13 @@
       "runtimeArgs": ["storybook", "dev", "-p", "6006"],
       "port": 6006,
       "autoPort": false
+    },
+    {
+      "name": "DS Test",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "/tmp/ds-test",
+      "port": 5174
     }
   ]
 }

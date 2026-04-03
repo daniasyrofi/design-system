@@ -1,0 +1,13 @@
+# Abadikan Design System — Code Owners
+# Semua PR otomatis minta review dari owner.
+# Format: <pattern> <@github-username>
+
+# Global: semua file
+* @daniasyrofi
+
+# Design tokens & styles — critical, require review
+src/styles/ @daniasyrofi
+src/tokens/ @daniasyrofi
+
+# CI/CD — always review workflow changes
+.github/ @daniasyrofi
