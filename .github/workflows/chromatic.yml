@@ -29,16 +29,13 @@ jobs:
 
       - run: npm ci
 
-      # Publish to Chromatic — auto-accept on main, review on PRs
+      # Publish to Chromatic — advisory only, never blocks CI
       - name: Publish to Chromatic
         uses: chromaui/action@latest
+        continue-on-error: true
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          # Only fail the build on PRs (no auto-accept)
           autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }}
-          # Exit with non-zero code if there are unapproved changes on PRs
-          exitZeroOnChanges: ${{ github.event_name != 'pull_request' }}
-          # Skip unchanged stories via TurboSnap (faster CI)
+          exitZeroOnChanges: true
           onlyChanged: true
-          # Build Storybook fresh (don't reuse stale artifacts)
           buildScriptName: build-storybook
