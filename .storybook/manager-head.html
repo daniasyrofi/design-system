@@ -2535,3 +2535,16 @@
   })();
 </script>
 
+<script>
+  // Suppress IconButton deprecation warning from storybook-dark-mode addon.
+  // storybook-dark-mode@5 uses IconButton (deprecated in SB11) — no fix released yet.
+  // Remove this block once the addon publishes an update.
+  (function () {
+    const _warn = console.warn.bind(console);
+    console.warn = function (...args) {
+      if (typeof args[0] === 'string' && args[0].includes('IconButton')) return;
+      _warn(...args);
+    };
+  })();
+</script>
+
