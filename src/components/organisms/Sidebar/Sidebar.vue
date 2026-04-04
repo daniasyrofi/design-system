@@ -156,7 +156,10 @@ function hasActiveChild(item: SidebarItem): boolean {
                 'cursor-pointer select-none overflow-hidden',
                 isCollapsed ? 'justify-center px-0 py-2.5' : 'px-3 py-2.5',
                 isActive(item) || hasActiveChild(item)
-                  ? 'bg-[--color-primary-subtle] text-[--color-primary-strong] font-semibold ds-sidebar-item--active'
+                  ? [
+                      'bg-[--color-primary-subtle] text-[--color-primary-strong] font-semibold ds-sidebar-item--active',
+                      isCollapsed && 'ds-sidebar-item--active-collapsed',
+                    ]
                   : 'text-[--color-text-secondary] hover:bg-[--color-neutral-subtle] hover:text-[--color-text-primary]'
               )
             "
@@ -212,7 +215,7 @@ function hasActiveChild(item: SidebarItem): boolean {
                 type="button"
                 :class="
                   cn(
-                    'flex items-center w-full gap-3 ds-sidebar-item text-sm',
+                    'relative flex items-center w-full gap-3 ds-sidebar-item text-sm',
                     'transition-colors duration-[--duration-fast] ease-[--ease-default]',
                     'cursor-pointer select-none',
                     'pl-10 pr-3 py-2',
@@ -282,9 +285,25 @@ function hasActiveChild(item: SidebarItem): boolean {
 
 <style scoped>
 .ds-sidebar-item {
+  position: relative;
   border-radius: var(--radius-md);
 }
 .ds-sidebar-item--active {
-  box-shadow: inset 3px 0 0 0 var(--color-primary);
+  box-shadow: none;
+}
+
+.ds-sidebar-item--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary);
+}
+
+.ds-sidebar-item--active-collapsed::before {
+  display: none;
 }
 </style>

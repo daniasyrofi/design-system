@@ -260,7 +260,7 @@ const popoverClasses = computed(() =>
 <style scoped>
 .ds-popover {
   background-color: var(--color-surface);
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-lg);
   box-shadow:
     var(--shadow-2xl),
     inset 0 0 0 1px var(--color-border);

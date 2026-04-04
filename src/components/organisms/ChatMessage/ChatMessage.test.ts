@@ -78,4 +78,12 @@ describe('ChatMessage', () => {
     })
     expect(wrapper.exists()).toBe(true)
   })
+
+  it('does not use fixed timestamp offset utility classes', () => {
+    const wrapper = mount(ChatMessage, {
+      props: { role: 'assistant', content: 'Aligned', timestamp: ts },
+    })
+    expect(wrapper.html()).not.toContain('ml-10')
+    expect(wrapper.html()).not.toContain('mr-10')
+  })
 })

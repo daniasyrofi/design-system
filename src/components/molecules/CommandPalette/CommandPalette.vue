@@ -218,7 +218,7 @@ function setActive(item: CommandItem) {
       >
         <!-- Panel -->
         <div
-          class="ds-cmd-panel w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden"
+          class="ds-cmd-panel w-full max-w-xl rounded-[var(--radius-lg)] shadow-2xl overflow-hidden"
           role="dialog"
           aria-modal="true"
           aria-label="Command palette"
@@ -291,7 +291,7 @@ function setActive(item: CommandItem) {
                 :disabled="item.disabled || undefined"
                 :class="
                   cn(
-                    'ds-cmd-item w-full flex items-center gap-3 px-2 py-2 text-left text-sm rounded-md',
+                    'ds-cmd-item w-full flex items-center gap-3 px-2 py-2 text-left text-sm rounded-[var(--radius-md)]',
                     'transition-colors duration-75',
                     isActive(item)
                       ? 'ds-cmd-item--active text-[--color-text-primary]'

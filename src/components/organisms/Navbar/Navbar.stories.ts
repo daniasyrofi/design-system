@@ -118,8 +118,8 @@ export const FloatingMegaMenu: Story = {
             showMega
               ? '!bg-white !border !border-[#E5E7EB] !rounded-b-none !shadow-none'
               : bgActive
-                ? '!bg-white !border !border-[#E5E7EB] !rounded-b-[16px] !shadow-sm'
-                : '!bg-transparent !border !border-transparent !rounded-b-[16px] !shadow-none',
+                ? '!bg-white !border !border-[#E5E7EB] !rounded-b-[var(--radius-xl)] !shadow-sm'
+                : '!bg-transparent !border !border-transparent !rounded-b-[var(--radius-xl)] !shadow-none',
           ]"
           class="transition-[background-color,box-shadow] duration-300"
         >
@@ -175,7 +175,7 @@ export const FloatingMegaMenu: Story = {
                 >
                   <div
                     v-show="showMega"
-                    class="absolute top-[100%] left-[-1px] w-[calc(100%+2px)] bg-white rounded-b-[24px] shadow-[0_16px_40px_rgba(0,0,0,0.12)] border border-t-0 border-[#E5E7EB] p-8 pt-10 flex flex-col gap-6 text-left cursor-default -z-10 origin-top"
+                    class="absolute top-[100%] left-0 w-full bg-white rounded-b-[var(--radius-xl)] shadow-[0_16px_40px_rgba(0,0,0,0.12)] border border-t-0 border-[#E5E7EB] p-8 pt-10 flex flex-col gap-6 text-left cursor-default -z-10 origin-top"
                   >
                     <div class="grid grid-cols-3 gap-8 normal-case tracking-normal">
 

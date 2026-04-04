@@ -309,7 +309,7 @@ const dropzoneClasses = computed(() =>
 
 <style scoped>
 .ds-dropzone {
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-lg);
 }
 .ds-file-preview {
   border-radius: var(--radius-md);

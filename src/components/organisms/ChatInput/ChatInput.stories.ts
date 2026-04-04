@@ -267,7 +267,7 @@ export const Default: Story = {
             style="
               align-self:flex-end;max-width:80%;padding:8px 14px;
               background:var(--color-neutral);color:white;
-              border-radius:var(--radius-xl);font-size:14px;
+              border-radius:calc(var(--radius-lg) - 1px);font-size:14px;
             "
           >{{ msg }}</div>
         </div>

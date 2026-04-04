@@ -133,7 +133,7 @@ const classes = computed(() =>
       :style="dotInlineStyle"
       aria-hidden="true"
     />
-    <span v-if="$slots.leading" class="shrink-0 -ml-1 flex items-center justify-center">
+    <span v-if="$slots.leading" class="shrink-0 flex items-center justify-center leading-none">
       <slot name="leading" />
     </span>
     <span class="truncate">
@@ -144,7 +144,8 @@ const classes = computed(() =>
       type="button"
       :class="
         cn(
-          'shrink-0 -mr-0.5 flex items-center justify-center rounded-sm opacity-60 hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-1 transition-opacity duration-150 cursor-pointer',
+          'shrink-0 flex items-center justify-center rounded-sm opacity-60 hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-1 transition-opacity duration-150 cursor-pointer',
+          'leading-none',
           removeButtonSizeClass[size]
         )
       "

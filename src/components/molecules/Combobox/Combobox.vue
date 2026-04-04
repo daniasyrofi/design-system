@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick, useId } from 'vue'
 import { cn } from '@/lib/utils'
-import { RiCloseLine, RiArrowDownSLine } from '@remixicon/vue'
+import { RiCloseLine, RiArrowDownSLine, RiCheckLine } from '@remixicon/vue'
 import Spinner from '@/components/atoms/Spinner/Spinner.vue'
 
 export interface ComboboxOption {
@@ -229,7 +229,7 @@ const wrapperClasses = computed(() =>
 const optionClass = (idx: number, option: ComboboxOption) =>
   cn(
     'ds-combobox-option',
-    'flex items-center w-full text-left px-3 py-2 rounded-lg text-sm',
+    'flex items-center w-full text-left px-3 py-2 rounded-[var(--radius-lg)] text-sm',
     'transition-colors duration-100 cursor-pointer select-none',
     option.disabled && 'opacity-40 cursor-not-allowed pointer-events-none',
     option.value === props.modelValue && 'ds-combobox-option--selected',
@@ -278,7 +278,7 @@ const optionClass = (idx: number, option: ComboboxOption) =>
       <button
         v-if="showClear"
         type="button"
-        class="ds-combobox-clear shrink-0 flex items-center justify-center transition-colors duration-200"
+        class="ds-combobox-clear shrink-0 leading-none flex items-center justify-center transition-colors duration-200"
         aria-label="Clear"
         @click.stop="clear"
       >
@@ -294,7 +294,7 @@ const optionClass = (idx: number, option: ComboboxOption) =>
         :size="String(iconSize)"
         :class="
           cn(
-            'shrink-0 transition-transform duration-200 pointer-events-none',
+            'shrink-0 leading-none transition-transform duration-200 pointer-events-none',
             isOpen && 'rotate-180'
           )
         "
@@ -338,17 +338,15 @@ const optionClass = (idx: number, option: ComboboxOption) =>
               >
                 <!-- Check mark for selected -->
                 <span
-                  :style="{
-                    width: '16px',
-                    minWidth: '16px',
-                    color: 'var(--color-primary)',
-                    marginRight: '8px',
-                    opacity: option.value === modelValue ? 1 : 0,
-                  }"
+                  class="inline-flex items-center justify-center w-4 min-w-4 mr-2 leading-none text-[--color-primary]"
+                  :style="{ opacity: option.value === modelValue ? 1 : 0 }"
                   aria-hidden="true"
-                  >✓</span
                 >
-                {{ option.label }}
+                  <RiCheckLine size="14" />
+                </span>
+                <span class="flex-1 min-w-0 truncate">
+                  {{ option.label }}
+                </span>
               </button>
             </template>
 

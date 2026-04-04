@@ -57,7 +57,7 @@ const wrapperStyle = {
   alignItems: 'flex-start',
   gap: '12px',
   padding: '14px 16px',
-  borderRadius: 'var(--radius-2xl)',
+  borderRadius: 'var(--radius-lg)',
   backgroundColor: 'var(--color-surface)',
   boxShadow:
     'var(--shadow-xl), 0 0 0 1px color-mix(in oklch, var(--color-border) 80%, transparent)',
@@ -78,7 +78,7 @@ const wrapperStyle = {
         width: '30px',
         height: '30px',
         minWidth: '30px',
-        borderRadius: '9px',
+        borderRadius: 'var(--radius-md)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

@@ -114,7 +114,7 @@ const isHeadingOnly = computed(() => Boolean(props.title) && !hasBody.value && !
       gap: s.gap,
       display: 'flex',
       alignItems: isHeadingOnly ? 'center' : 'flex-start',
-      borderRadius: 'var(--radius-2xl)',
+      borderRadius: 'var(--radius-lg)',
       backgroundColor: 'var(--color-surface)',
       boxShadow:
         'var(--shadow-xl), 0 0 0 1px color-mix(in oklch, var(--color-border) 80%, transparent)',

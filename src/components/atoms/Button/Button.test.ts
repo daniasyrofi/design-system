@@ -134,4 +134,33 @@ describe('Button', () => {
     const wrapper = mount(Button)
     expect(wrapper.classes()).toContain('ds-btn')
   })
+
+  it.each([
+    ['xs', 'pl-3', 'pr-2'],
+    ['sm', 'pl-4', 'pr-3'],
+    ['md', 'pl-5', 'pr-3'],
+    ['lg', 'pl-6', 'pr-4'],
+    ['xl', 'pl-8', 'pr-6'],
+  ] as const)(
+    'applies optical trailing spacing for %s',
+    (size, expectedLeftClass, expectedRightClass) => {
+      const wrapper = mount(Button, {
+        props: { size },
+        slots: {
+          default: 'Continue',
+          trailing: '<span data-testid="trail">→</span>',
+        },
+      })
+      expect(wrapper.classes()).toContain(expectedLeftClass)
+      expect(wrapper.classes()).toContain(expectedRightClass)
+    }
+  )
+
+  it('keeps symmetrical spacing for text-only buttons', () => {
+    const wrapper = mount(Button, {
+      props: { size: 'md' },
+      slots: { default: 'Continue' },
+    })
+    expect(wrapper.classes()).toContain('px-5')
+  })
 })

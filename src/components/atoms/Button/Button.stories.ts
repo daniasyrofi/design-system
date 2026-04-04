@@ -21,6 +21,7 @@ type Copy = {
     allSizes: string
     withLeadingIcon: string
     withTrailingIcon: string
+    opticalSpacing: string
     iconOnly: string
     loading: string
     states: string
@@ -78,6 +79,7 @@ const copyMap: Record<Locale, Copy> = {
       allSizes: 'All Sizes',
       withLeadingIcon: 'With Leading Icon',
       withTrailingIcon: 'With Trailing Icon',
+      opticalSpacing: 'Optical Spacing Rules',
       iconOnly: 'Icon Only',
       loading: 'Loading',
       states: 'States',
@@ -131,6 +133,7 @@ const copyMap: Record<Locale, Copy> = {
       allSizes: 'Semua Ukuran',
       withLeadingIcon: 'Dengan Ikon Depan',
       withTrailingIcon: 'Dengan Ikon Belakang',
+      opticalSpacing: 'Aturan Spasi Optical',
       iconOnly: 'Hanya Ikon',
       loading: 'Memuat',
       states: 'Status',
@@ -184,6 +187,7 @@ const copyMap: Record<Locale, Copy> = {
       allSizes: '全部尺寸',
       withLeadingIcon: '带前置图标',
       withTrailingIcon: '带后置图标',
+      opticalSpacing: '光学间距规则',
       iconOnly: '仅图标',
       loading: '加载',
       states: '状态',
@@ -316,6 +320,31 @@ export const WithTrailingIcon: Story = {
           {{ copy.labels.continue }}
           <template #trailing><RiArrowRightLine style="width:1em;height:1em;" /></template>
         </Button>
+      </div>
+    `,
+  }),
+}
+
+export const OpticalSpacing: Story = {
+  get name() {
+    return getStoryName('opticalSpacing')
+  },
+  render: () => ({
+    components: { Button, RiArrowRightLine },
+    setup: () => ({ copy: useCopy() }),
+    template: `
+      <div style="display:flex;flex-direction:column;gap:16px;max-width:480px;">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:0;">Text-only (symmetrical padding)</p>
+          <Button>{{ copy.labels.continueWithEmail }}</Button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:0;">Trailing icon (optical compensation)</p>
+          <Button>
+            {{ copy.labels.continue }}
+            <template #trailing><RiArrowRightLine style="width:1em;height:1em;" /></template>
+          </Button>
+        </div>
       </div>
     `,
   }),

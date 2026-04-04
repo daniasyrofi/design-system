@@ -60,4 +60,10 @@ describe('SegmentedControl', () => {
     expect(wrapper.classes()).toContain('flex')
     expect(wrapper.classes()).toContain('w-full')
   })
+
+  it('uses border-compensated inner radius for segment buttons', () => {
+    const wrapper = mount(SegmentedControl, { props: { modelValue: 'day', options } })
+    const firstButton = wrapper.findAll('button')[0]
+    expect(firstButton.classes()).toContain('rounded-[calc(var(--radius-md)-3px)]')
+  })
 })

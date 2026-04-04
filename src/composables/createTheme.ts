@@ -84,37 +84,30 @@ const RADIUS_PRESETS: Record<
   Record<string, string>
 > = {
   sharp: {
-    '--radius-xs': '0px',
+    '--radius-none': '0px',
     '--radius-sm': '0px',
     '--radius-md': '0px',
     '--radius-lg': '0px',
     '--radius-xl': '0px',
-    '--radius-2xl': '0px',
   },
   default: {}, // no overrides — use globals.css values
   soft: {
-    '--radius-xs': '3px',
     '--radius-sm': '6px',
     '--radius-md': '12px',
     '--radius-lg': '18px',
     '--radius-xl': '24px',
-    '--radius-2xl': '30px',
   },
   round: {
-    '--radius-xs': '6px',
     '--radius-sm': '10px',
     '--radius-md': '16px',
     '--radius-lg': '24px',
     '--radius-xl': '32px',
-    '--radius-2xl': '40px',
   },
   pill: {
-    '--radius-xs': '9999px',
     '--radius-sm': '9999px',
     '--radius-md': '9999px',
     '--radius-lg': '9999px',
     '--radius-xl': '9999px',
-    '--radius-2xl': '9999px',
   },
 }
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useSlots } from 'vue'
 import { cn } from '@/lib/utils'
 import Spinner from '@/components/atoms/Spinner/Spinner.vue'
 
@@ -30,6 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{ click: [e: MouseEvent] }>()
+const slots = useSlots()
 
 const tag = computed(() => (props.href ? 'a' : props.as))
 
@@ -98,12 +99,28 @@ const variantTokens: Record<Variant, any> = {
   },
 }
 
-const sizes: Record<Size, string> = {
-  xs: 'px-3 py-1 text-xs rounded-full min-h-7 gap-1.5',
-  sm: 'px-4 py-1.5 text-sm rounded-full min-h-8 gap-1.5',
-  md: 'px-5 py-2 text-sm rounded-full min-h-10 gap-2',
-  lg: 'px-6 py-2.5 text-base rounded-full min-h-12 gap-2',
-  xl: 'px-8 py-3 text-lg rounded-full min-h-14 gap-2',
+const textBaseSizes: Record<Size, string> = {
+  xs: 'py-1 text-xs rounded-full min-h-7',
+  sm: 'py-1.5 text-sm rounded-full min-h-8',
+  md: 'py-2 text-sm rounded-full min-h-10',
+  lg: 'py-2.5 text-base rounded-full min-h-12',
+  xl: 'py-3 text-lg rounded-full min-h-14',
+}
+
+const textSymmetricSpacing: Record<Size, string> = {
+  xs: 'px-3 gap-1.5',
+  sm: 'px-4 gap-1.5',
+  md: 'px-5 gap-2',
+  lg: 'px-6 gap-2',
+  xl: 'px-8 gap-2',
+}
+
+const textTrailingSpacing: Record<Size, string> = {
+  xs: 'pl-3 pr-2 gap-1.5',
+  sm: 'pl-4 pr-3 gap-1.5',
+  md: 'pl-5 pr-3 gap-2',
+  lg: 'pl-6 pr-4 gap-2',
+  xl: 'pl-8 pr-6 gap-2',
 }
 
 const iconSizes: Record<Size, string> = {
@@ -122,10 +139,16 @@ const spinnerSizes: Record<Size, 'xs' | 'sm' | 'md'> = {
   xl: 'md',
 }
 
+const hasTrailingContent = computed(() => !!slots.trailing && !props.loading)
+
+const textSpacingClasses = computed(() =>
+  hasTrailingContent.value ? textTrailingSpacing[props.size] : textSymmetricSpacing[props.size]
+)
+
 const classes = computed(() => {
   const baseAndSize = cn(
     ...baseClasses,
-    props.iconOnly ? iconSizes[props.size] : sizes[props.size],
+    props.iconOnly ? iconSizes[props.size] : cn(textBaseSizes[props.size], textSpacingClasses.value),
     props.fullWidth && 'w-full',
     props.variant === 'link' ? 'p-0! h-auto!' : '',
     'ds-btn--variant', // Add the stable logic class
@@ -162,7 +185,10 @@ const variantStyleVars = computed(() => {
     @click="!disabled && !loading && emit('click', $event)"
   >
     <!-- Leading slot -->
-    <span v-if="$slots.leading && !loading" class="shrink-0 -ml-1 flex items-center justify-center">
+    <span
+      v-if="$slots.leading && !loading"
+      class="shrink-0 flex items-center justify-center leading-none"
+    >
       <slot name="leading" />
     </span>
 
@@ -182,7 +208,7 @@ const variantStyleVars = computed(() => {
     <!-- Trailing slot -->
     <span
       v-if="$slots.trailing && !loading"
-      class="shrink-0 -mr-1 flex items-center justify-center"
+      class="shrink-0 flex items-center justify-center leading-none"
     >
       <slot name="trailing" />
     </span>

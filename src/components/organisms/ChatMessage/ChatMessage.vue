@@ -87,77 +87,72 @@ function handleRetry() {
       class="shrink-0"
     />
 
-    <!-- Bubble -->
-    <div :class="bubbleClass">
-      <!-- Actions overlay (copy) -->
-      <div
-        v-if="actions && status === 'sent' && !isTyping"
-        :class="
-          cn(
-            'absolute -top-3 opacity-0 group-hover:opacity-100',
-            'transition-opacity duration-[--duration-fast] ease-[--ease-default]',
-            isUser ? 'left-2' : 'right-2'
-          )
-        "
-      >
-        <button
-          type="button"
-          class="ds-bubble-copy-btn flex items-center justify-center size-7 [background:var(--color-surface-glass)] [backdrop-filter:var(--glass-blur)] border border-[--glass-border] text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-neutral-light] transition-all duration-[--duration-fast] ease-[--ease-default] cursor-pointer"
-          aria-label="Copy message"
-          @click="handleCopy"
+    <div :class="cn('flex flex-col min-w-0', isUser ? 'items-end' : 'items-start')">
+      <!-- Bubble -->
+      <div :class="bubbleClass">
+        <!-- Actions overlay (copy) -->
+        <div
+          v-if="actions && status === 'sent' && !isTyping"
+          :class="
+            cn(
+              'absolute -top-3 opacity-0 group-hover:opacity-100',
+              'transition-opacity duration-[--duration-fast] ease-[--ease-default]',
+              isUser ? 'left-2' : 'right-2'
+            )
+          "
         >
-          <RiFileCopyLine size="14" />
+          <button
+            type="button"
+            class="ds-bubble-copy-btn flex items-center justify-center size-7 [background:var(--color-surface-glass)] [backdrop-filter:var(--glass-blur)] border border-[--glass-border] text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-[--color-neutral-light] transition-all duration-[--duration-fast] ease-[--ease-default] cursor-pointer"
+            aria-label="Copy message"
+            @click="handleCopy"
+          >
+            <RiFileCopyLine size="14" />
+          </button>
+        </div>
+
+        <!-- Typing indicator -->
+        <div v-if="isTyping" class="flex items-center gap-1.5 py-1 px-1">
+          <span
+            v-for="i in 3"
+            :key="i"
+            class="size-2 rounded-full bg-current opacity-50"
+            :style="{
+              animation: 'typingBounce 1.2s ease-in-out infinite',
+              animationDelay: `${(i - 1) * 0.2}s`,
+            }"
+          />
+        </div>
+
+        <!-- Content -->
+        <p v-else class="whitespace-pre-wrap break-words">{{ content }}</p>
+
+        <!-- Error retry -->
+        <button
+          v-if="status === 'error'"
+          type="button"
+          class="mt-2 flex items-center gap-1 text-caption text-[--color-danger] hover:underline cursor-pointer"
+          @click="handleRetry"
+        >
+          <RiRefreshLine size="12" />
+          <span>Retry</span>
         </button>
       </div>
 
-      <!-- Typing indicator -->
-      <div v-if="isTyping" class="flex items-center gap-1.5 py-1 px-1">
-        <span
-          v-for="i in 3"
-          :key="i"
-          class="size-2 rounded-full bg-current opacity-50"
-          :style="{
-            animation: 'typingBounce 1.2s ease-in-out infinite',
-            animationDelay: `${(i - 1) * 0.2}s`,
-          }"
-        />
+      <!-- Timestamp -->
+      <div :class="cn('mt-1 text-caption text-[--color-text-tertiary]', isUser ? 'text-right' : 'text-left')">
+        <span v-if="userName" class="font-medium text-[--color-text-secondary]"
+          >{{ userName }} &middot;
+        </span>
+        <span>{{ formattedTime }}</span>
       </div>
-
-      <!-- Content -->
-      <p v-else class="whitespace-pre-wrap break-words">{{ content }}</p>
-
-      <!-- Error retry -->
-      <button
-        v-if="status === 'error'"
-        type="button"
-        class="mt-2 flex items-center gap-1 text-caption text-[--color-danger] hover:underline cursor-pointer"
-        @click="handleRetry"
-      >
-        <RiRefreshLine size="12" />
-        <span>Retry</span>
-      </button>
     </div>
-  </div>
-
-  <!-- Timestamp -->
-  <div
-    :class="
-      cn(
-        'mt-1 text-caption text-[--color-text-tertiary]',
-        isUser ? 'text-right mr-10' : 'text-left ml-10'
-      )
-    "
-  >
-    <span v-if="userName" class="font-medium text-[--color-text-secondary]"
-      >{{ userName }} &middot;
-    </span>
-    <span>{{ formattedTime }}</span>
   </div>
 </template>
 
 <style scoped>
 .ds-bubble {
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-lg);
 }
 .ds-bubble--user {
   border-bottom-right-radius: var(--radius-sm);

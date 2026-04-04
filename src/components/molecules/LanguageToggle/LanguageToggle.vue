@@ -23,8 +23,8 @@ function setLocale(loc: string) {
 }
 
 const wrapperSize: Record<string, string> = {
-  sm: 'p-[3px] gap-0.5',
-  md: 'p-[3px] gap-0.5',
+  sm: 'p-1 gap-0.5',
+  md: 'p-1 gap-0.5',
   lg: 'p-1   gap-1',
 }
 

@@ -28,6 +28,7 @@ const textClass = computed(
 const paddingX = computed(() => ({ sm: 'px-3', md: 'px-4', lg: 'px-5' })[ctx.size.value])
 const iconSize = computed(() => ({ sm: 14, md: 16, lg: 18 })[ctx.size.value])
 const spinnerSize = computed(() => (({ sm: 'xs', md: 'sm', lg: 'md' }) as const)[ctx.size.value])
+const clearOffsetClass = computed(() => ({ sm: 'right-7', md: 'right-8', lg: 'right-9' })[ctx.size.value])
 
 const displayText = computed(() => {
   const sel = ctx.selectedValues.value
@@ -49,6 +50,7 @@ const showClear = computed(
 )
 
 function handleClear(e: MouseEvent) {
+  e.preventDefault()
   e.stopPropagation()
   ctx.clearAll()
 }
@@ -80,51 +82,75 @@ const triggerClasses = computed(() =>
     ctx.loading.value && 'cursor-wait'
   )
 )
+
+const triggerInlineStyle = computed(() => {
+  if (!showClear.value || ctx.readonly.value) return undefined
+  return {
+    paddingRight: ({ sm: '56px', md: '60px', lg: '68px' } as const)[ctx.size.value],
+  }
+})
 </script>
 
 <template>
-  <button
-    :id="ctx.triggerId"
-    type="button"
-    :class="triggerClasses"
-    :disabled="ctx.disabled.value || ctx.loading.value"
-    :aria-expanded="ctx.isOpen.value"
-    :aria-readonly="ctx.readonly.value || undefined"
-    aria-haspopup="listbox"
-    @click="ctx.toggle()"
-    @keydown="handleKeydown"
-  >
-    <!-- Selected value / placeholder -->
-    <span
-      class="flex-1 truncate"
-      :class="displayText ? 'ds-select-trigger-text' : 'ds-select-trigger-placeholder'"
+  <div class="relative w-full">
+    <button
+      :id="ctx.triggerId"
+      type="button"
+      :class="triggerClasses"
+      :style="triggerInlineStyle"
+      :disabled="ctx.disabled.value || ctx.loading.value"
+      :aria-expanded="ctx.isOpen.value"
+      :aria-readonly="ctx.readonly.value || undefined"
+      aria-haspopup="listbox"
+      @click="ctx.toggle()"
+      @keydown="handleKeydown"
     >
-      {{ displayText || placeholder }}
-    </span>
+      <!-- Selected value / placeholder -->
+      <span
+        class="flex-1 min-w-0 truncate"
+        :class="displayText ? 'ds-select-trigger-text' : 'ds-select-trigger-placeholder'"
+      >
+        {{ displayText || placeholder }}
+      </span>
+
+      <!-- Loading spinner -->
+      <Spinner v-if="ctx.loading.value" :size="spinnerSize" color="neutral" />
+
+      <!-- Chevron (hidden when loading or readonly) -->
+      <RiArrowDownSLine
+        v-else-if="!ctx.readonly.value"
+        :size="String(iconSize)"
+        :class="
+          cn(
+            'shrink-0 leading-none transition-transform duration-200',
+            ctx.isOpen.value && 'rotate-180'
+          )
+        "
+        style="color: var(--color-text-tertiary)"
+        aria-hidden="true"
+      />
+    </button>
 
     <!-- Clear button -->
     <button
       v-if="showClear"
       type="button"
-      class="ds-select-clear shrink-0 flex items-center justify-center transition-colors duration-200 cursor-pointer"
+      :class="
+        cn(
+          'ds-select-clear absolute top-1/2 -translate-y-1/2 z-10',
+          'shrink-0 flex items-center justify-center transition-colors duration-200 cursor-pointer',
+          clearOffsetClass
+        )
+      "
       aria-label="Clear selection"
       @click="handleClear"
     >
-      <RiCloseLine :size="String(iconSize)" />
+      <RiCloseLine
+        :size="String(iconSize)"
+        class="leading-none"
+      />
     </button>
-
-    <!-- Loading spinner -->
-    <Spinner v-if="ctx.loading.value" :size="spinnerSize" color="neutral" />
-
-    <!-- Chevron (hidden when loading or readonly) -->
-    <RiArrowDownSLine
-      v-else-if="!ctx.readonly.value"
-      :size="String(iconSize)"
-      :class="cn('shrink-0 transition-transform duration-200', ctx.isOpen.value && 'rotate-180')"
-      style="color: var(--color-text-tertiary)"
-      aria-hidden="true"
-    />
-  </button>
+  </div>
 </template>
 
 <style scoped>

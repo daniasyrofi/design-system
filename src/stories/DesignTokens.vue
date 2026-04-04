@@ -94,13 +94,11 @@ const spacingTokens = [
 
 // ── Radii ─────────────────────────────────────────────────────────────────────
 const radiiTokens = [
-  { name: 'xs', var: '--radius-xs' },
+  { name: 'none', var: '--radius-none' },
   { name: 'sm', var: '--radius-sm' },
   { name: 'md', var: '--radius-md' },
   { name: 'lg', var: '--radius-lg' },
   { name: 'xl', var: '--radius-xl' },
-  { name: '2xl', var: '--radius-2xl' },
-  { name: '3xl', var: '--radius-3xl' },
   { name: 'full', var: '--radius-full' },
 ]
 

@@ -103,6 +103,12 @@ const pyClasses: Record<InputSize, string> = {
   lg: 'py-2.5',
 }
 
+const compactInsetClasses: Record<InputSize, string> = {
+  sm: 'pl-1.5',
+  md: 'pl-2',
+  lg: 'pl-2.5',
+}
+
 const iconSizePx: Record<InputSize, string> = {
   sm: '14',
   md: '16',
@@ -148,9 +154,10 @@ const wrapperClasses = computed(() =>
       <!-- Prefix Area (Background filled block e.g. "https://") -->
       <div
         v-if="$slots.prefix"
+        data-testid="input-prefix-panel"
         :class="
           cn(
-            'flex items-center self-stretch text-sm font-medium select-none whitespace-nowrap',
+            'flex items-center self-stretch text-sm font-medium select-none whitespace-nowrap rounded-l-[calc(var(--radius-lg)-1px)]',
             pxClasses[size]
           )
         "
@@ -158,7 +165,6 @@ const wrapperClasses = computed(() =>
           borderRight: '1px solid var(--color-border)',
           backgroundColor: 'var(--color-bg-subtle)',
           color: 'var(--color-text-secondary)',
-          borderRadius: 'var(--radius-lg) 0 0 var(--radius-lg)',
         }"
       >
         <slot name="prefix" />
@@ -191,7 +197,7 @@ const wrapperClasses = computed(() =>
             'flex-1 w-full bg-transparent outline-none focus-visible:outline-none h-full min-w-0 border-none focus:ring-0 focus-visible:ring-0',
             textSizeClass[size],
             pyClasses[size],
-            !$slots.prefix && !$slots.leading ? plClasses[size] : 'pl-2',
+            !$slots.prefix && !$slots.leading ? plClasses[size] : compactInsetClasses[size],
             !$slots.suffix && !$slots.trailing && !showClear && !isPassword ? prClasses[size] : '',
             disabled && 'cursor-not-allowed',
             readonly && 'cursor-default'
@@ -229,7 +235,7 @@ const wrapperClasses = computed(() =>
         <!-- Trailing Icon -->
         <div
           v-if="$slots.trailing"
-          :class="cn('flex items-center pl-2 select-none', prClasses[size])"
+          :class="cn('flex items-center select-none', compactInsetClasses[size], prClasses[size])"
           :style="{ color: 'var(--color-text-tertiary)' }"
         >
           <slot name="trailing" />
@@ -238,9 +244,10 @@ const wrapperClasses = computed(() =>
         <!-- Suffix Area (Background filled block e.g. ".com") -->
         <div
           v-if="$slots.suffix"
+          data-testid="input-suffix-panel"
           :class="
             cn(
-              'flex items-center self-stretch text-sm font-medium select-none whitespace-nowrap',
+              'flex items-center self-stretch text-sm font-medium select-none whitespace-nowrap rounded-r-[calc(var(--radius-lg)-1px)]',
               pxClasses[size]
             )
           "
@@ -248,7 +255,6 @@ const wrapperClasses = computed(() =>
             borderLeft: '1px solid var(--color-border)',
             backgroundColor: 'var(--color-bg-subtle)',
             color: 'var(--color-text-secondary)',
-            borderRadius: '0 var(--radius-lg) var(--radius-lg) 0',
           }"
         >
           <slot name="suffix" />
