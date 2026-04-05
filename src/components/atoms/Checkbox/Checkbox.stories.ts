@@ -233,6 +233,19 @@ const meta: Meta<typeof Checkbox> = {
   component: Checkbox,
   tags: ['autodocs'],
   parameters: { layout: 'centered', icon: 'check' },
+  decorators: [
+    (story) => {
+      const storyComponent = story()
+      return {
+        components: { storyComponent },
+        template: `
+          <div class="[&_.checkbox-label]:items-center [&_.checkbox-label>span:last-child]:mt-0">
+            <storyComponent />
+          </div>
+        `,
+      }
+    },
+  ],
   argTypes: {
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
     disabled: { control: 'boolean' },

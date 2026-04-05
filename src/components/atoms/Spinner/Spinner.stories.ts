@@ -16,7 +16,7 @@ type Copy = {
     loadingOverlay: string
   }
   sizeLabels: Record<Size, string>
-  colorLabels: Record<'primary' | 'secondary' | 'neutral' | 'danger', string>
+  colorLabels: Record<'primary' | 'secondary' | 'neutral' | 'danger' | 'white', string>
   labels: {
     loading: string
     clickToLoad: string
@@ -50,6 +50,7 @@ const copyMap: Record<Locale, Copy> = {
       secondary: 'Secondary - Accent',
       neutral: 'Neutral - Black',
       danger: 'Danger - Red',
+      white: 'White',
     },
     labels: {
       loading: 'Loading',
@@ -80,6 +81,7 @@ const copyMap: Record<Locale, Copy> = {
       secondary: 'Sekunder - Aksen',
       neutral: 'Netral - Hitam',
       danger: 'Bahaya - Merah',
+      white: 'Putih',
     },
     labels: {
       loading: 'Memuat',
@@ -110,6 +112,7 @@ const copyMap: Record<Locale, Copy> = {
       secondary: '次要 - 强调',
       neutral: '中性 - 黑色',
       danger: '危险 - 红色',
+      white: '白色',
     },
     labels: {
       loading: '加载中',
@@ -179,14 +182,17 @@ export const ColorVariants: Story = {
     setup: () => ({ copy: useCopy() }),
     template: `
       <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
-        <div v-for="[color, label] in [
-          ['primary', copy.colorLabels.primary],
-          ['secondary', copy.colorLabels.secondary],
-          ['neutral', copy.colorLabels.neutral],
-          ['danger', copy.colorLabels.danger],
-          ['#8b5cf6', copy.labels.customHexPurple],
+        <div v-for="[color, label, bg] in [
+          ['primary', copy.colorLabels.primary, 'transparent'],
+          ['secondary', copy.colorLabels.secondary, 'transparent'],
+          ['neutral', copy.colorLabels.neutral, 'transparent'],
+          ['danger', copy.colorLabels.danger, 'transparent'],
+          ['#ffffff', copy.colorLabels.white, 'var(--color-neutral)'],
+          ['#8b5cf6', copy.labels.customHexPurple, 'transparent'],
         ]" :key="label" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-          <Spinner size="md" :color="color" />
+          <div :style="{ background: bg, borderRadius: 'var(--radius-md)', padding: bg !== 'transparent' ? '8px' : '0' }">
+            <Spinner size="md" :color="color" />
+          </div>
           <span style="font-size:11px;color:var(--color-text-tertiary);">{{ label }}</span>
         </div>
       </div>

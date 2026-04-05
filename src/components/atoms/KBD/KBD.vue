@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
 const sizeClasses: Record<KbdSize, string> = {
   sm: 'text-[10px] leading-none px-1 py-0.5 rounded-[var(--radius-xs)] min-h-4',
   md: 'text-[11px] leading-none px-1.5 py-0.5 rounded-[var(--radius-sm)] min-h-5',
-  lg: 'text-xs leading-none px-2 py-1 rounded-[var(--radius-sm)] min-h-6',
+  lg: 'text-xs leading-none px-2 py-1 rounded-[var(--radius-md)] min-h-6',
 }
 
 const classes = computed(() =>

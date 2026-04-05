@@ -21,6 +21,14 @@ type Variant = (typeof variants)[number]
 type Style = (typeof styles)[number]
 type Size = (typeof sizes)[number]
 
+const storyRadiusBySize: Record<Size, string> = {
+  sm: '8px',
+  md: '10px',
+  lg: '12px',
+}
+
+const getStoryRadiusStyle = (size: Size) => ({ borderRadius: storyRadiusBySize[size] })
+
 type Copy = {
   defaultLabel: string
   variantLabels: Record<Variant, string>
@@ -502,10 +510,16 @@ export const AllSizes: Story = {
   },
   render: () => ({
     components: { Badge },
-    setup: () => ({ sizes, copy: useCopy() }),
+    setup: () => ({ sizes, copy: useCopy(), getStoryRadiusStyle }),
     template: `
       <div style="display:flex;align-items:center;gap:8px;">
-        <Badge v-for="s in sizes" :key="s" :size="s" variant="primary">{{ copy.sizeLabels[s] }}</Badge>
+        <Badge
+          v-for="s in sizes"
+          :key="s"
+          :size="s"
+          variant="primary"
+          :style="getStoryRadiusStyle(s)"
+        >{{ copy.sizeLabels[s] }}</Badge>
       </div>
     `,
   }),
@@ -591,7 +605,7 @@ export const FullMatrix: Story = {
   },
   render: () => ({
     components: { Badge },
-    setup: () => ({ variants, styles, sizes, copy: useCopy() }),
+    setup: () => ({ variants, styles, sizes, copy: useCopy(), getStoryRadiusStyle }),
     template: `
       <div style="display:flex;flex-direction:column;gap:24px;">
         <div v-for="s in styles" :key="s">
@@ -599,7 +613,14 @@ export const FullMatrix: Story = {
           <div style="display:flex;flex-direction:column;gap:8px;">
             <div v-for="sz in sizes" :key="sz" style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;">
               <span style="display:inline-flex;align-items:center;min-width:56px;white-space:nowrap;font-size:11px;color:var(--color-text-tertiary);flex-shrink:0;">{{ copy.sizeLabels[sz] }}</span>
-              <Badge v-for="v in variants" :key="v" :variant="v" :badge-style="s" :size="sz">{{ copy.variantLabels[v] }}</Badge>
+              <Badge
+                v-for="v in variants"
+                :key="v"
+                :variant="v"
+                :badge-style="s"
+                :size="sz"
+                :style="getStoryRadiusStyle(sz)"
+              >{{ copy.variantLabels[v] }}</Badge>
             </div>
           </div>
         </div>

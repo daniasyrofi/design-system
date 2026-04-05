@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { computed, ref } from 'vue'
+import * as RemixIcons from '@remixicon/vue'
 import Icon from './Icon.vue'
 import { getI18nLocale, resolveLocale, type SupportedLocale } from '@/i18n'
 
@@ -15,36 +16,17 @@ type Copy = {
   sizeLabels: Record<'xs' | 'sm' | 'md' | 'lg' | 'xl', string>
   titleLabels: {
     copyToClipboard: string
+    searchPlaceholder: string
+    allStyles: string
+    boldStyle: string
+    lineStyle: string
   }
   colorLabels: Record<'danger' | 'success' | 'warning' | 'info' | 'primary' | 'muted', string>
 }
 
-const commonIcons = [
-  'RiHomeLine',
-  'RiUser3Line',
-  'RiSettings3Line',
-  'RiSearchLine',
-  'RiHeartLine',
-  'RiStarLine',
-  'RiBellLine',
-  'RiMailLine',
-  'RiLockLine',
-  'RiCheckLine',
-  'RiCloseLine',
-  'RiArrowRightLine',
-  'RiAddLine',
-  'RiDeleteBinLine',
-  'RiEditLine',
-  'RiDownloadLine',
-  'RiEyeLine',
-  'RiEyeOffLine',
-  'RiInformationLine',
-  'RiAlertLine',
-  'RiCalendarLine',
-  'RiPhoneLine',
-  'RiMapPinLine',
-  'RiGlobeLine',
-]
+const allRemixIcons = Object.keys(RemixIcons)
+  .filter((name) => name.startsWith('Ri'))
+  .sort((a, b) => a.localeCompare(b))
 
 const copyMap: Record<Locale, Copy> = {
   en: {
@@ -63,6 +45,10 @@ const copyMap: Record<Locale, Copy> = {
     },
     titleLabels: {
       copyToClipboard: 'Click to copy',
+      searchPlaceholder: 'Search icon...',
+      allStyles: 'All',
+      boldStyle: 'Bold',
+      lineStyle: 'Line',
     },
     colorLabels: {
       danger: 'Danger',
@@ -89,6 +75,10 @@ const copyMap: Record<Locale, Copy> = {
     },
     titleLabels: {
       copyToClipboard: 'Klik untuk menyalin',
+      searchPlaceholder: 'Cari ikon...',
+      allStyles: 'Semua',
+      boldStyle: 'Bold',
+      lineStyle: 'Line',
     },
     colorLabels: {
       danger: 'Bahaya',
@@ -115,6 +105,10 @@ const copyMap: Record<Locale, Copy> = {
     },
     titleLabels: {
       copyToClipboard: '点击复制',
+      searchPlaceholder: '搜索图标...',
+      allStyles: '全部',
+      boldStyle: '粗体',
+      lineStyle: '线框',
     },
     colorLabels: {
       danger: '危险',
@@ -186,7 +180,21 @@ export const IconGrid: Story = {
     components: { Icon },
     setup() {
       const copy = useCopy()
+      const search = ref('')
+      const styleFilter = ref<'all' | 'fill' | 'line'>('all')
       const copied = ref<string | null>(null)
+
+      const filteredIcons = computed(() =>
+        allRemixIcons.filter((icon) => {
+          const lower = icon.toLowerCase()
+          const matchesSearch = lower.includes(search.value.trim().toLowerCase())
+          if (!matchesSearch) return false
+          if (styleFilter.value === 'fill') return icon.endsWith('Fill')
+          if (styleFilter.value === 'line') return icon.endsWith('Line')
+          return true
+        })
+      )
+
       function copyName(name: string) {
         navigator.clipboard?.writeText(name)
         copied.value = name
@@ -194,21 +202,39 @@ export const IconGrid: Story = {
           copied.value = null
         }, 1500)
       }
-      return { copy, icons: commonIcons, copied, copyName }
+      return { copy, search, styleFilter, icons: filteredIcons, copied, copyName }
     },
     template: `
-      <div style="display:flex;flex-wrap:wrap;gap:8px;max-width:480px;">
+      <div style="display:flex;flex-direction:column;gap:12px;width:min(1000px,92vw);">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+          <input
+            v-model="search"
+            type="text"
+            :placeholder="copy.titleLabels.searchPlaceholder"
+            style="min-width:220px;flex:1 1 260px;height:34px;padding:0 10px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);color:var(--color-text-primary);font-size:13px;"
+          />
+          <div style="display:flex;gap:6px;">
+            <button type="button" @click="styleFilter = 'all'" :style="{ height: '34px', padding: '0 12px', borderRadius: '999px', border: '1px solid var(--color-border)', background: styleFilter === 'all' ? 'var(--color-primary-light)' : 'var(--color-surface)', color: 'var(--color-text-primary)', fontSize: '12px', cursor: 'pointer' }">{{ copy.titleLabels.allStyles }}</button>
+            <button type="button" @click="styleFilter = 'fill'" :style="{ height: '34px', padding: '0 12px', borderRadius: '999px', border: '1px solid var(--color-border)', background: styleFilter === 'fill' ? 'var(--color-primary-light)' : 'var(--color-surface)', color: 'var(--color-text-primary)', fontSize: '12px', cursor: 'pointer' }">{{ copy.titleLabels.boldStyle }}</button>
+            <button type="button" @click="styleFilter = 'line'" :style="{ height: '34px', padding: '0 12px', borderRadius: '999px', border: '1px solid var(--color-border)', background: styleFilter === 'line' ? 'var(--color-primary-light)' : 'var(--color-surface)', color: 'var(--color-text-primary)', fontSize: '12px', cursor: 'pointer' }">{{ copy.titleLabels.lineStyle }}</button>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--color-text-tertiary);margin:0;">
+          Total Remix Icons: {{ icons.length }}
+        </p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;max-height:70vh;overflow:auto;padding-right:4px;">
         <button
           v-for="icon in icons"
           :key="icon"
-          style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:var(--radius-md);border:1px solid var(--color-border);background:var(--color-surface);min-width:80px;cursor:pointer;transition:background 150ms;"
-          :style="{ background: copied === icon ? 'var(--color-primary-light)' : 'var(--color-surface)' }"
+          style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:var(--radius-md);border:1px solid var(--color-border);background:var(--color-surface);min-width:80px;cursor:pointer;transition:background 150ms, border-color 150ms;"
+          :style="{ background: copied === icon ? 'var(--color-primary-light)' : 'var(--color-surface)', borderColor: copied === icon ? 'var(--color-primary)' : 'var(--color-border)' }"
           :title="copy.titleLabels.copyToClipboard + ': ' + icon"
           @click="copyName(icon)"
         >
           <Icon :name="icon" size="md" />
           <span style="font-size:10px;color:var(--color-text-secondary);text-align:center;line-height:1.2;">{{ icon.replace('Ri','').replace('Line','') }}</span>
         </button>
+        </div>
       </div>
     `,
   }),

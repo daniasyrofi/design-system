@@ -79,10 +79,16 @@ const textSizeClass: Record<InputSize, string> = {
   lg: 'text-base',
 }
 
-const pxClasses: Record<InputSize, string> = {
-  sm: 'px-3',
-  md: 'px-4',
-  lg: 'px-5',
+const prefixPadClasses: Record<InputSize, string> = {
+  sm: 'pl-[12px] pr-[6px]',
+  md: 'pl-[14px] pr-[8px]',
+  lg: 'pl-[16px] pr-[10px]',
+}
+
+const suffixPadClasses: Record<InputSize, string> = {
+  sm: 'pl-[6px] pr-[12px]',
+  md: 'pl-[8px] pr-[14px]',
+  lg: 'pl-[10px] pr-[16px]',
 }
 
 const plClasses: Record<InputSize, string> = {
@@ -109,21 +115,31 @@ const iconSizePx: Record<InputSize, string> = {
   lg: '18',
 }
 
+const rightActionInsetClass: Record<InputSize, string> = {
+  sm: 'pr-[3px]',
+  md: 'pr-[6px]',
+  lg: 'pr-[9px]',
+}
+
+const radiusOffsetPx: Record<InputSize, number> = {
+  sm: 10,
+  md: 9,
+  lg: 8,
+}
+
 const radiusClass: Record<InputSize, string> = {
-  sm: 'rounded-[max(0px,calc(var(--radius-2xl)-6px))]',
-  md: 'rounded-[max(0px,calc(var(--radius-2xl)-8px))]',
-  lg: 'rounded-[max(0px,calc(var(--radius-2xl)-10px))]',
+  sm: 'rounded-[max(0px,calc(var(--radius-2xl)-10px))]',
+  md: 'rounded-[max(0px,calc(var(--radius-2xl)-9px))]',
+  lg: 'rounded-[max(0px,calc(var(--radius-2xl)-8px))]',
 }
 
 const prefixRadiusStyle = computed(() => {
-  const pyPx: Record<InputSize, number> = { sm: 6, md: 8, lg: 10 }
-  const r = `max(0px, calc(var(--radius-2xl) - ${pyPx[props.size]}px))`
+  const r = `max(0px, calc(var(--radius-2xl) - ${radiusOffsetPx[props.size]}px))`
   return `${r} 0 0 ${r}`
 })
 
 const suffixRadiusStyle = computed(() => {
-  const pyPx: Record<InputSize, number> = { sm: 6, md: 8, lg: 10 }
-  const r = `max(0px, calc(var(--radius-2xl) - ${pyPx[props.size]}px))`
+  const r = `max(0px, calc(var(--radius-2xl) - ${radiusOffsetPx[props.size]}px))`
   return `0 ${r} ${r} 0`
 })
 
@@ -169,7 +185,7 @@ const wrapperClasses = computed(() =>
         :class="
           cn(
             'flex items-center self-stretch text-sm font-medium select-none whitespace-nowrap',
-            pxClasses[size]
+            prefixPadClasses[size]
           )
         "
         :style="{
@@ -220,14 +236,21 @@ const wrapperClasses = computed(() =>
       />
 
       <!-- Right Side Controls (Clear, Password Toggle, Trailing, Suffix) -->
-      <div class="flex items-center self-stretch shrink-0">
+      <div
+        :class="
+          cn(
+            'flex items-center self-stretch shrink-0 gap-1',
+            !$slots.suffix && (showClear || isPassword || $slots.trailing) && rightActionInsetClass[size]
+          )
+        "
+      >
         <!-- Clear Button -->
         <button
           v-if="showClear"
           type="button"
           aria-label="Clear input"
           @click="handleClear"
-          class="ds-input-action-btn flex items-center justify-center p-1.5 mx-0.5 rounded-md transition-colors outline-none"
+          class="ds-input-action-btn flex items-center justify-center p-1.5 rounded-md transition-colors outline-none"
         >
           <RiCloseLine :size="iconSizePx[size]" />
         </button>
@@ -238,7 +261,7 @@ const wrapperClasses = computed(() =>
           type="button"
           :aria-label="showPassword ? 'Hide password' : 'Show password'"
           @click="showPassword = !showPassword"
-          class="ds-input-action-btn flex items-center justify-center p-1.5 mx-0.5 rounded-md transition-colors outline-none"
+          class="ds-input-action-btn flex items-center justify-center p-1.5 rounded-md transition-colors outline-none"
         >
           <RiEyeOffLine v-if="showPassword" :size="iconSizePx[size]" />
           <RiEyeLine v-else :size="iconSizePx[size]" />
@@ -256,12 +279,12 @@ const wrapperClasses = computed(() =>
         <!-- Suffix Area (Background filled block e.g. ".com") -->
         <div
           v-if="$slots.suffix"
-          :class="
-            cn(
-              'flex items-center self-stretch text-sm font-medium select-none whitespace-nowrap',
-              pxClasses[size]
-            )
-          "
+        :class="
+          cn(
+            'flex items-center self-stretch text-sm font-medium select-none whitespace-nowrap',
+            suffixPadClasses[size]
+          )
+        "
           :style="{
             borderLeft: '1px solid var(--color-border)',
             backgroundColor: 'var(--color-bg-subtle)',

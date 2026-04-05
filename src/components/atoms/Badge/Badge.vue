@@ -99,13 +99,11 @@ const dotInlineStyle = computed(() => ({
 }))
 
 // ── Size classes (layout only, no color) ────────────────────────────────────
-// Optical scaling: radius grows with badge size so each size looks proportionally consistent
-// sm=4px (--radius-sm), md=8px (--radius-md), lg=12px (--radius-lg)
-// Small badge at 4px LOOKS rounder (4/20px = 20%), large at 12px looks more rectangular (12/28px = 43%)
+// Keep corner radius fixed across all sizes for a consistent badge silhouette.
 const sizeClasses: Record<Size, string> = {
-  sm: 'text-[11px] leading-none py-0.5 gap-1 rounded-[var(--radius-sm)] min-h-5',
+  sm: 'text-[11px] leading-none py-0.5 gap-1 rounded-[var(--radius-md)] min-h-5',
   md: 'text-xs leading-none py-0.5 gap-1 rounded-[var(--radius-md)] min-h-6',
-  lg: 'text-sm leading-none py-1 gap-1 rounded-[var(--radius-lg)] min-h-7',
+  lg: 'text-sm leading-none py-1 gap-1 rounded-[var(--radius-md)] min-h-7',
 }
 
 const basePadding: Record<Size, { pl: string; pr: string }> = {

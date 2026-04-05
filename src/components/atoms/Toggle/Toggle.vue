@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, useId } from 'vue'
 import { cn } from '@/lib/utils'
-import { baselineOffset } from '@/lib/opticalAlign'
 
 type Size = 'sm' | 'md' | 'lg'
 type ToggleColor = 'primary' | 'secondary' | 'neutral' | 'danger'
@@ -55,15 +54,6 @@ const labelTextClass: Record<Size, string> = {
   lg: 'text-base', // 16px
 }
 
-// Baseline alignment: (TrackHeight - FontSize) / 2
-const trackHeights: Record<Size, number> = { sm: 16, md: 20, lg: 24 }
-const fontSizePx: Record<Size, number> = { sm: 12, md: 14, lg: 16 }
-const offsetClass = computed(() => ({
-  sm: `mt-[${baselineOffset(trackHeights.sm, fontSizePx.sm)}px]`,
-  md: `mt-[${baselineOffset(trackHeights.md, fontSizePx.md)}px]`,
-  lg: `mt-[${baselineOffset(trackHeights.lg, fontSizePx.lg)}px]`,
-}))
-
 const trackClasses = computed(() =>
   cn(
     'relative inline-flex shrink-0 items-center',
@@ -105,7 +95,7 @@ const thumbStyle = {
 </script>
 
 <template>
-  <div class="relative flex items-start gap-2.5">
+  <div class="relative flex items-center gap-2.5">
     <input
       :id="inputId"
       type="checkbox"
@@ -141,7 +131,6 @@ const thumbStyle = {
       :class="
         cn(
           labelTextClass[size],
-          offsetClass[size],
           'font-medium leading-none select-none transition-colors',
           disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
         )

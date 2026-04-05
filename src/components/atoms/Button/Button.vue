@@ -195,7 +195,7 @@ const variantStyleVars = computed(() => {
 
     <!-- Loading spinner -->
     <span v-if="loading" class="shrink-0">
-      <Spinner :size="spinnerSizes[size]" />
+      <Spinner :size="spinnerSizes[size]" color="currentColor" />
     </span>
 
     <!-- Default slot (label) -->

@@ -46,6 +46,59 @@ type Copy = {
 
 const sizeOptions = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 
+const textPaddingBySize: Record<Size, number> = {
+  xs: 12,
+  sm: 16,
+  md: 20,
+  lg: 24,
+  xl: 32,
+}
+
+const iconSidePaddingBySize: Record<Size, number> = {
+  xs: 8,
+  sm: 10,
+  md: 12,
+  lg: 14,
+  xl: 20,
+}
+
+const iconTextPaddingBySize: Record<Size, number> = {
+  xs: 10,
+  sm: 12,
+  md: 16,
+  lg: 20,
+  xl: 24,
+}
+
+const getButtonStyle = (size: Size, iconPlacement: 'none' | 'leading' | 'trailing' = 'none') => {
+  const sharedStyle = {
+    borderRadius: '999px',
+    gap: '4px',
+  }
+
+  if (iconPlacement === 'leading') {
+    return {
+      ...sharedStyle,
+      paddingInlineStart: `${iconSidePaddingBySize[size]}px`,
+      paddingInlineEnd: `${iconTextPaddingBySize[size]}px`,
+    }
+  }
+
+  if (iconPlacement === 'trailing') {
+    return {
+      ...sharedStyle,
+      paddingInlineStart: `${iconTextPaddingBySize[size]}px`,
+      paddingInlineEnd: `${iconSidePaddingBySize[size]}px`,
+    }
+  }
+
+  return {
+    ...sharedStyle,
+    paddingInlineStart: `${textPaddingBySize[size]}px`,
+    paddingInlineEnd: `${textPaddingBySize[size]}px`,
+  }
+}
+
 const copyMap: Record<Locale, Copy> = {
   en: {
     defaultLabel: 'Button',
@@ -244,11 +297,14 @@ export const Default: Story = {
   },
   render: (args) => ({
     components: { Button },
-    setup: () => ({
-      args,
-      copy: useCopy(),
-    }),
-    template: '<Button v-bind="args">{{ copy.defaultLabel }}</Button>',
+    setup: () => {
+      const copy = useCopy()
+      const storyStyle = computed(() =>
+        args.variant === 'link' ? undefined : getButtonStyle((args.size ?? 'md') as Size)
+      )
+      return { args, copy, storyStyle }
+    },
+    template: '<Button v-bind="args" :style="storyStyle">{{ copy.defaultLabel }}</Button>',
   }),
 }
 
@@ -261,10 +317,11 @@ export const AllVariants: Story = {
     setup: () => ({
       copy: useCopy(),
       variants: ['default', 'primary', 'secondary', 'outline', 'ghost', 'danger', 'link'] as const,
+      getButtonStyle,
     }),
     template: `
       <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
-        <Button v-for="variant in variants" :key="variant" :variant="variant">{{ copy.variantLabels[variant] }}</Button>
+        <Button v-for="variant in variants" :key="variant" :variant="variant" :style="variant === 'link' ? undefined : getButtonStyle('md')">{{ copy.variantLabels[variant] }}</Button>
       </div>
     `,
   }),
@@ -276,10 +333,10 @@ export const AllSizes: Story = {
   },
   render: () => ({
     components: { Button },
-    setup: () => ({ copy: useCopy(), sizes: sizeOptions }),
+    setup: () => ({ copy: useCopy(), sizes: sizeOptions, getButtonStyle }),
     template: `
       <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;">
-        <Button v-for="size in sizes" :key="size" :size="size">{{ copy.sizeLabels[size] }}</Button>
+        <Button v-for="size in sizes" :key="size" :size="size" :style="getButtonStyle(size)">{{ copy.sizeLabels[size] }}</Button>
       </div>
     `,
   }),
@@ -291,10 +348,10 @@ export const WithLeadingIcon: Story = {
   },
   render: () => ({
     components: { Button, RiAddLine },
-    setup: () => ({ copy: useCopy(), sizes: sizeOptions }),
+    setup: () => ({ copy: useCopy(), sizes: sizeOptions, getButtonStyle }),
     template: `
       <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;">
-        <Button v-for="size in sizes" :key="size" :size="size">
+        <Button v-for="size in sizes" :key="size" :size="size" :style="getButtonStyle(size, 'leading')">
           <template #leading><RiAddLine style="width:1em;height:1em;" /></template>
           {{ copy.labels.addItem }}
         </Button>
@@ -309,10 +366,10 @@ export const WithTrailingIcon: Story = {
   },
   render: () => ({
     components: { Button, RiArrowRightLine },
-    setup: () => ({ copy: useCopy() }),
+    setup: () => ({ copy: useCopy(), sizes: sizeOptions, getButtonStyle }),
     template: `
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-        <Button>
+        <Button v-for="size in sizes" :key="size" :size="size" :style="getButtonStyle(size, 'trailing')">
           {{ copy.labels.continue }}
           <template #trailing><RiArrowRightLine style="width:1em;height:1em;" /></template>
         </Button>
@@ -368,15 +425,15 @@ export const Loading: Story = {
         await new Promise((r) => setTimeout(r, 2000))
         loading.value = false
       }
-      return { copy, loading, handleClick }
+      return { copy, loading, handleClick, getButtonStyle }
     },
     template: `
       <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
-        <Button :loading="loading" @click="handleClick">
+        <Button :loading="loading" :style="getButtonStyle('md', 'leading')" @click="handleClick">
           {{ loading ? copy.labels.loading : copy.labels.save }}
         </Button>
-        <Button variant="outline" loading>{{ copy.labels.loading }}</Button>
-        <Button variant="ghost" loading>{{ copy.labels.loading }}</Button>
+        <Button variant="outline" loading :style="getButtonStyle('md', 'leading')">{{ copy.labels.loading }}</Button>
+        <Button variant="ghost" loading :style="getButtonStyle('md', 'leading')">{{ copy.labels.loading }}</Button>
       </div>
     `,
   }),
@@ -388,24 +445,24 @@ export const States: Story = {
   },
   render: () => ({
     components: { Button },
-    setup: () => ({ copy: useCopy() }),
+    setup: () => ({ copy: useCopy(), getButtonStyle }),
     template: `
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div>
           <p style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:10px;">{{ copy.labels.headingDisabled }}</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <Button disabled>{{ copy.variantLabels.default }}</Button>
-            <Button variant="primary" disabled>{{ copy.variantLabels.primary }}</Button>
-            <Button variant="outline" disabled>{{ copy.variantLabels.outline }}</Button>
-            <Button variant="ghost" disabled>{{ copy.variantLabels.ghost }}</Button>
-            <Button variant="danger" disabled>{{ copy.variantLabels.danger }}</Button>
+            <Button disabled :style="getButtonStyle('md')">{{ copy.variantLabels.default }}</Button>
+            <Button variant="primary" disabled :style="getButtonStyle('md')">{{ copy.variantLabels.primary }}</Button>
+            <Button variant="outline" disabled :style="getButtonStyle('md')">{{ copy.variantLabels.outline }}</Button>
+            <Button variant="ghost" disabled :style="getButtonStyle('md')">{{ copy.variantLabels.ghost }}</Button>
+            <Button variant="danger" disabled :style="getButtonStyle('md')">{{ copy.variantLabels.danger }}</Button>
           </div>
         </div>
         <div>
           <p style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:10px;">{{ copy.labels.headingFullWidth }}</p>
           <div style="width:280px;display:flex;flex-direction:column;gap:8px;">
-            <Button fullWidth>{{ copy.labels.fullWidth }} {{ copy.variantLabels.default }}</Button>
-            <Button variant="outline" fullWidth>{{ copy.labels.fullWidth }} {{ copy.variantLabels.outline }}</Button>
+            <Button fullWidth :style="getButtonStyle('md')">{{ copy.labels.fullWidth }} {{ copy.variantLabels.default }}</Button>
+            <Button variant="outline" fullWidth :style="getButtonStyle('md')">{{ copy.labels.fullWidth }} {{ copy.variantLabels.outline }}</Button>
           </div>
         </div>
       </div>
@@ -422,16 +479,17 @@ export const Danger: Story = {
     setup: () => ({
       copy: useCopy(),
       confirmed: ref(false),
+      getButtonStyle,
     }),
     template: `
       <div style="display:flex;flex-direction:column;gap:12px;max-width:320px;">
         <p style="font-size:14px;color:var(--color-text-secondary);">{{ copy.labels.redReserved }}</p>
         <div style="display:flex;gap:8px;">
-          <Button variant="danger">
+          <Button variant="danger" :style="getButtonStyle('md', 'leading')">
             <template #leading><RiDeleteBinLine style="width:1em;height:1em;" /></template>
             {{ copy.labels.delete }}
           </Button>
-          <Button variant="outline">{{ copy.labels.cancel }}</Button>
+          <Button variant="outline" :style="getButtonStyle('md')">{{ copy.labels.cancel }}</Button>
         </div>
       </div>
     `,
