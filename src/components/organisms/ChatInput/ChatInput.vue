@@ -141,7 +141,7 @@ onMounted(() => {
 <style scoped>
 .ds-chat-input {
   background-color: var(--color-surface);
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-lg);
 }
 .ds-chat-input:focus-within {
   border-color: var(--color-primary);

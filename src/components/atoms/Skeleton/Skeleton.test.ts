@@ -7,8 +7,8 @@ describe('Skeleton', () => {
 
   it('renders a single element by default', () => {
     const wrapper = mount(Skeleton)
-    // Single skeleton = one span.skel
-    expect(wrapper.find('span.skel').exists()).toBe(true)
+    // Single skeleton = one span.ds-skel
+    expect(wrapper.find('span.ds-skel').exists()).toBe(true)
   })
 
   it('has role="status" and aria-busy="true"', () => {
@@ -27,12 +27,12 @@ describe('Skeleton', () => {
 
   it('renders multiple lines when lines > 1', () => {
     const wrapper = mount(Skeleton, { props: { variant: 'text', lines: 3 } })
-    expect(wrapper.findAll('span.skel')).toHaveLength(3)
+    expect(wrapper.findAll('span.ds-skel')).toHaveLength(3)
   })
 
   it('makes last line shorter (72% width) for multi-line text', () => {
     const wrapper = mount(Skeleton, { props: { variant: 'text', lines: 2 } })
-    const lines = wrapper.findAll('span.skel')
+    const lines = wrapper.findAll('span.ds-skel')
     const lastStyle = (lines[1].element as HTMLElement).style.width
     expect(lastStyle).toBe('72%')
   })
@@ -41,13 +41,13 @@ describe('Skeleton', () => {
 
   it('applies circular border-radius for circular variant', () => {
     const wrapper = mount(Skeleton, { props: { variant: 'circular' } })
-    const el = wrapper.find('span.skel').element as HTMLElement
+    const el = wrapper.find('span.ds-skel').element as HTMLElement
     expect(el.style.borderRadius).toBe('var(--radius-full)')
   })
 
   it('applies zero border-radius for rectangular variant', () => {
     const wrapper = mount(Skeleton, { props: { variant: 'rectangular' } })
-    const el = wrapper.find('span.skel').element as HTMLElement
+    const el = wrapper.find('span.ds-skel').element as HTMLElement
     expect(el.style.borderRadius).toBe('0px')
   })
 
@@ -55,7 +55,7 @@ describe('Skeleton', () => {
 
   it('applies custom width and height', () => {
     const wrapper = mount(Skeleton, { props: { width: '120px', height: '40px' } })
-    const el = wrapper.find('span.skel').element as HTMLElement
+    const el = wrapper.find('span.ds-skel').element as HTMLElement
     expect(el.style.width).toBe('120px')
     expect(el.style.height).toBe('40px')
   })

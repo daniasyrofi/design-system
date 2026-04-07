@@ -131,6 +131,12 @@ onBeforeUnmount(() => {
 
 // ── Panel position classes ────────────────────────────────────────────────────
 
+defineExpose({
+  el: panelRef,
+  open: () => { emit('update:modelValue', true) },
+  close: () => { if (!props.preventClose) emit('update:modelValue', false) },
+})
+
 const positionClass: Record<DrawerPlacement, string> = {
   left: 'inset-y-0 left-0',
   right: 'inset-y-0 right-0',
@@ -174,6 +180,7 @@ const positionClass: Record<DrawerPlacement, string> = {
             aria-modal="true"
             :aria-labelledby="$slots.title ? titleId : undefined"
             tabindex="-1"
+            :data-state="modelValue ? 'open' : 'closed'"
           >
             <!-- Header -->
             <div

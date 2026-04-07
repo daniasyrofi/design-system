@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ref } from 'vue'
+import { userEvent, within, expect } from 'storybook/test'
 import Drawer from './Drawer.vue'
 import Button from '@/components/atoms/Button/Button.vue'
 import Input from '@/components/atoms/Input/Input.vue'
@@ -27,6 +28,21 @@ type Story = StoryObj<typeof Drawer>
 
 export const Default: Story = {
   name: 'Right (default)',
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+
+    // Click the trigger button to open the drawer
+    const trigger = canvas.getByRole('button', { name: /open drawer/i })
+    await userEvent.click(trigger)
+
+    // Drawer renders via Teleport — query against document.body
+    const body = within(document.body)
+    await expect(body.getByRole('dialog')).toBeVisible()
+
+    // Press Escape to close
+    await userEvent.keyboard('{Escape}')
+    await expect(body.queryByRole('dialog')).not.toBeVisible()
+  },
   render: () => ({
     components: { Drawer, Button },
     setup() {

@@ -67,9 +67,9 @@ const classes = computed(() =>
   cn(
     'relative flex items-center justify-between transition-all duration-500 will-change-transform ease-[cubic-bezier(0.16,1,0.3,1)] mx-auto',
     isFloating.value
-      ? 'w-full max-w-[700px] h-[64px] px-[24px] rounded-b-[16px] bg-[--color-surface] shadow-md border border-[--color-border]'
+      ? 'w-full max-w-[700px] h-[64px] px-[24px] rounded-b-[var(--radius-xl)] bg-[--color-surface] shadow-md border border-[--color-border]'
       : cn(
-          'w-full max-w-[700px] h-[64px] px-[24px] rounded-b-[16px]',
+          'w-full max-w-[700px] h-[64px] px-[24px] rounded-b-[var(--radius-xl)]',
           variantClasses[props.variant],
           props.variant === 'default' && props.border && 'border-b border-[--color-border]'
         ),

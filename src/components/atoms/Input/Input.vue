@@ -38,10 +38,15 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   'update:modelValue': [value: string]
   clear: []
+  focus: [event: FocusEvent]
+  blur: [event: FocusEvent]
+  keydown: [event: KeyboardEvent]
+  keyup: [event: KeyboardEvent]
 }>()
 
 const autoId = useId()
 const inputId = computed(() => props.id ?? autoId)
+const inputRef = ref<HTMLInputElement | null>(null)
 const showPassword = ref(false)
 const hasError = computed(() => !!props.error)
 const charCount = computed(() => props.modelValue?.length ?? 0)
@@ -79,10 +84,16 @@ const textSizeClass: Record<InputSize, string> = {
   lg: 'text-base',
 }
 
-const pxClasses: Record<InputSize, string> = {
-  sm: 'px-3',
-  md: 'px-4',
-  lg: 'px-5',
+const prefixPadClasses: Record<InputSize, string> = {
+  sm: 'pl-[12px] pr-[6px]',
+  md: 'pl-[14px] pr-[8px]',
+  lg: 'pl-[16px] pr-[10px]',
+}
+
+const suffixPadClasses: Record<InputSize, string> = {
+  sm: 'pl-[6px] pr-[12px]',
+  md: 'pl-[8px] pr-[14px]',
+  lg: 'pl-[10px] pr-[16px]',
 }
 
 const plClasses: Record<InputSize, string> = {
@@ -103,11 +114,45 @@ const pyClasses: Record<InputSize, string> = {
   lg: 'py-2.5',
 }
 
+const compactInsetClasses: Record<InputSize, string> = {
+  sm: 'pl-1.5',
+  md: 'pl-2',
+  lg: 'pl-2.5',
+}
+
 const iconSizePx: Record<InputSize, string> = {
   sm: '14',
   md: '16',
   lg: '18',
 }
+
+const rightActionInsetClass: Record<InputSize, string> = {
+  sm: 'pr-[3px]',
+  md: 'pr-[6px]',
+  lg: 'pr-[9px]',
+}
+
+const radiusOffsetPx: Record<InputSize, number> = {
+  sm: 10,
+  md: 9,
+  lg: 8,
+}
+
+const radiusClass: Record<InputSize, string> = {
+  sm: 'rounded-[max(0px,calc(var(--radius-2xl)-10px))]',
+  md: 'rounded-[max(0px,calc(var(--radius-2xl)-9px))]',
+  lg: 'rounded-[max(0px,calc(var(--radius-2xl)-8px))]',
+}
+
+const prefixRadiusStyle = computed(() => {
+  const r = `max(0px, calc(var(--radius-2xl) - ${radiusOffsetPx[props.size]}px))`
+  return `${r} 0 0 ${r}`
+})
+
+const suffixRadiusStyle = computed(() => {
+  const r = `max(0px, calc(var(--radius-2xl) - ${radiusOffsetPx[props.size]}px))`
+  return `0 ${r} ${r} 0`
+})
 
 // Wrapper controls the background, border, and focus rings.
 // We use a flex container so prefix/suffix panels can stretch fully to the top and bottom.
@@ -115,13 +160,19 @@ const wrapperClasses = computed(() =>
   cn(
     'ds-input-wrapper',
     'relative flex items-center w-full transition-colors duration-200 ease-out',
-    'rounded-[var(--radius-lg)] border outline-none overflow-hidden',
+    radiusClass[props.size], 'border outline-none overflow-hidden',
     heightClass[props.size],
     hasError.value && 'ds-input-wrapper--error',
     props.disabled && 'ds-input-wrapper--disabled cursor-not-allowed',
     props.readonly && 'ds-input-wrapper--readonly'
   )
 )
+
+defineExpose({
+  el: inputRef,
+  focus: () => inputRef.value?.focus(),
+  blur: () => inputRef.value?.blur(),
+})
 </script>
 
 <template>
@@ -148,17 +199,18 @@ const wrapperClasses = computed(() =>
       <!-- Prefix Area (Background filled block e.g. "https://") -->
       <div
         v-if="$slots.prefix"
+        data-testid="input-prefix-panel"
         :class="
           cn(
             'flex items-center self-stretch text-sm font-medium select-none whitespace-nowrap',
-            pxClasses[size]
+            prefixPadClasses[size]
           )
         "
         :style="{
           borderRight: '1px solid var(--color-border)',
           backgroundColor: 'var(--color-bg-subtle)',
           color: 'var(--color-text-secondary)',
-          borderRadius: 'var(--radius-lg) 0 0 var(--radius-lg)',
+          borderRadius: prefixRadiusStyle,
         }"
       >
         <slot name="prefix" />
@@ -175,6 +227,7 @@ const wrapperClasses = computed(() =>
 
       <!-- Native Input -->
       <input
+        ref="inputRef"
         :id="inputId"
         :type="effectiveType"
         :value="modelValue"
@@ -191,7 +244,7 @@ const wrapperClasses = computed(() =>
             'flex-1 w-full bg-transparent outline-none focus-visible:outline-none h-full min-w-0 border-none focus:ring-0 focus-visible:ring-0',
             textSizeClass[size],
             pyClasses[size],
-            !$slots.prefix && !$slots.leading ? plClasses[size] : 'pl-2',
+            !$slots.prefix && !$slots.leading ? plClasses[size] : compactInsetClasses[size],
             !$slots.suffix && !$slots.trailing && !showClear && !isPassword ? prClasses[size] : '',
             disabled && 'cursor-not-allowed',
             readonly && 'cursor-default'
@@ -199,17 +252,28 @@ const wrapperClasses = computed(() =>
         "
         v-bind="$attrs"
         @input="handleInput"
+        @focus="emit('focus', $event)"
+        @blur="emit('blur', $event)"
+        @keydown="emit('keydown', $event)"
+        @keyup="emit('keyup', $event)"
       />
 
       <!-- Right Side Controls (Clear, Password Toggle, Trailing, Suffix) -->
-      <div class="flex items-center self-stretch shrink-0">
+      <div
+        :class="
+          cn(
+            'flex items-center self-stretch shrink-0 gap-1',
+            !$slots.suffix && (showClear || isPassword || $slots.trailing) && rightActionInsetClass[size]
+          )
+        "
+      >
         <!-- Clear Button -->
         <button
           v-if="showClear"
           type="button"
           aria-label="Clear input"
           @click="handleClear"
-          class="ds-input-action-btn flex items-center justify-center p-1.5 mx-0.5 rounded-md transition-colors outline-none"
+          class="ds-input-action-btn flex items-center justify-center p-1.5 rounded-md transition-colors outline-none"
         >
           <RiCloseLine :size="iconSizePx[size]" />
         </button>
@@ -220,7 +284,7 @@ const wrapperClasses = computed(() =>
           type="button"
           :aria-label="showPassword ? 'Hide password' : 'Show password'"
           @click="showPassword = !showPassword"
-          class="ds-input-action-btn flex items-center justify-center p-1.5 mx-0.5 rounded-md transition-colors outline-none"
+          class="ds-input-action-btn flex items-center justify-center p-1.5 rounded-md transition-colors outline-none"
         >
           <RiEyeOffLine v-if="showPassword" :size="iconSizePx[size]" />
           <RiEyeLine v-else :size="iconSizePx[size]" />
@@ -229,7 +293,7 @@ const wrapperClasses = computed(() =>
         <!-- Trailing Icon -->
         <div
           v-if="$slots.trailing"
-          :class="cn('flex items-center pl-2 select-none', prClasses[size])"
+          :class="cn('flex items-center select-none', compactInsetClasses[size], prClasses[size])"
           :style="{ color: 'var(--color-text-tertiary)' }"
         >
           <slot name="trailing" />
@@ -238,17 +302,17 @@ const wrapperClasses = computed(() =>
         <!-- Suffix Area (Background filled block e.g. ".com") -->
         <div
           v-if="$slots.suffix"
-          :class="
-            cn(
-              'flex items-center self-stretch text-sm font-medium select-none whitespace-nowrap',
-              pxClasses[size]
-            )
-          "
+        :class="
+          cn(
+            'flex items-center self-stretch text-sm font-medium select-none whitespace-nowrap',
+            suffixPadClasses[size]
+          )
+        "
           :style="{
             borderLeft: '1px solid var(--color-border)',
             backgroundColor: 'var(--color-bg-subtle)',
             color: 'var(--color-text-secondary)',
-            borderRadius: '0 var(--radius-lg) var(--radius-lg) 0',
+            borderRadius: suffixRadiusStyle,
           }"
         >
           <slot name="suffix" />

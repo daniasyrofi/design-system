@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { computed } from 'vue'
+import { userEvent, within, expect } from 'storybook/test'
 import Accordion from './Accordion.vue'
 import AccordionItem from './AccordionItem.vue'
 import { getI18nLocale, resolveLocale, type SupportedLocale } from '@/i18n'
@@ -222,6 +223,25 @@ type Story = StoryObj<typeof Accordion>
 export const Single: Story = {
   get name() {
     return getStoryName('single')
+  },
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+
+    // item-1 starts open (default-open), item-2 starts closed
+    const buttons = canvas.getAllByRole('button')
+    const firstBtn = buttons[0]
+    const secondBtn = buttons[1]
+
+    // First item is open by default
+    await expect(firstBtn).toHaveAttribute('aria-expanded', 'true')
+
+    // Click second accordion item to open it (single mode closes first)
+    await userEvent.click(secondBtn)
+    await expect(secondBtn).toHaveAttribute('aria-expanded', 'true')
+
+    // Click second item again to collapse it
+    await userEvent.click(secondBtn)
+    await expect(secondBtn).toHaveAttribute('aria-expanded', 'false')
   },
   render: () => ({
     components: { Accordion, AccordionItem },

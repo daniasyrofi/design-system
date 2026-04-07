@@ -54,12 +54,11 @@
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Radii */
-  --radius-xs: 2px;
+  --radius-none: 0px;
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
-  --radius-2xl: 20px;
   --radius-full: 9999px;
 
   /* Motion: duration */
@@ -71,6 +70,7 @@
   --duration-exit: 150ms;
   --duration-expand: 280ms;
   --duration-page: 400ms;
+  --duration-stagger: 50ms;
 
   /* Motion: easing */
   --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
@@ -98,6 +98,53 @@
   --space-16: 64px;
   --space-20: 80px;
   --space-24: 96px;
+
+  /* Icon sizes */
+  --ds-icon-xs: 12px;
+  --ds-icon-sm: 16px;
+  --ds-icon-md: 20px;
+  --ds-icon-lg: 24px;
+  --ds-icon-xl: 28px;
+  --ds-icon-2xl: 32px;
+
+  /* ── Component tokens (Tier 3) ───────────────────────────── */
+  /* Button */
+  --ds-btn-bg: var(--color-primary);
+  --ds-btn-text: var(--color-primary-text, #ffffff);
+  --ds-btn-border: transparent;
+  --ds-btn-radius: var(--radius-md);
+
+  /* Input */
+  --ds-input-bg: var(--color-surface);
+  --ds-input-border: var(--color-border);
+  --ds-input-border-focus: var(--color-primary);
+  --ds-input-border-error: var(--color-danger);
+  --ds-input-text: var(--color-text-primary);
+  --ds-input-placeholder: var(--color-text-muted);
+  --ds-input-radius: var(--radius-md);
+
+  /* Card */
+  --ds-card-bg: var(--color-surface);
+  --ds-card-border: var(--color-border);
+  --ds-card-shadow: var(--shadow-sm);
+  --ds-card-radius: var(--radius-lg);
+
+  /* Modal */
+  --ds-modal-bg: var(--color-surface);
+  --ds-modal-overlay: oklch(0.15 0.005 80 / 0.6);
+  --ds-modal-radius: var(--radius-xl);
+
+  /* Alert */
+  --ds-alert-radius: var(--radius-md);
+
+  /* Badge */
+  --ds-badge-radius: var(--radius-full);
+
+  /* Table */
+  --ds-table-bg: var(--color-surface);
+  --ds-table-border: var(--color-border);
+  --ds-table-header-bg: var(--color-bg-subtle);
+  --ds-table-row-hover: var(--color-bg-subtle);
 }
 
 /* ── Semantic tokens: Light mode ─────────────────────────────── */
@@ -112,11 +159,11 @@
 
   --color-border: var(--primitive-neutral-200);
   --color-border-subtle: color-mix(in oklch, var(--primitive-neutral-200) 50%, transparent);
-  --color-border-strong: var(--primitive-neutral-300);
+  --color-border-strong: var(--primitive-neutral-500);
 
   --color-text-heading: var(--primitive-neutral-900);
   --color-text-primary: var(--primitive-neutral-700);
-  --color-text-secondary: var(--primitive-neutral-500);
+  --color-text-secondary: var(--primitive-neutral-600);
   --color-text-tertiary: var(--primitive-neutral-400);
   --color-text-muted: var(--primitive-neutral-400);
   --color-text-disabled: var(--primitive-neutral-300);
@@ -201,7 +248,7 @@
 
   --color-border: oklch(0.3 0.01 80);
   --color-border-subtle: oklch(0.25 0.01 80);
-  --color-border-strong: oklch(0.35 0.01 80);
+  --color-border-strong: oklch(0.5 0.01 80);
 
   --color-text-heading: oklch(0.96 0.005 80);
   --color-text-primary: oklch(0.9 0.005 80);
@@ -246,6 +293,8 @@
 
   --avatar-bg-l: 0.28;
   --avatar-text-l: 0.78;
+
+  --ds-modal-overlay: oklch(0.05 0.005 80 / 0.75);
 }
 
 /* ── Base styles ──────────────────────────────────────────────── */
@@ -272,7 +321,7 @@ html {
 }
 
 /* ── Animations ───────────────────────────────────────────────── */
-@keyframes shimmer {
+@keyframes ds-shimmer {
   from {
     background-position: -400px 0;
   }
@@ -281,7 +330,7 @@ html {
   }
 }
 
-.skel {
+.ds-skel {
   background: linear-gradient(
     90deg,
     var(--color-neutral-light) 25%,
@@ -289,7 +338,7 @@ html {
     var(--color-neutral-light) 75%
   );
   background-size: 800px 100%;
-  animation: shimmer 1.4s ease-in-out infinite;
+  animation: ds-shimmer 1.4s ease-in-out infinite;
 }
 
 @keyframes ds-fade-in {
@@ -374,7 +423,7 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .skel {
+  .ds-skel {
     animation: none;
     background: var(--color-neutral-light);
   }

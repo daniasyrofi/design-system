@@ -1046,31 +1046,31 @@ export const Skeleton: Story = {
         <Card style="width:272px">
           <div style="display:flex;flex-direction:column;gap:12px;">
             <div style="display:flex;align-items:center;justify-content:space-between;">
-              <div class="skel" style="width:36px;height:36px;border-radius:var(--radius-md);"></div>
-              <div class="skel" style="width:52px;height:20px;border-radius:var(--radius-full);"></div>
+              <div class="ds-skel" style="width:36px;height:36px;border-radius:var(--radius-md);"></div>
+              <div class="ds-skel" style="width:52px;height:20px;border-radius:var(--radius-full);"></div>
             </div>
-            <div class="skel" style="width:80px;height:32px;border-radius:var(--radius-sm);"></div>
-            <div class="skel" style="width:110px;height:12px;border-radius:var(--radius-sm);"></div>
+            <div class="ds-skel" style="width:80px;height:32px;border-radius:var(--radius-sm);"></div>
+            <div class="ds-skel" style="width:110px;height:12px;border-radius:var(--radius-sm);"></div>
             <div style="height:1px;background:var(--color-border-subtle);"></div>
             <div style="display:flex;flex-direction:column;gap:6px;">
-              <div class="skel" style="width:100%;height:10px;border-radius:var(--radius-sm);"></div>
-              <div class="skel" style="width:80%;height:10px;border-radius:var(--radius-sm);"></div>
+              <div class="ds-skel" style="width:100%;height:10px;border-radius:var(--radius-sm);"></div>
+              <div class="ds-skel" style="width:80%;height:10px;border-radius:var(--radius-sm);"></div>
             </div>
           </div>
         </Card>
 
         <Card style="width:272px">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-            <div class="skel" style="width:40px;height:40px;border-radius:var(--radius-full);flex-shrink:0;"></div>
+            <div class="ds-skel" style="width:40px;height:40px;border-radius:var(--radius-full);flex-shrink:0;"></div>
             <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
-              <div class="skel" style="width:100px;height:12px;border-radius:var(--radius-sm);"></div>
-              <div class="skel" style="width:70px;height:10px;border-radius:var(--radius-sm);"></div>
+              <div class="ds-skel" style="width:100px;height:12px;border-radius:var(--radius-sm);"></div>
+              <div class="ds-skel" style="width:70px;height:10px;border-radius:var(--radius-sm);"></div>
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px;">
-            <div class="skel" style="width:100%;height:10px;border-radius:var(--radius-sm);"></div>
-            <div class="skel" style="width:90%;height:10px;border-radius:var(--radius-sm);"></div>
-            <div class="skel" style="width:60%;height:10px;border-radius:var(--radius-sm);"></div>
+            <div class="ds-skel" style="width:100%;height:10px;border-radius:var(--radius-sm);"></div>
+            <div class="ds-skel" style="width:90%;height:10px;border-radius:var(--radius-sm);"></div>
+            <div class="ds-skel" style="width:60%;height:10px;border-radius:var(--radius-sm);"></div>
           </div>
         </Card>
       </div>

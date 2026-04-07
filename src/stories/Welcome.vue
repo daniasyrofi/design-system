@@ -2,18 +2,18 @@
   <div class="welcome-container">
     <div class="sb-section-title">
       <h1
-        class="text-display"
+        class="ds-text-display"
         style="color: var(--color-text-heading); margin-bottom: var(--spacing-6)"
       >
         {{ $t('welcome.welcome_title') }}
       </h1>
       <p
-        class="text-body-lg"
+        class="ds-text-body-lg"
         style="color: var(--color-text-secondary); margin-bottom: var(--spacing-5)"
       >
         {{ $t('welcome.welcome_subtitle') }}
       </p>
-      <p class="text-body-lg" style="color: var(--color-text-secondary)">
+      <p class="ds-text-body-lg" style="color: var(--color-text-secondary)">
         {{ $t('welcome.welcome_tech') }}
       </p>
     </div>
@@ -21,13 +21,13 @@
     <div class="sb-section">
       <div class="sb-section-item">
         <h4
-          class="text-h4"
+          class="ds-text-h4"
           style="color: var(--color-text-heading); margin-bottom: var(--spacing-3)"
         >
           🎨 {{ $t('welcome.visual_title') }}
         </h4>
         <p
-          class="text-body"
+          class="ds-text-body"
           style="color: var(--color-text-secondary)"
           v-html="$t('welcome.visual_desc')"
         ></p>
@@ -35,13 +35,13 @@
 
       <div class="sb-section-item">
         <h4
-          class="text-h4"
+          class="ds-text-h4"
           style="color: var(--color-text-heading); margin-bottom: var(--spacing-3)"
         >
           🌐 {{ $t('welcome.i18n_title') }}
         </h4>
         <p
-          class="text-body"
+          class="ds-text-body"
           style="color: var(--color-text-secondary)"
           v-html="$t('welcome.i18n_desc')"
         ></p>
@@ -49,7 +49,7 @@
     </div>
 
     <div class="sb-section-title" style="margin-top: var(--spacing-12)">
-      <h2 class="text-h1" style="color: var(--color-text-heading); margin-bottom: var(--spacing-6)">
+      <h2 class="ds-text-h1" style="color: var(--color-text-heading); margin-bottom: var(--spacing-6)">
         {{ $t('welcome.guide_title') }}
       </h2>
     </div>
@@ -57,13 +57,13 @@
     <div class="sb-features-grid">
       <div class="sb-grid-item">
         <h4
-          class="text-h4"
+          class="ds-text-h4"
           style="color: var(--color-text-heading); margin-bottom: var(--spacing-2)"
         >
           1. {{ $t('welcome.atomic_title') }}
         </h4>
         <p
-          class="text-body"
+          class="ds-text-body"
           style="color: var(--color-text-secondary)"
           v-html="$t('welcome.atomic_desc')"
         ></p>
@@ -71,13 +71,13 @@
 
       <div class="sb-grid-item">
         <h4
-          class="text-h4"
+          class="ds-text-h4"
           style="color: var(--color-text-heading); margin-bottom: var(--spacing-2)"
         >
           2. {{ $t('welcome.controls_title') }}
         </h4>
         <p
-          class="text-body"
+          class="ds-text-body"
           style="color: var(--color-text-secondary)"
           v-html="$t('welcome.controls_desc')"
         ></p>
@@ -85,13 +85,13 @@
 
       <div class="sb-grid-item">
         <h4
-          class="text-h4"
+          class="ds-text-h4"
           style="color: var(--color-text-heading); margin-bottom: var(--spacing-2)"
         >
           3. {{ $t('welcome.theme_title') }}
         </h4>
         <p
-          class="text-body"
+          class="ds-text-body"
           style="color: var(--color-text-secondary)"
           v-html="$t('welcome.theme_desc')"
         ></p>
@@ -99,13 +99,13 @@
 
       <div class="sb-grid-item">
         <h4
-          class="text-h4"
+          class="ds-text-h4"
           style="color: var(--color-text-heading); margin-bottom: var(--spacing-2)"
         >
           4. {{ $t('welcome.a11y_title') }}
         </h4>
         <p
-          class="text-body"
+          class="ds-text-body"
           style="color: var(--color-text-secondary)"
           v-html="$t('welcome.a11y_desc')"
         ></p>

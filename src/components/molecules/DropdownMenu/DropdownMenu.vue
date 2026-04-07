@@ -159,7 +159,7 @@ const menuClasses = computed(() =>
 </script>
 
 <template>
-  <div class="relative inline-flex">
+  <div class="relative inline-flex" :data-state="isOpen ? 'open' : 'closed'">
     <!-- Trigger -->
     <div ref="triggerRef" @click="toggle">
       <slot name="trigger" />
@@ -185,6 +185,7 @@ const menuClasses = computed(() =>
             type="button"
             role="menuitem"
             :disabled="item.disabled"
+            :data-disabled="item.disabled ? '' : undefined"
             :class="
               cn(
                 'ds-dropdown-item flex w-full items-center gap-2.5 px-2 py-2 text-sm text-left',
@@ -206,7 +207,7 @@ const menuClasses = computed(() =>
               :size="16"
               :class="
                 cn(
-                  'ds-dropdown-icon shrink-0 text-[--color-text-secondary]',
+                  'ds-dropdown-icon shrink-0 leading-none text-[--color-text-secondary]',
                   item.tone === 'danger' && 'ds-dropdown-icon--danger'
                 )
               "
@@ -214,14 +215,14 @@ const menuClasses = computed(() =>
             />
 
             <!-- Label -->
-            <span class="flex-1">{{ item.label }}</span>
+            <span class="flex-1 min-w-0 truncate">{{ item.label }}</span>
 
             <!-- Shortcut -->
             <span
               v-if="item.shortcut"
               :class="
                 cn(
-                  'ds-dropdown-shortcut ml-4 shrink-0 text-xs text-[--color-text-muted]',
+                  'ds-dropdown-shortcut ml-4 shrink-0 leading-none text-xs text-[--color-text-muted]',
                   item.tone === 'danger' && 'ds-dropdown-shortcut--danger'
                 )
               "

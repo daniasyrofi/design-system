@@ -169,7 +169,7 @@ const hasStructuredSlots = computed(() => !!(slots.media || slots.header || slot
   border-radius: var(--radius-xl);
 }
 .ds-card--radius-xl {
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-xl);
 }
 
 /* ── Variants ── */

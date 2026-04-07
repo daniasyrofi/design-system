@@ -27,9 +27,9 @@ export const AllSizes: Story = {
     components: { KBD },
     template: `
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-        <KBD size="sm">⌘K</KBD>
+        <KBD size="sm" :style="{ '--radius-xs': 'var(--radius-sm)' }">⌘K</KBD>
         <KBD size="md">⌘K</KBD>
-        <KBD size="lg">⌘K</KBD>
+        <KBD size="lg" :style="{ '--radius-md': 'var(--radius-sm)' }">⌘K</KBD>
       </div>
     `,
   }),

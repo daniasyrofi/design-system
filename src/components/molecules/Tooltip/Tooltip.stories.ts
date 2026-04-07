@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { computed } from 'vue'
+import { userEvent, within, expect } from 'storybook/test'
 import Tooltip from './Tooltip.vue'
 import Button from '@/components/atoms/Button/Button.vue'
 import { getI18nLocale, resolveLocale, type SupportedLocale } from '@/i18n'
@@ -150,6 +151,23 @@ type Story = StoryObj<typeof Tooltip>
 export const Default: Story = {
   get name() {
     return getStoryName('default')
+  },
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+
+    // Hover over the trigger button
+    const trigger = canvas.getByRole('button')
+    await userEvent.hover(trigger)
+
+    // Wait for the tooltip delay (default 200ms + buffer)
+    await new Promise((r) => setTimeout(r, 300))
+
+    // Tooltip renders via Teleport — query against document.body
+    const body = within(document.body)
+    await expect(body.getByRole('tooltip')).toBeVisible()
+
+    // Move mouse away to hide tooltip
+    await userEvent.unhover(trigger)
   },
   render: (args) => ({
     components: { Tooltip, Button },

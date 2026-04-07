@@ -37,7 +37,7 @@ function toggle() {
 </script>
 
 <template>
-  <div>
+  <div :data-state="isOpen ? 'open' : 'closed'">
     <!--
       Trigger slot receives: open (boolean), toggle (fn), contentId (string for aria-controls).
       Example: <template #trigger="{ open, toggle, contentId }">

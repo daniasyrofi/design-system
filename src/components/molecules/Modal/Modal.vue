@@ -144,6 +144,12 @@ const overlayClasses = computed(() =>
   )
 )
 
+defineExpose({
+  el: panelRef,
+  open: () => { emit('update:modelValue', true) },
+  close: () => { if (!props.preventClose) emit('update:modelValue', false) },
+})
+
 const panelClasses = computed(() =>
   cn(
     'ds-modal-panel relative w-full',
@@ -184,6 +190,7 @@ const panelClasses = computed(() =>
             :aria-labelledby="$slots.title || $slots.header ? titleId : undefined"
             :aria-describedby="$slots.description ? descId : undefined"
             tabindex="-1"
+            :data-state="modelValue ? 'open' : 'closed'"
           >
             <!-- Header -->
             <div
@@ -264,7 +271,7 @@ const panelClasses = computed(() =>
 <style scoped>
 .ds-modal-panel {
   background-color: var(--color-surface);
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-lg);
   box-shadow:
     var(--shadow-2xl),
     inset 0 0 0 1px var(--color-border-subtle);

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { RiSearchLine } from '@remixicon/vue'
 import Input from '@/components/atoms/Input/Input.vue'
 import Spinner from '@/components/atoms/Spinner/Spinner.vue'
@@ -36,6 +36,10 @@ const emit = defineEmits<{
   'update:modelValue': [value: string]
   search: [value: string]
   clear: []
+  focus: [event: FocusEvent]
+  blur: [event: FocusEvent]
+  keydown: [event: KeyboardEvent]
+  keyup: [event: KeyboardEvent]
 }>()
 
 const internalValue = ref(props.modelValue)
@@ -80,10 +84,20 @@ const spinnerSize: Record<SearchSize, 'xs' | 'sm'> = {
   md: 'sm',
   lg: 'sm',
 }
+
+const inputCompRef = ref<InstanceType<typeof Input> | null>(null)
+
+defineExpose({
+  el: computed(() => inputCompRef.value?.el ?? null),
+  focus: () => inputCompRef.value?.focus(),
+  blur: () => inputCompRef.value?.blur(),
+  clear: handleClear,
+})
 </script>
 
 <template>
   <Input
+    ref="inputCompRef"
     :model-value="internalValue"
     type="text"
     :size="size"
@@ -93,6 +107,10 @@ const spinnerSize: Record<SearchSize, 'xs' | 'sm'> = {
     v-bind="$attrs"
     @update:model-value="handleUpdate"
     @clear="handleClear"
+    @focus="emit('focus', $event)"
+    @blur="emit('blur', $event)"
+    @keydown="emit('keydown', $event)"
+    @keyup="emit('keyup', $event)"
   >
     <template #leading>
       <RiSearchLine :size="String(iconSizePx[size])" />

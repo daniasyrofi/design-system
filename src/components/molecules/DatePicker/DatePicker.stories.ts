@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { computed, ref } from 'vue'
+import { userEvent, within, expect } from 'storybook/test'
 import DatePicker from './DatePicker.vue'
 import { getI18nLocale, resolveLocale, type SupportedLocale } from '@/i18n'
 
@@ -178,6 +179,28 @@ type Story = StoryObj<typeof DatePicker>
 export const Default: Story = {
   get name() {
     return getStoryName('default')
+  },
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+
+    // Click the trigger button to open the calendar
+    const trigger = canvas.getByRole('button')
+    await userEvent.click(trigger)
+
+    // Calendar panel should now be visible — find an enabled day button and click it
+    const dayButtons = canvas.getAllByRole('button').filter(
+      (btn) =>
+        btn.getAttribute('aria-label') !== 'Previous month' &&
+        btn.getAttribute('aria-label') !== 'Next month' &&
+        !btn.hasAttribute('disabled')
+    )
+    // Pick the first available day
+    const firstDay = dayButtons[0]
+    await userEvent.click(firstDay)
+
+    // Calendar should close after selecting a date
+    const navButtons = canvas.queryAllByRole('button', { name: /previous month|next month/i })
+    await expect(navButtons.length).toBe(0)
   },
   render: (args) => ({
     components: { DatePicker },

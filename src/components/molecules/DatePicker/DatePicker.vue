@@ -255,6 +255,16 @@ const iconSizePx: Record<Size, number> = {
   lg: 18,
 }
 
+const triggerRef = ref<HTMLButtonElement | null>(null)
+
+defineExpose({
+  el: containerRef,
+  focus: () => triggerRef.value?.focus(),
+  blur: () => triggerRef.value?.blur(),
+  open: () => { if (!props.disabled) isOpen.value = true },
+  close: () => { isOpen.value = false },
+})
+
 const hasError = computed(() => !!props.error)
 
 const triggerClasses = computed(() =>
@@ -288,6 +298,7 @@ const triggerClasses = computed(() =>
     <!-- Trigger -->
     <button
       :id="triggerId"
+      ref="triggerRef"
       type="button"
       :class="triggerClasses"
       :disabled="disabled"

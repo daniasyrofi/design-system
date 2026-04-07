@@ -17,15 +17,15 @@ const props = withDefaults(defineProps<Props>(), {
   color: 'currentColor',
 })
 
-const sizeMap: Record<IconSize, number> = {
-  xs: 12,
-  sm: 16,
-  md: 20,
-  lg: 24,
-  xl: 32,
+const sizeMap: Record<IconSize, string> = {
+  xs: 'var(--ds-icon-xs)',
+  sm: 'var(--ds-icon-sm)',
+  md: 'var(--ds-icon-md)',
+  lg: 'var(--ds-icon-lg)',
+  xl: 'var(--ds-icon-xl)',
 }
 
-const pixelSize = computed(() => sizeMap[props.size])
+const cssSize = computed(() => sizeMap[props.size])
 
 const iconComponent = computed<Component | null>(() => {
   const icons = RemixIcons as Record<string, Component>
@@ -37,7 +37,7 @@ const iconComponent = computed<Component | null>(() => {
   <component
     :is="iconComponent"
     v-if="iconComponent"
-    :size="pixelSize"
+    :style="{ width: cssSize, height: cssSize }"
     :color="color"
     :aria-hidden="!label || undefined"
     :aria-label="label"
@@ -45,7 +45,7 @@ const iconComponent = computed<Component | null>(() => {
   />
   <span
     v-else
-    :style="{ width: `${pixelSize}px`, height: `${pixelSize}px`, display: 'inline-block' }"
+    :style="{ width: cssSize, height: cssSize, display: 'inline-block' }"
     :title="`Icon '${name}' not found`"
     aria-hidden="true"
   />

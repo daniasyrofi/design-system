@@ -404,6 +404,82 @@ export const Empty: Story = {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+/** Skeleton loading state — shows animated placeholders while data loads. */
+export const SkeletonLoading: Story = {
+  name: 'Skeleton Loading',
+  args: { data: [], skeletonLoading: true },
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Click any row to expand a detail panel below it. */
+export const Expandable: Story = {
+  name: 'Expandable Rows',
+  render: () => ({
+    components: { Table, Badge },
+    setup: () => ({ COLUMNS, ROWS, STATUS_VARIANT }),
+    template: `
+      <Table :columns="COLUMNS" :data="ROWS" expandable hoverable>
+        <template #cell-status="{ value }">
+          <Badge :variant="STATUS_VARIANT[value]" badge-style="subtle" size="sm" dot>
+            {{ value }}
+          </Badge>
+        </template>
+        <template #expanded-row="{ row }">
+          <div style="display:flex;flex-direction:column;gap:4px;font-size:13px;">
+            <div><strong>Email:</strong> {{ row.email }}</div>
+            <div><strong>Company:</strong> {{ row.company }}</div>
+            <div><strong>Role:</strong> {{ row.role }}</div>
+            <div><strong>Last Active:</strong> {{ row.lastActive }}</div>
+          </div>
+        </template>
+      </Table>
+    `,
+  }),
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Toggle column visibility dynamically using the `hiddenColumns` prop. */
+export const ColumnToggle: Story = {
+  name: 'Column Toggle',
+  render: () => ({
+    components: { Table },
+    setup() {
+      const hidden = ref<string[]>([])
+      function toggle(key: string) {
+        if (hidden.value.includes(key)) {
+          hidden.value = hidden.value.filter((k) => k !== key)
+        } else {
+          hidden.value = [...hidden.value, key]
+        }
+      }
+      return { COLUMNS, ROWS, hidden, toggle }
+    },
+    template: `
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <label
+            v-for="col in COLUMNS"
+            :key="col.key"
+            style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;"
+          >
+            <input
+              type="checkbox"
+              :checked="!hidden.includes(col.key)"
+              @change="toggle(col.key)"
+            />
+            {{ col.label }}
+          </label>
+        </div>
+        <Table :columns="COLUMNS" :data="ROWS" :hidden-columns="hidden" hoverable />
+      </div>
+    `,
+  }),
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 /** All props wired to Storybook controls for live experimentation. */
 export const Playground: Story = {
   name: '⚙ Playground',

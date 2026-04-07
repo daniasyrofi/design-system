@@ -232,6 +232,64 @@ export const fonts = {
   mono: "'JetBrains Mono', monospace",
 } as const
 
+// ── Icon sizes ───────────────────────────────────────────────────────────────
+
+export const iconSizes = {
+  xs: 'var(--ds-icon-xs)',
+  sm: 'var(--ds-icon-sm)',
+  md: 'var(--ds-icon-md)',
+  lg: 'var(--ds-icon-lg)',
+  xl: 'var(--ds-icon-xl)',
+  '2xl': 'var(--ds-icon-2xl)',
+} as const
+
+export type IconSize = keyof typeof iconSizes
+
+// ── Component tokens (Tier 3) ────────────────────────────────────────────────
+// CSS variable references for component-level customisation.
+// Consumers can override these per-component without touching internals.
+
+export const componentTokens = {
+  button: {
+    bg: 'var(--ds-btn-bg)',
+    text: 'var(--ds-btn-text)',
+    border: 'var(--ds-btn-border)',
+    radius: 'var(--ds-btn-radius)',
+  },
+  input: {
+    bg: 'var(--ds-input-bg)',
+    border: 'var(--ds-input-border)',
+    borderFocus: 'var(--ds-input-border-focus)',
+    borderError: 'var(--ds-input-border-error)',
+    text: 'var(--ds-input-text)',
+    placeholder: 'var(--ds-input-placeholder)',
+    radius: 'var(--ds-input-radius)',
+  },
+  card: {
+    bg: 'var(--ds-card-bg)',
+    border: 'var(--ds-card-border)',
+    shadow: 'var(--ds-card-shadow)',
+    radius: 'var(--ds-card-radius)',
+  },
+  modal: {
+    bg: 'var(--ds-modal-bg)',
+    overlay: 'var(--ds-modal-overlay)',
+    radius: 'var(--ds-modal-radius)',
+  },
+  alert: {
+    radius: 'var(--ds-alert-radius)',
+  },
+  badge: {
+    radius: 'var(--ds-badge-radius)',
+  },
+  table: {
+    bg: 'var(--ds-table-bg)',
+    border: 'var(--ds-table-border)',
+    headerBg: 'var(--ds-table-header-bg)',
+    rowHover: 'var(--ds-table-row-hover)',
+  },
+} as const
+
 // ── Z-index scale ─────────────────────────────────────────────────────────────
 
 export const zIndex = {

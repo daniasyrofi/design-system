@@ -119,6 +119,13 @@ function onFocus(e: FocusEvent) {
   ;(e.target as HTMLInputElement).select()
 }
 
+const containerRef = ref<HTMLElement | null>(null)
+
+defineExpose({
+  el: containerRef,
+  focus: () => inputRefs.value[0]?.focus(),
+})
+
 const sizeMap: Record<PinSize, string> = {
   sm: 'w-8 h-9 text-sm rounded-[var(--radius-sm)]',
   md: 'w-10 h-11 text-base rounded-[var(--radius-md)]',
@@ -127,7 +134,7 @@ const sizeMap: Record<PinSize, string> = {
 </script>
 
 <template>
-  <div class="inline-flex items-center gap-2" role="group" aria-label="PIN input">
+  <div ref="containerRef" class="inline-flex items-center gap-2" role="group" aria-label="PIN input">
     <input
       v-for="(digit, idx) in digits"
       :key="idx"

@@ -38,6 +38,8 @@ function handleToggle() {
       'ds-accordion-item--disabled': disabled,
       'ds-accordion-item--open': open,
     }"
+    :data-state="open ? 'open' : 'closed'"
+    :data-disabled="disabled ? '' : undefined"
   >
     <!-- Trigger -->
     <button
@@ -53,6 +55,7 @@ function handleToggle() {
       "
       :aria-expanded="open"
       :disabled="disabled"
+      :data-state="open ? 'open' : 'closed'"
       @click="handleToggle"
     >
       <div class="flex flex-col gap-0.5 min-w-0">

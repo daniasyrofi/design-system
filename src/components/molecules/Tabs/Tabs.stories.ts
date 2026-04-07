@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { computed, ref } from 'vue'
+import { userEvent, within, expect } from 'storybook/test'
 import { RiHomeLine, RiUserLine, RiSettings4Line, RiBellLine } from '@remixicon/vue'
 import Tabs from './Tabs.vue'
 import TabsList from './TabsList.vue'
@@ -379,6 +380,20 @@ type Story = StoryObj<typeof Tabs>
 export const Default: Story = {
   get name() {
     return getStoryName('default')
+  },
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+
+    // Get all tab triggers and click the second one
+    const tabs = canvas.getAllByRole('tab')
+    await userEvent.click(tabs[1])
+
+    // Second tab should now be selected
+    await expect(tabs[1]).toHaveAttribute('aria-selected', 'true')
+
+    // Press ArrowLeft — focus should move to the first tab
+    await userEvent.keyboard('{ArrowLeft}')
+    await expect(tabs[0]).toHaveFocus()
   },
   render: (args) => ({
     components: { Tabs, TabsList, TabsTrigger, TabsContent },

@@ -178,6 +178,9 @@ export type StatSize = 'sm' | 'md' | 'lg'
 // TagInput
 export type TagInputSize = 'sm' | 'md' | 'lg'
 
+// ── Composables ──────────────────────────────────────────────────────────────
+export type { Breakpoint } from './composables/useBreakpoint'
+
 // ── Organisms ─────────────────────────────────────────────────────────────────
 
 // Sidebar (re-exported from source)

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { computed, ref } from 'vue'
+import { userEvent, within, expect } from 'storybook/test'
 import Modal from './Modal.vue'
 import Button from '@/components/atoms/Button/Button.vue'
 import Input from '@/components/atoms/Input/Input.vue'
@@ -238,6 +239,21 @@ type Story = StoryObj<typeof Modal>
 export const Default: Story = {
   get name() {
     return getStoryName('default')
+  },
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+
+    // Click the trigger button to open the modal
+    const trigger = canvas.getByRole('button', { name: /open modal|buka modal|打开弹窗/i })
+    await userEvent.click(trigger)
+
+    // Modal renders via Teleport — query against document.body
+    const body = within(document.body)
+    await expect(body.getByRole('dialog')).toBeVisible()
+
+    // Press Escape to close
+    await userEvent.keyboard('{Escape}')
+    await expect(body.queryByRole('dialog')).not.toBeVisible()
   },
   render: (args) => ({
     components: {

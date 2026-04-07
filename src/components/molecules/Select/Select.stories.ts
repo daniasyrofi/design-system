@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { computed, ref } from 'vue'
+import { userEvent, within, expect } from 'storybook/test'
 import Select from './Select.vue'
 import SelectTrigger from './SelectTrigger.vue'
 import SelectContent from './SelectContent.vue'
@@ -235,6 +236,25 @@ type Story = StoryObj<typeof Select>
 export const Default: Story = {
   get name() {
     return getStoryName('default')
+  },
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+
+    // Click the SelectTrigger (button with aria-haspopup="listbox") to open dropdown
+    const trigger = canvas.getByRole('button', { name: /select\.\.\.|pilih\.\.\.|请选择/i })
+    await userEvent.click(trigger)
+
+    // Listbox renders via Teleport — query against document.body
+    const body = within(document.body)
+    const listbox = body.getByRole('listbox')
+    await expect(listbox).toBeVisible()
+
+    // Click first option
+    const options = body.getAllByRole('option')
+    await userEvent.click(options[0])
+
+    // Listbox should close after selection
+    await expect(body.queryByRole('listbox')).not.toBeVisible()
   },
   render: () => ({
     components: { Select, SelectTrigger, SelectContent, SelectItem },

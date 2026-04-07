@@ -74,7 +74,7 @@ function select(value: string, optDisabled?: boolean) {
       :disabled="disabled || opt.disabled"
       :class="
         cn(
-          'relative inline-flex items-center justify-center font-medium rounded-[calc(var(--radius-md)-2px)] transition-all duration-[--duration-fast] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-1',
+          'relative inline-flex items-center justify-center font-medium rounded-[calc(var(--radius-md)-3px)] transition-all duration-[--duration-fast] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-1',
           sizeClasses[size],
           fullWidth && 'flex-1',
           modelValue === opt.value

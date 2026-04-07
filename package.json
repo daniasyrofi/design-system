@@ -38,6 +38,9 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "sideEffects": [
     "dist/style.css"
   ],
@@ -54,17 +57,37 @@
     "build-storybook": "storybook build",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "npm run build && changeset publish"
+    "release": "npm run build && changeset publish",
+    "test:e2e": "playwright test"
   },
   "size-limit": [
     {
-      "path": "dist/index.mjs",
-      "limit": "480 kB",
-      "import": "*"
+      "path": "dist/atoms.mjs",
+      "limit": "40 kB",
+      "import": "*",
+      "ignore": ["vue", "vue-i18n", "@remixicon/vue", "remixicon", "clsx", "@fontsource/inter", "@fontsource/jetbrains-mono"]
+    },
+    {
+      "path": "dist/molecules.mjs",
+      "limit": "120 kB",
+      "import": "*",
+      "ignore": ["vue", "vue-i18n", "@remixicon/vue", "remixicon", "clsx", "@fontsource/inter", "@fontsource/jetbrains-mono"]
+    },
+    {
+      "path": "dist/organisms.mjs",
+      "limit": "60 kB",
+      "import": "*",
+      "ignore": ["vue", "vue-i18n", "@remixicon/vue", "remixicon", "clsx", "@fontsource/inter", "@fontsource/jetbrains-mono"]
+    },
+    {
+      "path": "dist/tokens.mjs",
+      "limit": "5 kB",
+      "import": "*",
+      "ignore": ["vue", "vue-i18n"]
     },
     {
       "path": "dist/style.css",
-      "limit": "25 kB"
+      "limit": "80 kB"
     }
   ],
   "peerDependencies": {
@@ -78,9 +101,7 @@
     "@tailwindcss/vite": "^4.2.2",
     "clsx": "^2.1.1",
     "remixicon": "^4.9.1",
-    "tailwindcss": "^4.2.2",
-    "vue": "^3.4.0",
-    "vue-i18n": "^9.0.0"
+    "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
     "@changesets/cli": "^2.30.0",
@@ -117,7 +138,9 @@
     "vite": "^8.0.1",
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^4.1.2",
+    "vue": "^3.4.0",
     "vue-eslint-parser": "^10.4.0",
+    "vue-i18n": "^9.0.0",
     "vue-tsc": "^3.2.5"
   }
 }

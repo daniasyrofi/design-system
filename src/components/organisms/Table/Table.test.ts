@@ -184,6 +184,118 @@ describe('Table', () => {
     })
   })
 
+  describe('stickyHeader', () => {
+    it('applies sticky class to thead tr when stickyHeader=true', () => {
+      const wrapper = mount(Table, { props: { columns, data, stickyHeader: true } })
+      const headerRow = wrapper.find('thead tr')
+      expect(headerRow.classes()).toContain('sticky')
+      expect(headerRow.classes()).toContain('z-10')
+    })
+
+    it('does not apply sticky class when stickyHeader=false', () => {
+      const wrapper = mount(Table, { props: { columns, data, stickyHeader: false } })
+      const headerRow = wrapper.find('thead tr')
+      expect(headerRow.classes()).not.toContain('sticky')
+    })
+  })
+
+  describe('skeletonLoading', () => {
+    it('renders 5 skeleton rows when skeletonLoading=true', () => {
+      const wrapper = mount(Table, { props: { columns, data: [], skeletonLoading: true } })
+      const rows = wrapper.find('tbody').findAll('tr')
+      expect(rows.length).toBe(5)
+    })
+
+    it('renders skeleton elements in each cell', () => {
+      const wrapper = mount(Table, { props: { columns, data: [], skeletonLoading: true } })
+      // Each row should have skeletons matching the number of columns
+      const skeletons = wrapper.findAll('[role="status"][aria-busy="true"]')
+      // 5 rows × 3 columns = 15 skeletons
+      expect(skeletons.length).toBe(15)
+    })
+
+    it('does not show empty state when skeletonLoading=true', () => {
+      const wrapper = mount(Table, {
+        props: { columns, data: [], skeletonLoading: true, emptyText: 'No records' },
+      })
+      expect(wrapper.text()).not.toContain('No records')
+    })
+  })
+
+  describe('expandable rows', () => {
+    it('toggles expanded row on click when expandable=true', async () => {
+      const wrapper = mount(Table, {
+        props: { columns, data, expandable: true },
+        slots: { 'expanded-row': '<div class="expanded-content">Details</div>' },
+      })
+
+      // Initially no expanded rows
+      expect(wrapper.findAll('.expanded-content').length).toBe(0)
+
+      // Click the first data row
+      const dataRows = wrapper.find('tbody').findAll('tr')
+      await dataRows[0].trigger('click')
+
+      // Expanded content should appear
+      expect(wrapper.find('.expanded-content').exists()).toBe(true)
+      expect(wrapper.text()).toContain('Details')
+    })
+
+    it('collapses expanded row on second click', async () => {
+      const wrapper = mount(Table, {
+        props: { columns, data, expandable: true },
+        slots: { 'expanded-row': '<div class="expanded-content">Details</div>' },
+      })
+
+      const dataRows = wrapper.find('tbody').findAll('tr')
+      await dataRows[0].trigger('click')
+      expect(wrapper.find('.expanded-content').exists()).toBe(true)
+
+      // Click again to collapse
+      // After expansion, the first <tr> is still at index 0, expansion row is index 1
+      const updatedRows = wrapper.find('tbody').findAll('tr')
+      await updatedRows[0].trigger('click')
+      expect(wrapper.find('.expanded-content').exists()).toBe(false)
+    })
+
+    it('applies cursor-pointer class when expandable=true', () => {
+      const wrapper = mount(Table, { props: { columns, data, expandable: true } })
+      const firstRow = wrapper.find('tbody tr')
+      expect(firstRow.classes()).toContain('cursor-pointer')
+    })
+  })
+
+  describe('hiddenColumns', () => {
+    it('hides columns listed in hiddenColumns', () => {
+      const wrapper = mount(Table, {
+        props: { columns, data, hiddenColumns: ['email'] },
+      })
+      // Header should not contain Email
+      const headers = wrapper.findAll('th')
+      const headerTexts = headers.map((h) => h.text())
+      expect(headerTexts).not.toContain(expect.stringContaining('Email'))
+
+      // Data should not contain email values
+      expect(wrapper.text()).not.toContain('alice@example.com')
+    })
+
+    it('shows all columns when hiddenColumns is empty', () => {
+      const wrapper = mount(Table, {
+        props: { columns, data, hiddenColumns: [] },
+      })
+      expect(wrapper.text()).toContain('Email')
+      expect(wrapper.text()).toContain('alice@example.com')
+    })
+
+    it('renders correct number of th elements', () => {
+      const wrapper = mount(Table, {
+        props: { columns, data, hiddenColumns: ['email', 'role'] },
+      })
+      const headers = wrapper.findAll('th')
+      expect(headers.length).toBe(1) // only 'name'
+    })
+  })
+
   describe('virtual scrolling', () => {
     it('renders visible rows in virtual mode', () => {
       const bigData = Array.from({ length: 200 }, (_, i) => ({

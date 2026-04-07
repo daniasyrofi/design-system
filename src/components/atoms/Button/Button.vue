@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useAttrs, ref } from 'vue'
 import { cn } from '@/lib/utils'
 import Spinner from '@/components/atoms/Spinner/Spinner.vue'
 
@@ -30,6 +30,9 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{ click: [e: MouseEvent] }>()
+const slots = defineSlots()
+const attrs = useAttrs()
+const buttonRef = ref<HTMLElement | null>(null)
 
 const tag = computed(() => (props.href ? 'a' : props.as))
 
@@ -45,7 +48,16 @@ const baseClasses = [
   'active:scale-[0.97]',
 ]
 
-const variantTokens: Record<Variant, any> = {
+interface VariantTokenSet {
+  bg: string
+  text: string
+  border: string
+  hoverBg: string
+  hoverBorder: string
+  hoverText?: string
+}
+
+const variantTokens: Record<Variant, VariantTokenSet> = {
   default: {
     bg: 'var(--color-neutral)',
     text: 'var(--color-text-inverse)',
@@ -99,11 +111,27 @@ const variantTokens: Record<Variant, any> = {
 }
 
 const sizes: Record<Size, string> = {
-  xs: 'px-3 py-1 text-xs rounded-full min-h-7 gap-1.5',
-  sm: 'px-4 py-1.5 text-sm rounded-full min-h-8 gap-1.5',
-  md: 'px-5 py-2 text-sm rounded-full min-h-10 gap-2',
-  lg: 'px-6 py-2.5 text-base rounded-full min-h-12 gap-2',
-  xl: 'px-8 py-3 text-lg rounded-full min-h-14 gap-2',
+  xs: 'py-1 text-xs rounded-[max(0px,calc(var(--radius-2xl)-4px))] min-h-7 gap-1.5',
+  sm: 'py-1.5 text-sm rounded-[max(0px,calc(var(--radius-2xl)-6px))] min-h-8 gap-1.5',
+  md: 'py-2 text-sm rounded-[max(0px,calc(var(--radius-2xl)-8px))] min-h-10 gap-2',
+  lg: 'py-2.5 text-base rounded-[max(0px,calc(var(--radius-2xl)-10px))] min-h-12 gap-2',
+  xl: 'py-3 text-lg rounded-[max(0px,calc(var(--radius-2xl)-12px))] min-h-14 gap-2',
+}
+
+const textPadClass: Record<Size, { pl: string; pr: string }> = {
+  xs: { pl: 'pl-3', pr: 'pr-3' },
+  sm: { pl: 'pl-4', pr: 'pr-4' },
+  md: { pl: 'pl-5', pr: 'pr-5' },
+  lg: { pl: 'pl-6', pr: 'pr-6' },
+  xl: { pl: 'pl-8', pr: 'pr-8' },
+}
+
+const iconPadClass: Record<Size, { pl: string; pr: string }> = {
+  xs: { pl: 'pl-2', pr: 'pr-2' },
+  sm: { pl: 'pl-2.5', pr: 'pr-2.5' },
+  md: { pl: 'pl-3', pr: 'pr-3' },
+  lg: { pl: 'pl-3.5', pr: 'pr-3.5' },
+  xl: { pl: 'pl-5', pr: 'pr-5' },
 }
 
 const iconSizes: Record<Size, string> = {
@@ -122,10 +150,20 @@ const spinnerSizes: Record<Size, 'xs' | 'sm' | 'md'> = {
   xl: 'md',
 }
 
+const paddingClasses = computed(() => {
+  if (props.iconOnly || props.variant === 'link') return ''
+  const hasLeading = !!slots.leading
+  const hasTrailing = !!slots.trailing
+  const pl = hasLeading ? iconPadClass[props.size].pl : textPadClass[props.size].pl
+  const pr = hasTrailing ? iconPadClass[props.size].pr : textPadClass[props.size].pr
+  return `${pl} ${pr}`
+})
+
 const classes = computed(() => {
   const baseAndSize = cn(
     ...baseClasses,
     props.iconOnly ? iconSizes[props.size] : sizes[props.size],
+    paddingClasses.value,
     props.fullWidth && 'w-full',
     props.variant === 'link' ? 'p-0! h-auto!' : '',
     'ds-btn--variant', // Add the stable logic class
@@ -146,29 +184,43 @@ const variantStyleVars = computed(() => {
     '--btn-hover-text': t.hoverText || t.text,
   }
 })
+
+const mergedStyle = computed(() => [variantStyleVars.value, attrs.style])
+
+defineExpose({
+  el: buttonRef,
+  focus: () => buttonRef.value?.focus(),
+  blur: () => buttonRef.value?.blur(),
+})
+
+const rootAttrs = computed(() => {
+  const { style: _style, ...rest } = attrs as Record<string, unknown>
+  return rest
+})
 </script>
 
 <template>
   <component
     :is="tag"
+    ref="buttonRef"
     :class="classes"
-    :style="variantStyleVars"
+    :style="mergedStyle"
     :disabled="disabled || loading || undefined"
     :href="href"
     :type="tag === 'button' ? type : undefined"
     :aria-disabled="disabled || loading"
     :aria-busy="loading"
-    v-bind="$attrs"
+    v-bind="rootAttrs"
     @click="!disabled && !loading && emit('click', $event)"
   >
     <!-- Leading slot -->
-    <span v-if="$slots.leading && !loading" class="shrink-0 -ml-1 flex items-center justify-center">
+    <span v-if="$slots.leading && !loading" class="shrink-0 flex items-center justify-center">
       <slot name="leading" />
     </span>
 
     <!-- Loading spinner -->
     <span v-if="loading" class="shrink-0">
-      <Spinner :size="spinnerSizes[size]" />
+      <Spinner :size="spinnerSizes[size]" color="currentColor" />
     </span>
 
     <!-- Default slot (label) -->
@@ -182,7 +234,7 @@ const variantStyleVars = computed(() => {
     <!-- Trailing slot -->
     <span
       v-if="$slots.trailing && !loading"
-      class="shrink-0 -mr-1 flex items-center justify-center"
+      class="shrink-0 flex items-center justify-center"
     >
       <slot name="trailing" />
     </span>

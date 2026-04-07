@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useResponsiveProp, type ResponsiveProp } from '@/composables/useResponsiveProp'
 
 type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
 
 interface Props {
-  /** Maximum width of the container. @default 'xl' */
-  size?: ContainerSize
+  /** Maximum width of the container. Accepts responsive object. @default 'xl' */
+  size?: ResponsiveProp<ContainerSize>
   /** Apply horizontal padding. @default true */
   padded?: boolean
   /** Center the container horizontally. @default true */
@@ -30,9 +31,11 @@ const maxWidthMap: Record<ContainerSize, string> = {
   full: '100%',
 }
 
+const resolvedSize = useResponsiveProp<ContainerSize>(() => props.size, 'xl')
+
 const style = computed(() => ({
   width: '100%',
-  maxWidth: maxWidthMap[props.size],
+  maxWidth: maxWidthMap[resolvedSize.value],
   marginLeft: props.centered ? 'auto' : undefined,
   marginRight: props.centered ? 'auto' : undefined,
   paddingLeft: props.padded ? 'var(--space-4)' : undefined,

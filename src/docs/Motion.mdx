@@ -1,0 +1,181 @@
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Design System/Motion" />
+
+# Motion
+
+Motion in Abadikan DS is purposeful, subtle, and respectful of user preferences.
+We use three motion profiles that map to different UI scenarios.
+
+---
+
+## Motion Principles
+
+| Principle | Description |
+|-----------|-------------|
+| **Purposeful** | Every animation communicates something — state changes, spatial relationships, or feedback. Never animate for decoration alone. |
+| **Subtle** | Durations stay short (100–350ms). Users interact with UI constantly; motion must feel instant, not theatrical. |
+| **Accessible** | All animations respect `prefers-reduced-motion`. Critical state changes are communicated with color and text, not just motion. |
+| **Consistent** | Use the token system. Don't hardcode `300ms ease-in-out` — use `var(--duration-normal) var(--ease-out)`. |
+
+---
+
+## Duration Tokens
+
+| Token | Value | When to use |
+|-------|-------|-------------|
+| `--duration-instant` | `0ms` | Toggling visibility without transition |
+| `--duration-fast` | `100ms` | Micro-interactions: button press, checkbox tick |
+| `--duration-normal` | `200ms` | Most UI transitions: dropdowns, tooltips appearing |
+| `--duration-slow` | `300ms` | Complex transitions: modals, drawers, page sections |
+| `--duration-slower` | `500ms` | Emphasis animations: success states, onboarding |
+| `--duration-stagger` | `50ms` | Delay increment between staggered list items |
+
+---
+
+## Easing Tokens
+
+| Token | Value | When to use |
+|-------|-------|-------------|
+| `--ease-default` | `cubic-bezier(0.4, 0, 0.2, 1)` | General purpose — smooth in, smooth out |
+| `--ease-in` | `cubic-bezier(0.4, 0, 1, 1)` | Elements leaving the screen |
+| `--ease-out` | `cubic-bezier(0, 0, 0.2, 1)` | Elements entering the screen |
+| `--ease-spring` | `cubic-bezier(0.175, 0.885, 0.32, 1.275)` | Playful feedback: ratings, toggles |
+| `--ease-bounce` | `cubic-bezier(0.34, 1.56, 0.64, 1)` | Strong positive feedback: success, confetti |
+
+---
+
+## Motion Profiles
+
+### Default — Functional UI Motion
+
+Use for everyday transitions: dropdowns, tooltips, menus, accordions.
+
+```css
+transition: opacity var(--duration-normal) var(--ease-out),
+            transform var(--duration-normal) var(--ease-out);
+```
+
+**Examples:** Select dropdown opening, Tooltip appearing, Collapsible expanding
+
+---
+
+### Spring — Interactive Feedback
+
+Use when a user's direct action deserves a tactile response.
+
+```css
+transition: transform var(--duration-normal) var(--ease-spring);
+```
+
+**Examples:** Button press (`scale-[0.97]`), Toggle switching, Rating star fill
+
+---
+
+### Bounce — Celebratory / Positive
+
+Use sparingly for positive outcomes that deserve emphasis.
+
+```css
+transition: transform var(--duration-slow) var(--ease-bounce);
+```
+
+**Examples:** Success toast appearing, Form submission confirmed, Badge count increment
+
+---
+
+## Stagger Pattern
+
+When animating lists, stagger each item's entry by `--duration-stagger` (50ms) to create a cascade effect without feeling slow.
+
+```vue
+<template>
+  <ul>
+    <li
+      v-for="(item, i) in items"
+      :key="item.id"
+      class="ds-fade-in"
+      :style="{ animationDelay: `${i * 50}ms` }"
+    >
+      {{ item.label }}
+    </li>
+  </ul>
+</template>
+```
+
+Or with the CSS variable:
+
+```css
+.list-item {
+  animation: ds-fade-in var(--duration-normal) var(--ease-out) both;
+  animation-delay: calc(var(--item-index) * var(--duration-stagger));
+}
+```
+
+---
+
+## Reduced Motion
+
+**All DS components automatically respect `prefers-reduced-motion`.**
+
+Our `globals.css` includes:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+### For consumers
+
+Never use motion as the sole indicator of state change. Always pair with:
+- Color change
+- Icon swap
+- Text label update
+
+```vue
+<!-- ✅ Good: motion + text + color -->
+<Button :loading="saving">
+  {{ saving ? 'Saving...' : 'Save' }}
+</Button>
+
+<!-- ❌ Bad: motion only -->
+<div :class="{ 'animate-spin': saving }" />
+```
+
+---
+
+## DS Animation Classes
+
+Utility classes available globally after importing `@abadikan/ds/styles`:
+
+| Class | Keyframe | Use case |
+|-------|----------|----------|
+| `ds-fade-in` | `ds-fade-in` | General enter animation |
+| `ds-scale-in` | `ds-scale-in` | Popover / menu appear |
+| `ds-slide-down` | `ds-slide-down` | Accordion / collapsible open |
+| `ds-shake` | `ds-shake` | Form validation error |
+
+---
+
+## Do's and Don'ts
+
+### ✅ Do
+
+- Use the token system: `var(--duration-normal) var(--ease-out)`
+- Keep enter animations under 300ms
+- Use `ease-out` for entering elements (starts fast, lands softly)
+- Use `ease-in` for exiting elements (starts slow, exits quickly)
+- Always pair motion with semantic state change
+
+### ❌ Don't
+
+- Animate `width`/`height` directly (causes layout reflow — animate `max-height` or `transform: scaleY` instead)
+- Use `linear` easing for UI transitions (feels mechanical)
+- Add motion to every interaction (animation fatigue)
+- Exceed 500ms for UI feedback (feels broken/slow)
+- Rely on motion alone to communicate state (accessibility)

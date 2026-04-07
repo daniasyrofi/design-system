@@ -23,7 +23,7 @@ const classes = computed(() => {
     return cn(
       base,
       isVertical ? 'flex-col' : 'flex-row',
-      'gap-0.5 p-[3px] rounded-full ds-tabs-list--pill'
+      'gap-0.5 p-1 rounded-full ds-tabs-list--pill'
     )
   }
 

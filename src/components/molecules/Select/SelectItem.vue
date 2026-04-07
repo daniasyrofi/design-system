@@ -43,7 +43,7 @@ const checkboxSize = computed(() => (({ sm: 'sm', md: 'sm', lg: 'md' }) as const
 
 const itemClasses = computed(() =>
   cn(
-    'ds-select-item flex items-center gap-2 w-full text-left rounded-[var(--radius-md)]',
+    'ds-select-item flex items-center gap-2 w-full text-left rounded-[var(--radius-lg)]',
     'cursor-pointer select-none transition-colors duration-[--duration-fast]',
     ctx.size.value === 'sm' ? 'px-2 py-1.5 text-sm' : 'px-2.5 py-2 text-sm',
     ctx.size.value === 'lg' && 'text-base',

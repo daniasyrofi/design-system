@@ -75,6 +75,11 @@ describe('Navbar', () => {
     expect(wrapper.find('.float-state').exists()).toBe(true)
   })
 
+  it('uses token-based bottom radius class', () => {
+    const wrapper = mount(Navbar)
+    expect(wrapper.find('header').classes()).toContain('rounded-b-[var(--radius-xl)]')
+  })
+
   it('unmounts cleanly when floatingOnScroll=true', () => {
     const wrapper = mount(Navbar, { props: { sticky: true, floatingOnScroll: true } })
     expect(() => wrapper.unmount()).not.toThrow()

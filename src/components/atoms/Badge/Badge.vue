@@ -99,10 +99,23 @@ const dotInlineStyle = computed(() => ({
 }))
 
 // ── Size classes (layout only, no color) ────────────────────────────────────
+// Keep corner radius fixed across all sizes for a consistent badge silhouette.
 const sizeClasses: Record<Size, string> = {
-  sm: 'text-[11px] leading-none px-2 py-0.5 gap-1 rounded-[var(--radius-sm)] min-h-5',
-  md: 'text-xs leading-none px-2.5 py-0.5 gap-1.5 rounded-[var(--radius-sm)] min-h-6',
-  lg: 'text-sm leading-none px-3 py-1 gap-1.5 rounded-[var(--radius-sm)] min-h-7',
+  sm: 'text-[11px] leading-none py-0.5 gap-1 rounded-[var(--radius-md)] min-h-5',
+  md: 'text-xs leading-none py-0.5 gap-1 rounded-[var(--radius-md)] min-h-6',
+  lg: 'text-sm leading-none py-1 gap-1 rounded-[var(--radius-md)] min-h-7',
+}
+
+const basePadding: Record<Size, { pl: string; pr: string }> = {
+  sm: { pl: 'pl-2', pr: 'pr-2' },
+  md: { pl: 'pl-2.5', pr: 'pr-2.5' },
+  lg: { pl: 'pl-3', pr: 'pr-3' },
+}
+
+const iconSidePad: Record<Size, { pl: string; pr: string }> = {
+  sm: { pl: 'pl-1.5', pr: 'pr-1' },
+  md: { pl: 'pl-2', pr: 'pr-1.5' },
+  lg: { pl: 'pl-2', pr: 'pr-2' },
 }
 
 const dotSizeClass: Record<Size, string> = {
@@ -111,16 +124,26 @@ const dotSizeClass: Record<Size, string> = {
   lg: 'size-2',
 }
 
+const slots = defineSlots()
+
 const removeButtonSizeClass: Record<Size, string> = {
   sm: 'size-3',
   md: 'size-3.5',
   lg: 'size-4',
 }
 
+const paddingClasses = computed(() => {
+  const hasLeading = !!slots.leading
+  const pl = hasLeading ? iconSidePad[props.size].pl : basePadding[props.size].pl
+  const pr = props.removable ? iconSidePad[props.size].pr : basePadding[props.size].pr
+  return `${pl} ${pr}`
+})
+
 const classes = computed(() =>
   cn(
     'inline-flex items-center font-medium select-none overflow-hidden max-w-full',
-    sizeClasses[props.size]
+    sizeClasses[props.size],
+    paddingClasses.value
   )
 )
 </script>
@@ -133,7 +156,7 @@ const classes = computed(() =>
       :style="dotInlineStyle"
       aria-hidden="true"
     />
-    <span v-if="$slots.leading" class="shrink-0 -ml-1 flex items-center justify-center">
+    <span v-if="$slots.leading" class="shrink-0 flex items-center justify-center">
       <slot name="leading" />
     </span>
     <span class="truncate">
@@ -144,7 +167,7 @@ const classes = computed(() =>
       type="button"
       :class="
         cn(
-          'shrink-0 -mr-0.5 flex items-center justify-center rounded-sm opacity-60 hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-1 transition-opacity duration-150 cursor-pointer',
+          'shrink-0 flex items-center justify-center rounded-sm opacity-60 hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-1 transition-opacity duration-150 cursor-pointer',
           removeButtonSizeClass[size]
         )
       "

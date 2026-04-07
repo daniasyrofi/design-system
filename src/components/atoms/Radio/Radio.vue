@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, useId } from 'vue'
+import { computed, useId, ref } from 'vue'
 import { cn } from '@/lib/utils'
+import { baselineOffset } from '@/lib/opticalAlign'
 
 type RadioSize = 'sm' | 'md' | 'lg'
 type RadioColor = 'primary' | 'secondary' | 'neutral' | 'danger'
@@ -25,9 +26,14 @@ const props = withDefaults(defineProps<Props>(), {
   readonly: false,
 })
 
-const emit = defineEmits<{ 'update:modelValue': [value: string | number] }>()
+const emit = defineEmits<{
+  'update:modelValue': [value: string | number]
+  focus: [event: FocusEvent]
+  blur: [event: FocusEvent]
+}>()
 
 const inputId = useId()
+const inputRef = ref<HTMLInputElement | null>(null)
 const isChecked = computed(() => props.modelValue === props.value)
 const hasError = computed(() => !!props.error)
 
@@ -62,13 +68,14 @@ const descTextClass: Record<RadioSize, string> = {
   lg: 'text-sm',
 }
 
-// Math for baseline alignment: (BoxHeight - LineHeight) / 2
-// Assumes text uses leading-none (LineHeight = FontSize)
-const offsetClass: Record<RadioSize, string> = {
-  sm: 'mt-[2px]', // (16 - 12)/2 = 2px
-  md: 'mt-[3px]', // (20 - 14)/2 = 3px
-  lg: 'mt-[4px]', // (24 - 16)/2 = 4px
-}
+// Baseline alignment: (BoxHeight - FontSize) / 2
+const boxHeights: Record<RadioSize, number> = { sm: 16, md: 20, lg: 24 }
+const fontSizes: Record<RadioSize, number> = { sm: 12, md: 14, lg: 16 }
+const offsetClass = computed(() => ({
+  sm: `mt-[${baselineOffset(boxHeights.sm, fontSizes.sm)}px]`,
+  md: `mt-[${baselineOffset(boxHeights.md, fontSizes.md)}px]`,
+  lg: `mt-[${baselineOffset(boxHeights.lg, fontSizes.lg)}px]`,
+}))
 
 const outerStyle = computed(() => {
   const colorVar = `var(--color-${props.color})`
@@ -129,6 +136,12 @@ const focusRingVar = computed(() =>
     ? 'var(--ring-danger)'
     : `0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-${props.color})`
 )
+
+defineExpose({
+  el: inputRef,
+  focus: () => inputRef.value?.focus(),
+  blur: () => inputRef.value?.blur(),
+})
 </script>
 
 <template>
@@ -144,6 +157,7 @@ const focusRingVar = computed(() =>
     >
       <!-- Hidden native input -->
       <input
+        ref="inputRef"
         :id="inputId"
         type="radio"
         class="sr-only peer"
@@ -154,6 +168,8 @@ const focusRingVar = computed(() =>
         :aria-invalid="hasError || undefined"
         :aria-describedby="description || error ? `${inputId}-desc` : undefined"
         @change="handleChange"
+        @focus="emit('focus', $event)"
+        @blur="emit('blur', $event)"
       />
 
       <!-- Visual radio button -->

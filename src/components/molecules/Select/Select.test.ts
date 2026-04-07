@@ -151,4 +151,22 @@ describe('Select (compound)', () => {
     await wrapper.find('[aria-haspopup="listbox"]').trigger('click')
     expect(wrapper.find('[aria-haspopup="listbox"]').attributes('aria-expanded')).toBe('false')
   })
+
+  it('renders clear control outside of trigger button element', async () => {
+    const wrapper = mount(Select, {
+      props: { modelValue: 'apple' },
+      slots: {
+        default: `
+          <SelectTrigger placeholder="Pick..." :clearable="true" />
+          <SelectContent>
+            <SelectItem value="apple" label="Apple">Apple</SelectItem>
+          </SelectContent>
+        `,
+      },
+      global: { components: { SelectTrigger, SelectContent, SelectItem } },
+    })
+    await nextTick()
+    const trigger = wrapper.find('[aria-haspopup="listbox"]')
+    expect(trigger.find('button').exists()).toBe(false)
+  })
 })

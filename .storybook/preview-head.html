@@ -70,9 +70,9 @@ body {
   background-color: var(--color-bg-subtle) !important;
   border-top: 1px solid var(--color-border) !important;
 }
-/* "Show code" / "Copy code" links — scoped to preview bar only */
-.sbdocs-preview > div:last-child button,
-.sbdocs-preview > div:last-child a {
+/* "Show code" / "Copy code" links — scoped to preview actions only */
+.sbdocs-preview .sbdocs-preview-actions button,
+.sbdocs-preview .sbdocs-preview-actions a {
   color: var(--color-text-secondary, #6b7280) !important;
   background: transparent !important;
   border: none !important;
@@ -85,10 +85,10 @@ body {
 /* Keep preview action icons synced with text color */
 .sbdocs-preview-actions svg,
 .sbdocs-preview-actions svg *,
-.sbdocs-preview > div:last-child button svg,
-.sbdocs-preview > div:last-child button svg *,
-.sbdocs-preview > div:last-child a svg,
-.sbdocs-preview > div:last-child a svg * {
+.sbdocs-preview .sbdocs-preview-actions button svg,
+.sbdocs-preview .sbdocs-preview-actions button svg *,
+.sbdocs-preview .sbdocs-preview-actions a svg,
+.sbdocs-preview .sbdocs-preview-actions a svg * {
   color: inherit !important;
   fill: currentColor !important;
   stroke: currentColor !important;
@@ -121,22 +121,14 @@ body[data-theme='dark'] .docs-story h3,
   color: #ffffff !important;
 }
 
-:root[data-theme='dark'] .sbdocs-preview > div:last-child button,
-:root[data-theme='dark'] .sbdocs-preview > div:last-child a,
-body[data-theme='dark'] .sbdocs-preview > div:last-child button,
-body[data-theme='dark'] .sbdocs-preview > div:last-child a,
-.dark .sbdocs-preview > div:last-child button,
-.dark .sbdocs-preview > div:last-child a,
-.sb-main-dark .sbdocs-preview > div:last-child button,
-.sb-main-dark .sbdocs-preview > div:last-child a,
-:root[data-theme='dark'] .sbdocs-preview-actions,
-:root[data-theme='dark'] .sbdocs-preview-actions *,
-body[data-theme='dark'] .sbdocs-preview-actions,
-body[data-theme='dark'] .sbdocs-preview-actions *,
-.dark .sbdocs-preview-actions,
-.dark .sbdocs-preview-actions *,
-.sb-main-dark .sbdocs-preview-actions,
-.sb-main-dark .sbdocs-preview-actions * {
+:root[data-theme='dark'] .sbdocs-preview .sbdocs-preview-actions button,
+:root[data-theme='dark'] .sbdocs-preview .sbdocs-preview-actions a,
+body[data-theme='dark'] .sbdocs-preview .sbdocs-preview-actions button,
+body[data-theme='dark'] .sbdocs-preview .sbdocs-preview-actions a,
+.dark .sbdocs-preview .sbdocs-preview-actions button,
+.dark .sbdocs-preview .sbdocs-preview-actions a,
+.sb-main-dark .sbdocs-preview .sbdocs-preview-actions button,
+.sb-main-dark .sbdocs-preview .sbdocs-preview-actions a {
   color: var(--color-text-secondary, #a3a9b4) !important;
 }
 
@@ -167,46 +159,34 @@ body[data-theme='dark'] .sbdocs-content h4,
   color: #ffffff !important;
 }
 
-:root[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions,
-:root[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions *,
-:root[data-theme='dark'] .sbdocs-content .sbdocs-preview button,
-:root[data-theme='dark'] .sbdocs-content .sbdocs-preview a,
-body[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions,
-body[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions *,
-body[data-theme='dark'] .sbdocs-content .sbdocs-preview button,
-body[data-theme='dark'] .sbdocs-content .sbdocs-preview a,
-.dark .sbdocs-content .sbdocs-preview-actions,
-.dark .sbdocs-content .sbdocs-preview-actions *,
-.dark .sbdocs-content .sbdocs-preview button,
-.dark .sbdocs-content .sbdocs-preview a,
-.sb-main-dark .sbdocs-content .sbdocs-preview-actions,
-.sb-main-dark .sbdocs-content .sbdocs-preview-actions *,
-.sb-main-dark .sbdocs-content .sbdocs-preview button,
-.sb-main-dark .sbdocs-content .sbdocs-preview a {
+:root[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions button,
+:root[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions a,
+body[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions button,
+body[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions a,
+.dark .sbdocs-content .sbdocs-preview-actions button,
+.dark .sbdocs-content .sbdocs-preview-actions a,
+.sb-main-dark .sbdocs-content .sbdocs-preview-actions button,
+.sb-main-dark .sbdocs-content .sbdocs-preview-actions a {
   color: var(--color-text-secondary, #a3a9b4) !important;
   background-color: transparent !important;
 }
 
-:root[data-theme='light'] .sbdocs-preview > div:last-child button:hover,
-:root[data-theme='light'] .sbdocs-preview > div:last-child a:hover,
-body[data-theme='light'] .sbdocs-preview > div:last-child button:hover,
-body[data-theme='light'] .sbdocs-preview > div:last-child a:hover,
 :root[data-theme='light'] .sbdocs-content .sbdocs-preview-actions button:hover,
 :root[data-theme='light'] .sbdocs-content .sbdocs-preview-actions a:hover,
 body[data-theme='light'] .sbdocs-content .sbdocs-preview-actions button:hover,
 body[data-theme='light'] .sbdocs-content .sbdocs-preview-actions a:hover,
+:root[data-theme='light'] .sbdocs-preview .sbdocs-preview-actions button:hover,
+:root[data-theme='light'] .sbdocs-preview .sbdocs-preview-actions a:hover,
+body[data-theme='light'] .sbdocs-preview .sbdocs-preview-actions button:hover,
+body[data-theme='light'] .sbdocs-preview .sbdocs-preview-actions a:hover,
 :root[data-theme='light'] .sbdocs-content .sbdocs-preview-actions button:focus-visible,
 :root[data-theme='light'] .sbdocs-content .sbdocs-preview-actions a:focus-visible,
 body[data-theme='light'] .sbdocs-content .sbdocs-preview-actions button:focus-visible,
 body[data-theme='light'] .sbdocs-content .sbdocs-preview-actions a:focus-visible,
-:root[data-theme='dark'] .sbdocs-preview > div:last-child button:hover,
-:root[data-theme='dark'] .sbdocs-preview > div:last-child a:hover,
-body[data-theme='dark'] .sbdocs-preview > div:last-child button:hover,
-body[data-theme='dark'] .sbdocs-preview > div:last-child a:hover,
-.dark .sbdocs-preview > div:last-child button:hover,
-.dark .sbdocs-preview > div:last-child a:hover,
-.sb-main-dark .sbdocs-preview > div:last-child button:hover,
-.sb-main-dark .sbdocs-preview > div:last-child a:hover,
+:root[data-theme='light'] .sbdocs-preview .sbdocs-preview-actions button:focus-visible,
+:root[data-theme='light'] .sbdocs-preview .sbdocs-preview-actions a:focus-visible,
+body[data-theme='light'] .sbdocs-preview .sbdocs-preview-actions button:focus-visible,
+body[data-theme='light'] .sbdocs-preview .sbdocs-preview-actions a:focus-visible,
 :root[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions button:hover,
 :root[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions a:hover,
 body[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions button:hover,
@@ -222,7 +202,23 @@ body[data-theme='dark'] .sbdocs-content .sbdocs-preview-actions a:focus-visible,
 .dark .sbdocs-content .sbdocs-preview-actions button:focus-visible,
 .dark .sbdocs-content .sbdocs-preview-actions a:focus-visible,
 .sb-main-dark .sbdocs-content .sbdocs-preview-actions button:focus-visible,
-.sb-main-dark .sbdocs-content .sbdocs-preview-actions a:focus-visible {
+.sb-main-dark .sbdocs-content .sbdocs-preview-actions a:focus-visible,
+:root[data-theme='dark'] .sbdocs-preview .sbdocs-preview-actions button:hover,
+:root[data-theme='dark'] .sbdocs-preview .sbdocs-preview-actions a:hover,
+body[data-theme='dark'] .sbdocs-preview .sbdocs-preview-actions button:hover,
+body[data-theme='dark'] .sbdocs-preview .sbdocs-preview-actions a:hover,
+.dark .sbdocs-preview .sbdocs-preview-actions button:hover,
+.dark .sbdocs-preview .sbdocs-preview-actions a:hover,
+.sb-main-dark .sbdocs-preview .sbdocs-preview-actions button:hover,
+.sb-main-dark .sbdocs-preview .sbdocs-preview-actions a:hover,
+:root[data-theme='dark'] .sbdocs-preview .sbdocs-preview-actions button:focus-visible,
+:root[data-theme='dark'] .sbdocs-preview .sbdocs-preview-actions a:focus-visible,
+body[data-theme='dark'] .sbdocs-preview .sbdocs-preview-actions button:focus-visible,
+body[data-theme='dark'] .sbdocs-preview .sbdocs-preview-actions a:focus-visible,
+.dark .sbdocs-preview .sbdocs-preview-actions button:focus-visible,
+.dark .sbdocs-preview .sbdocs-preview-actions a:focus-visible,
+.sb-main-dark .sbdocs-preview .sbdocs-preview-actions button:focus-visible,
+.sb-main-dark .sbdocs-preview .sbdocs-preview-actions a:focus-visible {
   color: var(--color-secondary, #e53a71) !important;
   background-color: var(--color-secondary-light, rgba(255, 115, 150, 0.18)) !important;
 }

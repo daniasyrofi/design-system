@@ -105,6 +105,26 @@ describe('Input', () => {
     expect(wrapper.emitted('clear')).toHaveLength(1)
   })
 
+  it('compensates prefix corner radius with wrapper border width', () => {
+    const wrapper = mount(Input, {
+      props: { modelValue: '' },
+      slots: { prefix: 'https://' },
+    })
+    const prefix = wrapper.find('[data-testid="input-prefix-panel"]')
+    expect(prefix.exists()).toBe(true)
+    expect(prefix.classes()).toContain('rounded-l-[calc(var(--radius-lg)-1px)]')
+  })
+
+  it('compensates suffix corner radius with wrapper border width', () => {
+    const wrapper = mount(Input, {
+      props: { modelValue: '' },
+      slots: { suffix: '.com' },
+    })
+    const suffix = wrapper.find('[data-testid="input-suffix-panel"]')
+    expect(suffix.exists()).toBe(true)
+    expect(suffix.classes()).toContain('rounded-r-[calc(var(--radius-lg)-1px)]')
+  })
+
   // ── Accessibility ────────────────────────────────────────────
 
   it('links label to input via htmlFor/id', () => {

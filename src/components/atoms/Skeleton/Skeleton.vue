@@ -54,7 +54,7 @@ const singleStyle = computed(() => ({
     <span
       v-for="i in lines"
       :key="i"
-      :class="cn('skel')"
+      :class="cn('ds-skel')"
       :style="[lineStyle, i === lines && lines > 1 ? { width: '72%' } : {}]"
     />
   </span>
@@ -62,7 +62,7 @@ const singleStyle = computed(() => ({
   <!-- Single skeleton -->
   <span
     v-else
-    :class="cn('skel')"
+    :class="cn('ds-skel')"
     :style="singleStyle"
     role="status"
     aria-busy="true"

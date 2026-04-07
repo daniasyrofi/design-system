@@ -37,6 +37,10 @@ export interface SelectContext {
   getItemLabel: (value: string) => string
   /** Whether the root has an error (used by trigger for red border). */
   hasError: ComputedRef<boolean>
+  /** Called by trigger on focus to forward the event to the root. */
+  onTriggerFocus: (e: FocusEvent) => void
+  /** Called by trigger on blur to forward the event to the root. */
+  onTriggerBlur: (e: FocusEvent) => void
 }
 
 /** Primary injection key for the Select compound component context. */

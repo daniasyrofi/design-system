@@ -218,6 +218,19 @@ const meta: Meta<typeof Radio> = {
   component: Radio,
   tags: ['autodocs'],
   parameters: { layout: 'centered', icon: 'circleHollow' },
+  decorators: [
+    (story) => {
+      const storyComponent = story()
+      return {
+        components: { storyComponent },
+        template: `
+          <div class="[&_label]:items-center [&_label>span:last-child]:mt-0">
+            <storyComponent />
+          </div>
+        `,
+      }
+    },
+  ],
   argTypes: {
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
     disabled: { control: 'boolean' },
@@ -269,12 +282,14 @@ export const WithDescription: Story = {
     components: { Radio },
     setup: () => ({ copy: useCopy(), value: ref('standard') }),
     template: `
-      <Radio
-        v-model="value"
-        :label="copy.labels.standardShipping"
-        :description="copy.labels.freeDelivery"
-        value="standard"
-      />
+      <div class="[&_label]:!items-start [&_label>span:last-child]:!mt-[3px]">
+        <Radio
+          v-model="value"
+          :label="copy.labels.standardShipping"
+          :description="copy.labels.freeDelivery"
+          value="standard"
+        />
+      </div>
     `,
   }),
 }
@@ -382,18 +397,20 @@ export const RadioGroup: Story = {
       return { copy, selected, options }
     },
     template: `
-      <fieldset style="display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--color-border);border-radius:var(--radius-lg);max-width:320px;">
-        <legend style="font-size:14px;font-weight:600;color:var(--color-text-heading);padding:0 4px;">{{ copy.labels.shippingMethod }}</legend>
-        <Radio
-          v-for="opt in options"
-          :key="opt.value"
-          v-model="selected"
-          :value="opt.value"
-          :label="opt.label"
-          :description="opt.description"
-          name="shipping"
-        />
-      </fieldset>
+      <div class="[&_label]:!items-start [&_label>span:last-child]:!mt-[3px]">
+        <fieldset style="display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--color-border);border-radius:var(--radius-lg);max-width:320px;">
+          <legend style="font-size:14px;font-weight:600;color:var(--color-text-heading);padding:0 4px;">{{ copy.labels.shippingMethod }}</legend>
+          <Radio
+            v-for="opt in options"
+            :key="opt.value"
+            v-model="selected"
+            :value="opt.value"
+            :label="opt.label"
+            :description="opt.description"
+            name="shipping"
+          />
+        </fieldset>
+      </div>
     `,
   }),
 }
@@ -427,18 +444,20 @@ export const PaymentMethod: Story = {
       return { copy, method, opts }
     },
     template: `
-      <fieldset style="display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--color-border);border-radius:var(--radius-lg);max-width:300px;">
-        <legend style="font-size:14px;font-weight:600;color:var(--color-text-heading);padding:0 4px;">{{ copy.labels.paymentMethod }}</legend>
-        <Radio
-          v-for="opt in opts"
-          :key="opt.value"
-          v-model="method"
-          :value="opt.value"
-          :label="opt.label"
-          :description="opt.description"
-          name="payment"
-        />
-      </fieldset>
+      <div class="[&_label]:!items-start [&_label>span:last-child]:!mt-[3px]">
+        <fieldset style="display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--color-border);border-radius:var(--radius-lg);max-width:300px;">
+          <legend style="font-size:14px;font-weight:600;color:var(--color-text-heading);padding:0 4px;">{{ copy.labels.paymentMethod }}</legend>
+          <Radio
+            v-for="opt in opts"
+            :key="opt.value"
+            v-model="method"
+            :value="opt.value"
+            :label="opt.label"
+            :description="opt.description"
+            name="payment"
+          />
+        </fieldset>
+      </div>
     `,
   }),
 }

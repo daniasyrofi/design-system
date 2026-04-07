@@ -1,0 +1,442 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Docs/Component Anatomy" />
+
+# Component Anatomy Guide
+
+Reference for the internal structure, slots, and customization points of core components.
+
+---
+
+## Modal
+
+### Structure
+
+```
+Modal (Teleport to body)
+├── Overlay (backdrop — fixed, blur + dark tint)
+└── Panel (dialog container — .ds-modal-panel)
+    ├── Header (conditional: if title/header slot or closable)
+    │   ├── #header slot (full override)
+    │   │   ├── #title slot → <h2>
+    │   │   └── #description slot → <p>
+    │   └── #close-button slot → Button (ghost, icon-only)
+    ├── Body
+    │   └── #default slot → main content
+    └── Footer (conditional: if footer slot exists)
+        └── #footer slot → actions area
+```
+
+### Slots
+
+| Slot | Description | Scope |
+|------|-------------|-------|
+| `default` | Main modal body content | -- |
+| `header` | Full header override (replaces title + description) | -- |
+| `title` | Modal title text inside `<h2>` | -- |
+| `description` | Subtitle / description below title | -- |
+| `footer` | Action buttons area with subtle background | -- |
+| `close-button` | Custom close trigger (replaces default close button) | -- |
+
+### Component Tokens
+
+| Token | Default | Description |
+|-------|---------|-------------|
+| `--color-surface` | theme surface | Panel background color |
+| `--color-border-subtle` | theme border | Header/footer border color |
+| `--color-neutral-light` | theme neutral | Footer background color |
+| `--radius-2xl` | theme radius | Panel border radius |
+| `--shadow-2xl` | theme shadow | Panel box shadow |
+
+### Key Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `boolean` | -- | Controls visibility (v-model) |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'` | Dialog max-width |
+| `closable` | `boolean` | `true` | Shows/hides the close button |
+| `closeOnOverlay` | `boolean` | `true` | Close when clicking the backdrop |
+| `preventClose` | `boolean` | `false` | Disable all user-initiated close actions |
+| `scrollBehavior` | `'inside' \| 'outside'` | `'inside'` | Scroll containment strategy |
+
+---
+
+## Select
+
+A compound component consisting of `Select`, `SelectTrigger`, `SelectContent`, `SelectGroup`, `SelectItem`, and `SelectSeparator`.
+
+### Structure
+
+```
+Select (root — provides context)
+├── Label (conditional: if label prop)
+├── #default slot
+│   ├── SelectTrigger → <button>
+│   │   ├── Display text / placeholder
+│   │   ├── Clear button (conditional)
+│   │   ├── Spinner (conditional: if loading)
+│   │   └── Chevron icon
+│   └── SelectContent → dropdown panel (.ds-select-dropdown)
+│       ├── Search input (conditional: if searchable)
+│       └── Items list
+│           ├── SelectGroup (optional grouping)
+│           │   ├── Group label → <div>
+│           │   └── #default slot → SelectItem(s)
+│           ├── SelectItem → <button role="option">
+│           │   ├── Checkbox indicator
+│           │   └── #default slot → item label
+│           └── SelectSeparator → <div role="separator">
+└── Helper / Error text (conditional)
+```
+
+### Sub-Component Slots
+
+| Component | Slot | Description | Scope |
+|-----------|------|-------------|-------|
+| `Select` | `default` | Contains SelectTrigger + SelectContent | -- |
+| `SelectContent` | `default` | Contains SelectItem(s) and SelectGroup(s) | -- |
+| `SelectGroup` | `default` | Contains grouped SelectItem(s) | -- |
+| `SelectItem` | `default` | Custom item content (replaces label text) | -- |
+
+### Component Tokens
+
+| Token | Default | Description |
+|-------|---------|-------------|
+| `--color-surface` | theme surface | Trigger and dropdown background |
+| `--color-border` | theme border | Trigger border, dropdown inset ring |
+| `--color-border-strong` | theme border | Trigger border on hover |
+| `--color-danger` | theme danger | Error state border color |
+| `--color-text-primary` | theme text | Trigger focus ring, selected text |
+| `--color-text-tertiary` | theme text | Placeholder, chevron, group label |
+| `--color-neutral-light` | theme neutral | Item hover background |
+| `--color-secondary-light` | theme secondary | Selected item background |
+| `--radius-lg` | theme radius | Trigger border radius |
+| `--radius-xl` | theme radius | Dropdown border radius |
+| `--shadow-2xl` | theme shadow | Dropdown box shadow |
+
+### Key Props
+
+**Select (root)**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `string \| string[]` | -- | Selected value(s), supports v-model |
+| `multiple` | `boolean` | `false` | Allow multiple selections |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size token for all children |
+| `disabled` | `boolean` | `false` | Disables the entire select |
+| `label` | `string` | -- | Label rendered above trigger |
+| `helperText` | `string` | -- | Helper text below (hidden when error set) |
+| `error` | `string` | -- | Error message with error styling |
+| `loading` | `boolean` | `false` | Shows spinner, prevents opening |
+| `readonly` | `boolean` | `false` | Shows value but prevents opening |
+
+**SelectTrigger**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `placeholder` | `string` | `'Select...'` | Text when nothing is selected |
+| `clearable` | `boolean` | `false` | Show a clear button |
+
+**SelectContent**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `searchable` | `boolean` | `false` | Show search input to filter items |
+
+**SelectItem**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | -- | Value emitted when selected |
+| `label` | `string` | -- | Display label (falls back to value) |
+| `disabled` | `boolean` | `false` | Prevents selection |
+
+**SelectGroup**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | -- | Group header label |
+
+---
+
+## Tabs
+
+A compound component consisting of `Tabs`, `TabsList`, `TabsTrigger`, and `TabsContent`.
+
+### Structure
+
+```
+Tabs (root — provides context)
+└── #default slot
+    ├── TabsList → <div role="tablist">
+    │   └── TabsTrigger(s) → <button role="tab">
+    │       └── #default slot → tab label / icon
+    └── TabsContent(s) → <div role="tabpanel">
+        └── #default slot → panel content
+```
+
+### Sub-Component Slots
+
+| Component | Slot | Description | Scope |
+|-----------|------|-------------|-------|
+| `Tabs` | `default` | Contains TabsList + TabsContent(s) | -- |
+| `TabsList` | `default` | Contains TabsTrigger(s) | -- |
+| `TabsTrigger` | `default` | Tab label text, icons, badges | -- |
+| `TabsContent` | `default` | Panel content for this tab | -- |
+
+### Component Tokens
+
+| Token | Default | Description |
+|-------|---------|-------------|
+| `--color-border` | theme border | Line variant bottom border, boxed variant borders |
+| `--color-surface` | theme surface | Active tab background (line, pill) |
+| `--color-neutral-light` | theme neutral | Pill list background, boxed active background |
+| `--color-text-primary` | theme text | Active tab text color |
+| `--color-text-secondary` | theme text | Inactive tab text color |
+| `--color-primary` | theme primary | Focus ring color |
+| `--radius-xl` | theme radius | Boxed list border radius |
+| `--shadow-sm` | theme shadow | Pill/boxed list shadow |
+
+### Key Props
+
+**Tabs (root)**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `string` | -- | Active tab value (v-model) |
+| `variant` | `'line' \| 'pill' \| 'boxed'` | `'line'` | Visual style variant |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Layout orientation |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Visual size of triggers |
+
+**TabsTrigger**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | -- | Unique value linking to its TabsContent |
+| `disabled` | `boolean` | `false` | Disables the tab trigger |
+
+**TabsContent**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | -- | Unique value linking to its TabsTrigger |
+
+---
+
+## Card
+
+### Structure
+
+```
+Card (root — dynamic element via `as` prop)
+├── #media slot → cover image / media area (top)
+├── #header slot → title, actions, metadata
+├── #default slot → main body content
+└── #footer slot → actions, links, metadata
+```
+
+### Slots
+
+| Slot | Description | Scope |
+|------|-------------|-------|
+| `media` | Top image or cover area (full-bleed, clips to card radius) | -- |
+| `header` | Title row, actions, or metadata | -- |
+| `default` | Main body content | -- |
+| `footer` | Bottom actions, links, or metadata | -- |
+
+### Component Tokens
+
+| Token | Default | Description |
+|-------|---------|-------------|
+| `--card-bg` | `var(--color-surface)` | Card background color |
+| `--card-border` | `var(--color-border)` | Card border/ring color |
+| `--card-shadow` | varies by variant | Card box shadow |
+| `--card-shadow-hover` | `var(--shadow-xl)` | Shadow on hover (hoverable/clickable) |
+| `--color-surface-glass` | theme glass | Glass variant background |
+| `--glass-blur` | theme blur | Glass variant backdrop filter |
+| `--radius-md` through `--radius-2xl` | theme radii | Border radius per radius prop |
+
+### Key Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' \| 'outlined' \| 'elevated' \| 'flat' \| 'glass'` | `'default'` | Stylistic variant |
+| `padding` | `'none' \| 'sm' \| 'md' \| 'lg'` | `'md'` | Internal padding |
+| `radius` | `'sm' \| 'md' \| 'lg' \| 'xl'` | `'lg'` | Border radius scale |
+| `hoverable` | `boolean` | `false` | Subtle lift on hover |
+| `clickable` | `boolean` | `false` | Makes card interactive (button role, focusable) |
+| `as` | `string` | `'div'` | HTML element to render as |
+
+---
+
+## Table
+
+### Structure
+
+```
+Table (root — .ds-table-root)
+├── Loading overlay (conditional: spinner + blur backdrop)
+└── Table wrapper (overflow scroll container)
+    └── <table>
+        ├── <thead>
+        │   └── <tr> header row
+        │       ├── Select-all checkbox <th> (conditional: if selectable)
+        │       └── Column header <th> (per column)
+        │           ├── Column label text
+        │           └── Sort indicators (conditional: if sortable)
+        └── <tbody>
+            ├── Data rows <tr>
+            │   ├── Row checkbox <td> (conditional: if selectable)
+            │   └── Cell <td> (per column)
+            │       └── #cell-{key} slot → custom cell content
+            └── Empty state <tr> (conditional: no data)
+                └── #empty slot → empty message
+```
+
+### Slots
+
+| Slot | Description | Scope |
+|------|-------------|-------|
+| `cell-{key}` | Custom render for a specific column cell | `{ row, value }` |
+| `empty` | Custom empty state content | -- |
+
+### Component Tokens
+
+| Token | Default | Description |
+|-------|---------|-------------|
+| `--color-surface` | theme surface | Table background |
+| `--color-border` | theme border | Table border, row borders |
+| `--color-bg-subtle` | theme bg | Header row background, striped rows |
+| `--color-text-primary` | theme text | Cell text color |
+| `--color-text-secondary` | theme text | Header text color |
+| `--color-text-tertiary` | theme text | Empty state text |
+| `--color-neutral-subtle` | theme neutral | Hovered row background |
+| `--color-primary-subtle` | theme primary | Selected row background |
+| `--radius-lg` | theme radius | Table root border radius |
+| `--shadow-sm` | theme shadow | Sticky header shadow |
+
+### Key Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `columns` | `TableColumn[]` | -- | Array of column definitions |
+| `data` | `Record<string, unknown>[]` | -- | Array of row data objects |
+| `loading` | `boolean` | `false` | Shows loading overlay with spinner |
+| `selectable` | `boolean` | `false` | Adds row selection checkboxes |
+| `hoverable` | `boolean` | `true` | Highlights rows on hover |
+| `striped` | `boolean` | `false` | Alternating row backgrounds |
+| `stickyHeader` | `boolean` | `false` | Fixed header while body scrolls |
+| `emptyText` | `string` | `'No data'` | Text when data array is empty |
+| `filterBy` | `string` | `''` | Global filter string (case-insensitive) |
+| `virtual` | `boolean` | `false` | Enable virtual scrolling for large datasets |
+| `rowHeight` | `number` | `48` | Row height in px (virtual mode) |
+| `containerHeight` | `number` | `400` | Container height in px (virtual mode) |
+
+### TableColumn Interface
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `key` | `string` | -- | Unique key mapping to row data property |
+| `label` | `string` | -- | Display label in column header |
+| `sortable` | `boolean` | `false` | Enables click-to-sort |
+| `width` | `string` | -- | CSS width (e.g. `'120px'`, `'20%'`) |
+| `align` | `'left' \| 'center' \| 'right'` | `'left'` | Text alignment |
+| `filterable` | `boolean` | `true` | Include in global filter matching |
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `sort` | `{ key: string, direction: 'asc' \| 'desc' }` | Emitted when a sortable column header is clicked |
+| `select` | `Record<string, unknown>[]` | Emitted with the array of currently selected rows |
+
+---
+
+## Form
+
+### Structure
+
+```
+Form (root — <form> element)
+└── #default slot → form fields (Input, Select, Checkbox, etc.)
+```
+
+### Slots
+
+| Slot | Description | Scope |
+|------|-------------|-------|
+| `default` | Form fields and content | -- |
+
+### Key Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `layout` | `'stack' \| 'grid' \| 'inline'` | `'stack'` | Layout arrangement of fields |
+| `gap` | `'sm' \| 'md' \| 'lg'` | `'md'` | Spacing between form fields |
+
+### Layout Modes
+
+| Layout | Behavior |
+|--------|----------|
+| `stack` | Vertical column (`flex-col`) |
+| `grid` | Responsive 2-column grid (`grid-cols-1 md:grid-cols-2`) |
+| `inline` | Horizontal wrap (`flex-row flex-wrap items-end`) |
+
+---
+
+## Drawer
+
+### Structure
+
+```
+Drawer (Teleport to body)
+├── Overlay (backdrop — fixed, blur + dark tint)
+└── Panel (sliding container — .ds-drawer)
+    ├── Header (conditional: if title slot or closable)
+    │   ├── #title slot → <h2>
+    │   └── #close-button slot → Button (ghost, icon-only)
+    ├── Body (flex-1, overflow-y-auto)
+    │   └── #default slot → main content
+    └── Footer (conditional: if footer slot exists)
+        └── #footer slot → actions area
+```
+
+### Slots
+
+| Slot | Description | Scope |
+|------|-------------|-------|
+| `default` | Main drawer body content (scrollable) | -- |
+| `title` | Drawer title text inside `<h2>` | -- |
+| `close-button` | Custom close trigger (replaces default close button) | -- |
+| `footer` | Action buttons area with subtle background | -- |
+
+### Component Tokens
+
+| Token | Default | Description |
+|-------|---------|-------------|
+| `--color-surface` | theme surface | Panel background color |
+| `--color-border-subtle` | theme border | Header/footer border color, panel inset ring |
+| `--color-neutral-light` | theme neutral | Footer background color |
+| `--color-text-heading` | theme text | Title text color |
+| `--shadow-2xl` | theme shadow | Panel box shadow |
+
+### Key Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelValue` | `boolean` | -- | Controls visibility (v-model) |
+| `placement` | `'left' \| 'right' \| 'top' \| 'bottom'` | `'right'` | Side from which the drawer slides in |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'` | Width (left/right) or height (top/bottom) |
+| `closable` | `boolean` | `true` | Shows/hides the close button |
+| `closeOnOverlay` | `boolean` | `true` | Close when clicking the backdrop |
+| `preventClose` | `boolean` | `false` | Disable all user-initiated close actions |
+
+### Size Map
+
+| Size | Dimension |
+|------|-----------|
+| `sm` | 320px |
+| `md` | 400px |
+| `lg` | 540px |
+| `xl` | 720px |
+| `full` | 100% |

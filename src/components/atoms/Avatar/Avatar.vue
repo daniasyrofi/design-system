@@ -55,8 +55,8 @@ const iconSizePx: Record<AvatarSize, number> = {
 
 const shapeClass: Record<AvatarShape, string> = {
   circle: 'rounded-full',
-  rounded: 'rounded-xl',
-  square: 'rounded-md',
+  rounded: 'rounded-[var(--radius-xl)]',
+  square: 'rounded-[var(--radius-md)]',
 }
 
 const statusSizeClass: Record<AvatarSize, string> = {

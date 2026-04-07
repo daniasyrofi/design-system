@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils'
 import { RiArrowUpSLine, RiArrowDownSLine } from '@remixicon/vue'
 import Checkbox from '../../atoms/Checkbox/Checkbox.vue'
 import Spinner from '../../atoms/Spinner/Spinner.vue'
+import Skeleton from '../../atoms/Skeleton/Skeleton.vue'
 import { useVirtualList } from '@/composables/useVirtualList'
 
 export interface TableColumn {
@@ -40,6 +41,12 @@ interface Props {
   stickyHeader?: boolean
   /** Text displayed when the data array is empty. @default 'No data' */
   emptyText?: string
+  /** Enables row expansion on click. Use the `expanded-row` slot for content. @default false */
+  expandable?: boolean
+  /** Array of column keys to hide from rendering. */
+  hiddenColumns?: string[]
+  /** When true, renders skeleton placeholder rows instead of the spinner overlay. @default false */
+  skeletonLoading?: boolean
   /**
    * Global filter string — rows where no filterable column contains this value
    * (case-insensitive) are hidden. Leave empty / undefined to show all rows.
@@ -62,6 +69,9 @@ const props = withDefaults(defineProps<Props>(), {
   hoverable: true,
   striped: false,
   stickyHeader: false,
+  expandable: false,
+  hiddenColumns: () => [],
+  skeletonLoading: false,
   emptyText: 'No data',
   filterBy: '',
   virtual: false,
@@ -73,6 +83,26 @@ const emit = defineEmits<{
   sort: [payload: { key: string; direction: TableSortDirection }]
   select: [selectedRows: Record<string, unknown>[]]
 }>()
+
+// ── Column visibility ────────────────────────────────────────────────────────
+
+const visibleColumns = computed(() =>
+  props.columns.filter((col) => !props.hiddenColumns?.includes(col.key))
+)
+
+// ── Row expansion ────────────────────────────────────────────────────────────
+
+const expandedRows = ref<Set<number>>(new Set())
+
+function toggleRow(index: number) {
+  const next = new Set(expandedRows.value)
+  if (next.has(index)) {
+    next.delete(index)
+  } else {
+    next.add(index)
+  }
+  expandedRows.value = next
+}
 
 // ── Sort state ────────────────────────────────────────────────────────────────
 
@@ -236,7 +266,7 @@ const alignClass: Record<string, string> = {
 
             <!-- Column headers -->
             <th
-              v-for="col in columns"
+              v-for="col in visibleColumns"
               :key="col.key"
               :style="col.width ? { width: col.width } : undefined"
               :class="
@@ -309,7 +339,7 @@ const alignClass: Record<string, string> = {
               :class="
                 cn(
                   'transition-colors duration-[--duration-fast]',
-                  hoverable && 'hover:bg-[--color-neutral-subtle]',
+                  hoverable && 'hover:bg-[--ds-table-row-hover]',
                   striped && rowIndex % 2 === 1 && 'bg-[--color-bg-subtle]',
                   selectedRowIndices.has(rowIndex) && 'bg-[--color-primary-subtle]'
                 )
@@ -324,7 +354,7 @@ const alignClass: Record<string, string> = {
                 />
               </td>
               <td
-                v-for="col in columns"
+                v-for="col in visibleColumns"
                 :key="col.key"
                 :style="{ height: `${rowHeight}px` }"
                 :class="
@@ -348,50 +378,78 @@ const alignClass: Record<string, string> = {
             />
           </template>
 
-          <!-- Normal mode -->
-          <template v-else-if="!virtual && processedData.length > 0">
-            <tr
-              v-for="(row, rowIndex) in processedData"
-              :key="rowIndex"
-              :class="
-                cn(
-                  'transition-colors duration-[--duration-fast]',
-                  hoverable && 'hover:bg-[--color-neutral-subtle]',
-                  striped && 'even:bg-[--color-bg-subtle]',
-                  selectedRowIndices.has(rowIndex) && 'bg-[--color-primary-subtle]'
-                )
-              "
-            >
+          <!-- Skeleton loading rows -->
+          <template v-else-if="skeletonLoading">
+            <tr v-for="i in 5" :key="`skel-${i}`">
               <td v-if="selectable" class="w-12 px-4 py-3 border-b border-[--color-border]">
-                <Checkbox
-                  :model-value="selectedRowIndices.has(rowIndex)"
-                  size="sm"
-                  :aria-label="`Select row ${rowIndex + 1}`"
-                  @update:model-value="handleSelectRow(rowIndex, $event)"
-                />
+                <Skeleton variant="rectangular" width="16px" height="16px" />
               </td>
               <td
-                v-for="col in columns"
+                v-for="col in visibleColumns"
                 :key="col.key"
-                :class="
-                  cn(
-                    'px-4 py-3 border-b border-[--color-border]',
-                    'text-sm text-[--color-text-primary]',
-                    alignClass[col.align ?? 'left']
-                  )
-                "
+                class="px-4 py-3 border-b border-[--color-border]"
               >
-                <slot :name="`cell-${col.key}`" :row="row" :value="row[col.key]">
-                  {{ row[col.key] }}
-                </slot>
+                <Skeleton variant="text" width="80%" />
               </td>
             </tr>
           </template>
 
+          <!-- Normal mode -->
+          <template v-else-if="!virtual && processedData.length > 0">
+            <template v-for="(row, rowIndex) in processedData" :key="rowIndex">
+              <tr
+                :class="
+                  cn(
+                    'transition-colors duration-[--duration-fast]',
+                    hoverable && 'hover:bg-[--ds-table-row-hover]',
+                    striped && 'even:bg-[--color-bg-subtle]',
+                    selectedRowIndices.has(rowIndex) && 'bg-[--color-primary-subtle]',
+                    expandable && 'cursor-pointer'
+                  )
+                "
+                @click="expandable && toggleRow(rowIndex)"
+              >
+                <td v-if="selectable" class="w-12 px-4 py-3 border-b border-[--color-border]">
+                  <Checkbox
+                    :model-value="selectedRowIndices.has(rowIndex)"
+                    size="sm"
+                    :aria-label="`Select row ${rowIndex + 1}`"
+                    @update:model-value="handleSelectRow(rowIndex, $event)"
+                    @click.stop
+                  />
+                </td>
+                <td
+                  v-for="col in visibleColumns"
+                  :key="col.key"
+                  :class="
+                    cn(
+                      'px-4 py-3 border-b border-[--color-border]',
+                      'text-sm text-[--color-text-primary]',
+                      alignClass[col.align ?? 'left']
+                    )
+                  "
+                >
+                  <slot :name="`cell-${col.key}`" :row="row" :value="row[col.key]">
+                    {{ row[col.key] }}
+                  </slot>
+                </td>
+              </tr>
+              <!-- Expanded row -->
+              <tr v-if="expandable && expandedRows.has(rowIndex)">
+                <td
+                  :colspan="selectable ? visibleColumns.length + 1 : visibleColumns.length"
+                  class="px-4 py-3 bg-[--color-bg-subtle] border-b border-[--color-border]"
+                >
+                  <slot name="expanded-row" :row="row" :index="rowIndex" />
+                </td>
+              </tr>
+            </template>
+          </template>
+
           <!-- Empty state -->
-          <tr v-else-if="!loading">
+          <tr v-else-if="!loading && !skeletonLoading">
             <td
-              :colspan="selectable ? columns.length + 1 : columns.length"
+              :colspan="selectable ? visibleColumns.length + 1 : visibleColumns.length"
               class="px-4 py-12 text-center text-sm text-[--color-text-tertiary]"
             >
               <slot name="empty">

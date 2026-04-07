@@ -33,7 +33,11 @@ const props = withDefaults(defineProps<Props>(), {
   readonly: false,
 })
 
-const emit = defineEmits<{ 'update:modelValue': [value: string | string[]] }>()
+const emit = defineEmits<{
+  'update:modelValue': [value: string | string[]]
+  focus: [event: FocusEvent]
+  blur: [event: FocusEvent]
+}>()
 
 const isOpen = ref(false)
 const rootRef = ref<HTMLElement | null>(null)
@@ -118,11 +122,19 @@ provide(SELECT_KEY, {
   registerItem,
   unregisterItem,
   getItemLabel,
+  onTriggerFocus: (e: FocusEvent) => emit('focus', e),
+  onTriggerBlur: (e: FocusEvent) => emit('blur', e),
+})
+
+defineExpose({
+  el: rootRef,
+  open: () => { isOpen.value = true },
+  close: () => { isOpen.value = false },
 })
 </script>
 
 <template>
-  <div ref="rootRef" class="flex flex-col gap-1.5 w-full">
+  <div ref="rootRef" class="flex flex-col gap-1.5 w-full" :data-state="isOpen ? 'open' : 'closed'">
     <!-- Label — linked to trigger button via triggerId -->
     <label
       v-if="label"

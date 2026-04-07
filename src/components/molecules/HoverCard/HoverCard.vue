@@ -68,6 +68,7 @@ const enterFromClass = computed(() => {
 <template>
   <div
     class="relative inline-block"
+    :data-state="isOpen ? 'open' : 'closed'"
     @mouseenter="open"
     @mouseleave="close"
     @focusin="open"

@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { cn } from '@/lib/utils'
+import { useResponsiveProp, type ResponsiveProp } from '@/composables/useResponsiveProp'
 
 type StackDirection = 'vertical' | 'horizontal'
 type StackAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline'
 type StackJustify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'
 
 interface Props {
-  /** Stack direction (column vs row). @default 'vertical' */
-  direction?: StackDirection
-  /** Gap between children in 4px units (e.g. 4 = 16px). Also accepts CSS strings like '1rem'. @default 4 */
-  gap?: number | string
+  /** Stack direction (column vs row). Accepts responsive object. @default 'vertical' */
+  direction?: ResponsiveProp<StackDirection>
+  /** Gap between children in 4px units (e.g. 4 = 16px). Also accepts CSS strings like '1rem'. Accepts responsive object. @default 4 */
+  gap?: ResponsiveProp<number | string>
   /** Cross-axis alignment. @default 'stretch' */
   align?: StackAlign
   /** Main-axis justification. @default 'start' */
@@ -50,8 +51,11 @@ const justifyMap: Record<StackJustify, string> = {
   evenly: 'justify-evenly',
 }
 
+const resolvedDirection = useResponsiveProp(() => props.direction, 'vertical')
+const resolvedGap = useResponsiveProp<number | string>(() => props.gap, 4)
+
 const gapStyle = computed(() => {
-  const g = props.gap
+  const g = resolvedGap.value
   if (typeof g === 'number') return `${g * 4}px`
   return g
 })
@@ -59,7 +63,7 @@ const gapStyle = computed(() => {
 const classes = computed(() =>
   cn(
     props.inline ? 'inline-flex' : 'flex',
-    props.direction === 'horizontal' ? 'flex-row' : 'flex-col',
+    resolvedDirection.value === 'horizontal' ? 'flex-row' : 'flex-col',
     alignMap[props.align],
     justifyMap[props.justify],
     props.wrap && 'flex-wrap'

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useId } from 'vue'
+import { ref, computed, useId } from 'vue'
 import { cn } from '@/lib/utils'
 import { RiAddLine, RiSubtractLine } from '@remixicon/vue'
 
@@ -35,6 +35,10 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   'update:modelValue': [value: number]
+  focus: [event: FocusEvent]
+  blur: [event: FocusEvent]
+  keydown: [event: KeyboardEvent]
+  keyup: [event: KeyboardEvent]
 }>()
 
 const canDecrement = computed(() => props.modelValue - props.step >= props.min)
@@ -83,6 +87,14 @@ const btnWidthClass: Record<Size, string> = {
   md: 'w-10',
   lg: 'w-12',
 }
+
+const inputRef = ref<HTMLInputElement | null>(null)
+
+defineExpose({
+  el: inputRef,
+  focus: () => inputRef.value?.focus(),
+  blur: () => inputRef.value?.blur(),
+})
 </script>
 
 <template>
@@ -130,6 +142,7 @@ const btnWidthClass: Record<Size, string> = {
       <!-- Value display -->
       <input
         :id="inputId"
+        ref="inputRef"
         type="number"
         :value="modelValue"
         :min="min"
@@ -146,6 +159,10 @@ const btnWidthClass: Record<Size, string> = {
           )
         "
         @input="handleInput"
+        @focus="emit('focus', $event)"
+        @blur="emit('blur', $event)"
+        @keydown="emit('keydown', $event)"
+        @keyup="emit('keyup', $event)"
       />
 
       <!-- Increment -->

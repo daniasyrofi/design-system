@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ref } from 'vue'
+import { userEvent, within, expect } from 'storybook/test'
 import Combobox from './Combobox.vue'
 import type { ComboboxOption } from './Combobox.vue'
 
@@ -41,6 +42,23 @@ type Story = StoryObj<typeof Combobox>
 
 export const Default: Story = {
   name: 'Default',
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const canvas = within(canvasElement)
+
+    // Click the combobox input to open the dropdown
+    const input = canvas.getByRole('combobox')
+    await userEvent.click(input)
+
+    // Options list (listbox) should be visible
+    await expect(canvas.getByRole('listbox')).toBeVisible()
+
+    // Type to filter options
+    await userEvent.type(input, 'sin')
+
+    // Only "Singapore" should remain visible
+    await expect(canvas.getByRole('option', { name: /singapore/i })).toBeVisible()
+    await expect(canvas.queryByRole('option', { name: /indonesia/i })).not.toBeInTheDocument()
+  },
   render: () => ({
     components: { Combobox },
     setup() {

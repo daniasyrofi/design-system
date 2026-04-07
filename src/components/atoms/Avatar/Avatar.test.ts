@@ -46,12 +46,12 @@ describe('Avatar', () => {
 
   it('applies rounded shape', () => {
     const wrapper = mount(Avatar, { props: { name: 'AB', shape: 'rounded' } })
-    expect(wrapper.classes()).toContain('rounded-xl')
+    expect(wrapper.classes()).toContain('rounded-[var(--radius-xl)]')
   })
 
   it('applies square shape', () => {
     const wrapper = mount(Avatar, { props: { name: 'AB', shape: 'square' } })
-    expect(wrapper.classes()).toContain('rounded-md')
+    expect(wrapper.classes()).toContain('rounded-[var(--radius-md)]')
   })
 
   // ── Status dot ───────────────────────────────────────────────

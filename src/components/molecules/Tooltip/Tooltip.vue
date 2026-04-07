@@ -124,6 +124,7 @@ const triggerEvents = computed(() => {
   <div
     class="relative inline-flex"
     data-tooltip-root
+    :data-state="isVisible ? 'open' : 'closed'"
     v-bind="triggerEvents"
     @vue:mounted="addClickOutside"
     @vue:beforeUnmount="removeClickOutside"

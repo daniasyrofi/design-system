@@ -139,6 +139,9 @@ function handleKeydown(e: KeyboardEvent) {
     :aria-controls="`tabpanel-${value}`"
     :tabindex="isActive ? 0 : -1"
     :disabled="disabled"
+    :data-state="isActive ? 'active' : 'inactive'"
+    :data-orientation="ctx.orientation"
+    :data-disabled="disabled ? '' : undefined"
     @click="!disabled && ctx.selectTab(value)"
     @keydown="handleKeydown"
   >
