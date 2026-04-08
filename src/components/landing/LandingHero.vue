@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed, inject } from 'vue'
 import Navbar from '@/components/organisms/Navbar/Navbar.vue'
 import Button from '@/components/atoms/Button/Button.vue'
+
+const navigateTo = inject<(page: string) => void>('navigate', () => {})
 
 const megaIcons = {
   OnCall:
@@ -16,8 +18,21 @@ const hovering = ref(false)
 const isScrolled = ref(false)
 const bgActive = computed(() => isScrolled.value || hovering.value || showMega.value)
 
+const pillClasses = computed(() => {
+  if (!isScrolled.value && !hovering.value && !showMega.value) {
+    // Hero: transparent, full-width
+    return 'max-w-[1040px] bg-transparent border border-transparent rounded-none shadow-none'
+  }
+  if (showMega.value) {
+    // Mega open: white pill, top radius only
+    return 'max-w-[720px] bg-white border border-[var(--color-border)] rounded-t-[20px] rounded-b-none shadow-none'
+  }
+  // Scrolled / hovered: full white pill
+  return 'max-w-[720px] bg-white border border-[var(--color-border)] rounded-[20px] shadow-sm'
+})
+
 function onScroll() {
-  isScrolled.value = window.scrollY > 10
+  isScrolled.value = window.scrollY > 80
 }
 onMounted(() => {
   window.addEventListener('scroll', onScroll, { passive: true })
@@ -41,34 +56,10 @@ function onMegaLeave() {
 
 // ── Counter animation ────────────────────────────────────────────────────────
 const stats = [
-  {
-    target: 200,
-    suffix: '+',
-    context: 'Pasangan Indonesia',
-    desc: 'sudah bikin undangan di Abadikan',
-    display: ref(0),
-  },
-  {
-    target: 10000,
-    suffix: '+',
-    context: 'Tamu nyata',
-    desc: 'sudah menerima undangan digitalnya',
-    display: ref(0),
-  },
-  {
-    target: 176,
-    suffix: 'K+',
-    context: 'Link undangan',
-    desc: 'kali dibuka dan dibaca tamu',
-    display: ref(0),
-  },
-  {
-    target: 61,
-    suffix: 'K+',
-    context: 'Pengunjung',
-    desc: 'orang mampir ke halaman undangan',
-    display: ref(0),
-  },
+  { target: 12000, suffix: '+', label: 'Pasangan Bahagia', display: ref(0) },
+  { target: 50000, suffix: '+', label: 'Tamu Diundang', display: ref(0) },
+  { target: 15000, suffix: '+', label: 'Ucapan & Doa', display: ref(0) },
+  { target: 176, suffix: 'K+', label: 'Link Dibuka', display: ref(0) },
 ]
 
 function easeOutCubic(t: number) {
@@ -93,7 +84,6 @@ function startCounters() {
   stats.forEach((stat, i) => animateCounter(stat, 1800, i * 120))
 }
 
-// Format with dots: 10000 → "10.000"
 function fmt(val: number) {
   return val.toLocaleString('id-ID')
 }
@@ -101,32 +91,61 @@ function fmt(val: number) {
 
 <template>
   <div class="hero-root">
-    <!-- Pinstripe -->
-    <div class="pinstripe"></div>
+    <!-- Radial glow overlay -->
+    <div class="hero-glow" aria-hidden="true"></div>
 
-    <!-- Bottom vignette gradient (matches story) -->
-    <div
-      class="absolute bottom-0 w-full h-[400px] bg-gradient-to-t from-[#9e1a29] to-transparent pointer-events-none opacity-40"
-    ></div>
+    <!-- Fixed nav block: top bar + main navbar (fixed beats overflow-x:hidden on hero-root) -->
+    <div class="fixed top-0 left-0 right-0 z-[100]">
 
-    <!-- Navbar — FloatingMegaMenu pattern -->
-    <Navbar
-      variant="transparent"
-      :sticky="true"
-      :border="false"
-      :class="[
-        showMega
-          ? '!bg-white !border !border-[var(--color-border)] !rounded-b-none !shadow-none'
-          : bgActive
-            ? '!bg-white !border !border-[var(--color-border)] !rounded-b-[16px] !shadow-sm'
-            : '!bg-transparent !border !border-transparent !rounded-b-[16px] !shadow-none',
-      ]"
-      class="transition-[background-color,box-shadow] duration-300 !px-5"
-    >
+      <!-- Top utility bar — collapses on scroll -->
+      <div
+        class="overflow-hidden transition-[max-height,opacity] duration-300 bg-[#0a0a0a]"
+        :class="isScrolled ? 'max-h-0 opacity-0' : 'max-h-[48px] opacity-100'"
+      >
+        <div class="flex items-center justify-between px-5 py-[4px] max-w-[1040px] mx-auto">
+          <!-- Personal / Bisnis tabs -->
+          <div class="flex items-center gap-1">
+            <!-- Active: bg + bottom line. Hover: bg only -->
+            <button
+              class="text-[13px] font-[600] px-[10px] py-[5px] rounded-lg text-white bg-white/15 border-b-2 border-white whitespace-nowrap transition-colors"
+            >Personal</button>
+            <button
+              class="text-[13px] font-[600] px-[10px] py-[5px] rounded-lg text-white/50 border-b-2 border-transparent whitespace-nowrap hover:text-white hover:bg-white/10 transition-colors"
+              @click="navigateTo('business')"
+            >Bisnis</button>
+          </div>
+          <!-- EN / ID language toggle -->
+          <div class="flex items-center bg-[#232323] rounded-full h-[28px] px-[2px] gap-0">
+            <span class="text-[12px] font-[600] bg-white text-black rounded-full w-[24px] h-[24px] flex items-center justify-center cursor-pointer hover:bg-white/90 transition-colors">EN</span>
+            <span class="text-[12px] font-[600] text-white/50 rounded-full w-[24px] h-[24px] flex items-center justify-center cursor-pointer hover:text-white hover:bg-white/10 transition-colors">ID</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pill outer: padding transitions on scroll -->
+      <div
+        class="flex justify-center transition-[padding] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
+        :class="isScrolled ? 'px-4 py-2' : 'px-0 py-0'"
+      >
+        <!-- Pill inner: animates max-width, bg, border, radius, shadow -->
+        <div
+          class="w-full transition-[max-width,background-color,border-color,border-radius,box-shadow] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden"
+          :class="pillClasses"
+        >
+      <!-- Main Navbar — content shell only -->
+      <Navbar
+        variant="transparent"
+        :sticky="false"
+        :border="false"
+        class="!px-5 !max-w-full"
+      >
       <template #start>
         <div
           class="flex items-center w-[160px] h-[50px] cursor-pointer"
-          :style="{ color: bgActive ? 'var(--color-text-heading)' : 'var(--color-text-inverse)', transition: 'color var(--duration-slow)' }"
+          :style="{
+            color: bgActive ? 'var(--color-text-heading)' : 'var(--color-text-inverse)',
+            transition: 'color var(--duration-slow)',
+          }"
         >
           <div
             class="w-[150px] h-[48px] bg-current -ml-2"
@@ -141,13 +160,16 @@ function fmt(val: number) {
       <template #center>
         <nav
           class="flex h-full items-center justify-center gap-[20px] w-[244px]"
-          :style="{ color: bgActive ? 'var(--color-text-heading)' : 'var(--color-text-inverse)', transition: 'color var(--duration-slow)' }"
+          :style="{
+            color: bgActive ? 'var(--color-text-heading)' : 'var(--color-text-inverse)',
+            transition: 'color var(--duration-slow)',
+          }"
           @mouseenter="onNavEnter"
           @mouseleave="onNavLeave"
         >
-          <span
-            class="text-[14px] font-[500] cursor-pointer hover:opacity-70 transition-opacity whitespace-nowrap"
-            >Tema</span
+          <span class="text-[14px] font-[500] cursor-pointer hover:opacity-70 transition-opacity whitespace-nowrap"
+            @click="navigateTo('consumer')"
+            >Beranda</span
           >
 
           <div
@@ -157,8 +179,9 @@ function fmt(val: number) {
           >
             <span
               class="text-[14px] font-[500] hover:opacity-70 transition-opacity flex items-center gap-[3px] h-full whitespace-nowrap"
+              @click.stop="navigateTo('template')"
             >
-              Fitur
+              Template
               <svg
                 class="w-3 h-3 mt-[1px] transition-transform duration-300"
                 :class="showMega ? 'rotate-180' : 'rotate-0'"
@@ -189,7 +212,9 @@ function fmt(val: number) {
               >
                 <div class="grid grid-cols-3 gap-5 normal-case tracking-normal">
                   <div>
-                    <h4 class="text-[10px] font-bold text-[var(--color-text-tertiary)] tracking-wider mb-4 uppercase">
+                    <h4
+                      class="text-[10px] font-bold text-[var(--color-text-tertiary)] tracking-wider mb-4 uppercase"
+                    >
                       Produk
                     </h4>
                     <div class="flex flex-col gap-3">
@@ -248,7 +273,9 @@ function fmt(val: number) {
                   </div>
 
                   <div>
-                    <h4 class="text-[10px] font-bold text-[var(--color-text-tertiary)] tracking-wider mb-4 uppercase">
+                    <h4
+                      class="text-[10px] font-bold text-[var(--color-text-tertiary)] tracking-wider mb-4 uppercase"
+                    >
                       Platform
                     </h4>
                     <div class="flex flex-col gap-1">
@@ -299,7 +326,9 @@ function fmt(val: number) {
                   </div>
 
                   <div class="flex flex-col">
-                    <h4 class="text-[10px] font-bold text-[var(--color-text-tertiary)] tracking-wider mb-4 uppercase">
+                    <h4
+                      class="text-[10px] font-bold text-[var(--color-text-tertiary)] tracking-wider mb-4 uppercase"
+                    >
                       Unggulan
                     </h4>
                     <div
@@ -331,7 +360,9 @@ function fmt(val: number) {
                   </div>
                 </div>
 
-                <div class="pt-3 border-t border-[var(--color-border-subtle)] flex items-center justify-between">
+                <div
+                  class="pt-3 border-t border-[var(--color-border-subtle)] flex items-center justify-between"
+                >
                   <div class="flex gap-6 text-[13px] font-[600] text-[var(--color-text-secondary)]">
                     <a href="#" class="hover:text-[var(--color-text-heading)]">Integrasi</a>
                     <a href="#" class="hover:text-[var(--color-text-heading)]">Pelajari Fitur</a>
@@ -342,19 +373,19 @@ function fmt(val: number) {
             </transition>
           </div>
 
-          <span
-            class="text-[14px] font-[500] cursor-pointer hover:opacity-70 transition-opacity whitespace-nowrap"
-            >Tentang</span
+          <span class="text-[14px] font-[500] cursor-pointer hover:opacity-70 transition-opacity whitespace-nowrap"
+            @click="navigateTo('harga')"
+            >Harga</span
           >
-          <span
-            class="text-[14px] font-[500] cursor-pointer hover:opacity-70 transition-opacity whitespace-nowrap"
-            >Kontak</span
+          <span class="text-[14px] font-[500] cursor-pointer hover:opacity-70 transition-opacity whitespace-nowrap"
+            @click="navigateTo('blog')"
+            >Blog</span
           >
         </nav>
       </template>
 
       <template #end>
-        <div class="flex items-center gap-[10px] w-[160px] justify-end">
+        <div class="flex items-center gap-[10px] justify-end">
           <Button
             variant="outline"
             size="sm"
@@ -370,34 +401,76 @@ function fmt(val: number) {
             size="sm"
             :style="
               !bgActive
-                ? '--btn-bg: var(--color-text-heading); --btn-text: var(--color-text-inverse); --btn-border: var(--color-text-heading); --btn-hover-bg: #000000; --btn-hover-border: #000000;'
+                ? '--btn-bg: var(--color-text-inverse); --btn-text: var(--color-neutral); --btn-border: var(--color-text-inverse); --btn-hover-bg: rgba(255,255,255,0.88); --btn-hover-border: rgba(255,255,255,0.88);'
                 : ''
             "
-            >Daftar</Button
+            >Buat Undangan</Button
           >
         </div>
       </template>
-    </Navbar>
+      </Navbar>
+        </div>
+      </div>
+    </div>
 
-    <!-- Hero content -->
+    <!-- Spacer: top bar (~40px) + main nav (~64px) = 104px in hero state -->
+    <div class="shrink-0 transition-[height] duration-300" :class="isScrolled ? 'h-[72px]' : 'h-[104px]'" aria-hidden="true" />
+
+    <!-- Hero body — 2-column asymmetric layout -->
     <div class="hero-body">
-      <div class="px-8 text-center relative z-10" style="font-family: var(--font-display)">
-        <h1
-          class="text-[48px] md:text-[60px] font-[800] tracking-tight mb-5 leading-[1.15] max-w-[800px] mx-auto"
-          style="font-family: var(--font-display); color: white !important"
-        >
-          Satu Platform, Ribuan Cara<br />Abadikan Cerita Cintamu.
-        </h1>
-        <p
-          class="text-[17px] md:text-[19px] mb-10 max-w-2xl mx-auto font-[500] leading-relaxed"
-          style="
-            font-family: var(--font-display);
-            color: rgba(255, 255, 255, 0.9) !important;
-          "
-        >
-          Bikin Undangan Digital dan Kado Interaktif yang memorable,<br />estetik, dan penuh makna.
-        </p>
-        <Button variant="default" size="lg" class="shadow-lg">Buat Undanganmu</Button>
+      <div class="hero-content-grid">
+        <!-- Left: text + CTAs -->
+        <div class="hero-left">
+          <!-- Overline pill -->
+          <div class="hero-overline">
+            <span>Platform Undangan Digital #1 yang Bercerita</span>
+          </div>
+
+          <!-- H1 -->
+          <h1 class="hero-h1">
+            Kisah Cintamu,<br />Layak Diabadikan.
+          </h1>
+
+          <!-- Subtitle -->
+          <p class="hero-sub">
+            Buat undangan website pernikahan yang cantik, personal, dan bercerita — langsung dari HP,
+            selesai dalam 15 menit.
+          </p>
+
+          <!-- CTA row -->
+          <div class="hero-ctas">
+            <Button
+              variant="default"
+              size="lg"
+              style="--btn-bg: var(--color-text-inverse); --btn-text: var(--color-neutral); --btn-border: var(--color-text-inverse); --btn-hover-bg: rgba(255,255,255,0.88); --btn-hover-border: rgba(255,255,255,0.88); font-weight: 600;"
+            >
+              Buat Undangan Gratis →
+            </Button>
+            <Button
+              variant="ghost"
+              size="lg"
+              style="--btn-bg: transparent; --btn-text: var(--color-text-inverse); --btn-border: rgba(255,255,255,0.4); --btn-hover-bg: rgba(255,255,255,0.08); --btn-hover-border: rgba(255,255,255,0.6); --btn-hover-text: var(--color-text-inverse); font-weight: 500;"
+            >
+              Lihat Contoh Undangan
+            </Button>
+          </div>
+
+          <!-- Trust line -->
+          <p class="hero-trust">
+            Dipercaya 12.000+ pasangan · 50.000+ tamu diundang · Gratis untuk dicoba
+          </p>
+        </div>
+
+        <!-- Right: phone mockup placeholder -->
+        <div class="hero-right" aria-hidden="true">
+          <div class="hero-mockup">
+            <div class="mockup-inner">
+              <div class="mockup-label">Preview Undangan</div>
+              <div class="mockup-gradient"></div>
+              <div class="mockup-shine"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -405,11 +478,10 @@ function fmt(val: number) {
     <div class="social-bar">
       <div class="social-bar-inner">
         <div v-for="(stat, i) in stats" :key="i" class="social-stat">
-          <div class="social-context">{{ stat.context }}</div>
           <div class="social-num">
             {{ fmt(stat.display.value) }}<span class="social-suffix">{{ stat.suffix }}</span>
           </div>
-          <div class="social-desc">{{ stat.desc }}</div>
+          <div class="social-label">{{ stat.label }}</div>
         </div>
       </div>
     </div>
@@ -417,38 +489,187 @@ function fmt(val: number) {
 </template>
 
 <style scoped>
+/* ── Root ─────────────────────────────────────────────────────────────────── */
 .hero-root {
   position: relative;
   width: 100%;
-  min-height: 900px;
-  max-height: 900px;
-  background-color: var(--color-primary);
+  min-height: 100vh;
+  background: radial-gradient(ellipse 80% 45% at 50% -10%, oklch(0.55 0.22 18 / 0.35), transparent),
+    var(--color-neutral);
   overflow-x: hidden;
   font-family: var(--font-display);
   display: flex;
   flex-direction: column;
 }
 
+/* Radial glow (reinforces top center warmth) */
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 60% 30% at 50% 0%, oklch(0.55 0.22 18 / 0.18), transparent);
+  z-index: 0;
+}
+
+/* ── Hero body ────────────────────────────────────────────────────────────── */
 .hero-body {
   flex: 1;
   display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  padding: 80px 0 64px;
+}
+
+/* 2-column grid */
+.hero-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 3rem;
+}
+
+/* ── Left side ────────────────────────────────────────────────────────────── */
+.hero-left {
+  display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+/* Overline pill */
+.hero-overline {
+  display: inline-flex;
+  align-items: center;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  margin-bottom: 1.25rem;
+  font-family: var(--font-ui);
+}
+
+/* H1 */
+.hero-h1 {
+  font-size: clamp(2.8rem, 6vw + 0.5rem, 5rem);
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--color-text-inverse);
+  margin: 0 0 1.5rem;
+  text-align: left;
+}
+
+/* Subtitle */
+.hero-sub {
+  font-size: clamp(1rem, 0.5vw + 0.875rem, 1.2rem);
+  font-family: var(--font-ui);
+  font-weight: 400;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 42ch;
+  margin: 0 0 2.25rem;
+  text-align: left;
+}
+
+/* CTA row */
+.hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Trust line */
+.hero-trust {
+  font-size: 12px;
+  font-family: var(--font-ui);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+/* ── Right side — mockup ──────────────────────────────────────────────────── */
+.hero-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-mockup {
+  width: 400px;
+  height: 560px;
+  border-radius: var(--radius-xl, 28px);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    var(--shadow-lg);
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.mockup-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
 }
 
-/* Social proof bar */
+.mockup-label {
+  position: relative;
+  z-index: 2;
+  font-size: 13px;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.mockup-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 100%, oklch(0.55 0.22 18 / 0.28), transparent),
+    radial-gradient(ellipse 50% 40% at 50% 20%, rgba(255, 255, 255, 0.03), transparent);
+}
+
+.mockup-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+}
+
+/* ── Social proof bar ─────────────────────────────────────────────────────── */
 .social-bar {
   position: relative;
   z-index: 2;
   background: rgba(0, 0, 0, 0.22);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: var(--space-5);
+  padding: 1.25rem var(--space-5, 1.25rem);
 }
 
 .social-bar-inner {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -457,8 +678,8 @@ function fmt(val: number) {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: var(--space-1);
-  padding: 0 var(--space-6);
+  gap: 4px;
+  padding: 0 var(--space-6, 1.5rem);
   position: relative;
 }
 
@@ -476,19 +697,11 @@ function fmt(val: number) {
   top: 8px;
   bottom: 8px;
   width: 1px;
-  background: rgba(255, 255, 255, 0.35);
-}
-
-.social-context {
-  font-size: 12px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.75);
-  letter-spacing: 0.1px;
-  line-height: 1;
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .social-num {
-  font-size: 38px;
+  font-size: 36px;
   font-weight: 700;
   color: var(--color-text-inverse);
   line-height: 1.05;
@@ -498,21 +711,73 @@ function fmt(val: number) {
 }
 
 .social-suffix {
-  font-size: 38px;
+  font-size: 30px;
   font-weight: 700;
-  opacity: 0.6;
-  letter-spacing: -1.5px;
+  opacity: 0.5;
+  letter-spacing: -1px;
 }
 
-.social-desc {
+.social-label {
   font-size: 12px;
+  font-family: var(--font-ui);
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.5);
   line-height: 1.4;
-  max-width: 150px;
 }
 
-.pinstripe {
-  display: none;
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .hero-content-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding: 0 1.5rem;
+    text-align: left;
+  }
+
+  .hero-right {
+    order: -1;
+  }
+
+  .hero-mockup {
+    width: 100%;
+    max-width: 340px;
+    height: 420px;
+  }
+
+  .social-bar-inner {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem 0;
+  }
+
+  .social-stat:nth-child(2)::before {
+    display: none;
+  }
+
+  .social-stat:nth-child(3)::before {
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .hero-body {
+    padding: 60px 0 48px;
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .social-bar-inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .social-num {
+    font-size: 28px;
+  }
+
+  .social-suffix {
+    font-size: 22px;
+  }
 }
 </style>
