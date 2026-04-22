@@ -102,11 +102,11 @@ export const Default: Story = {
             </div>
 
             <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleLogin">
-              <Input v-model="email" type="email" label="Email" placeholder="kamu@contoh.com" :error="emailErr" @update:modelValue="emailErr = ''">
+              <Input v-model="email" type="email" label="Email" required placeholder="kamu@contoh.com" :error="emailErr" @update:modelValue="emailErr = ''">
                 <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
               </Input>
               <div style="display:flex;flex-direction:column;gap:2px;">
-                <Input v-model="password" type="password" label="Password" placeholder="••••••••" :error="passErr" @update:modelValue="passErr = ''">
+                <Input v-model="password" type="password" label="Password" required placeholder="••••••••" :error="passErr" @update:modelValue="passErr = ''">
                   <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
                 </Input>
                 <div style="text-align:right;margin-top:4px;">
@@ -156,6 +156,7 @@ export const ForgotPassword: Story = {
     setup() {
       const email = ref(''), emailErr = ref('')
       const loading = ref(false), countdown = ref(0), showSuccess = ref(false)
+      const sent = ref(false)
       let timer: ReturnType<typeof setInterval> | null = null
 
       function handleSend() {
@@ -165,6 +166,7 @@ export const ForgotPassword: Story = {
         setTimeout(() => {
           loading.value = false
           showSuccess.value = true
+          sent.value = true
           countdown.value = 10
           timer = setInterval(() => {
             countdown.value--
@@ -172,7 +174,7 @@ export const ForgotPassword: Story = {
           }, 1000)
         }, 1500)
       }
-      return { email, emailErr, loading, countdown, showSuccess, handleSend }
+      return { email, emailErr, loading, countdown, sent, showSuccess, handleSend }
     },
     template: `
       <div style="${GRID}">
@@ -187,11 +189,11 @@ export const ForgotPassword: Story = {
             </div>
 
             <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleSend">
-              <Input v-model="email" type="email" label="Email" placeholder="Masukkan email kamu" :error="emailErr" @update:modelValue="emailErr = ''">
+              <Input v-model="email" type="email" label="Email" required placeholder="Masukkan email kamu" :error="emailErr" @update:modelValue="emailErr = ''">
                 <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
               </Input>
               <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}">Kirim Tautan</Button>
-              <Button type="button" variant="outline" full-width size="md" :disabled="countdown > 0" style="${BTN}">
+              <Button v-if="sent" type="button" variant="outline" full-width size="md" :disabled="countdown > 0" style="${BTN}">
                 {{ countdown > 0 ? 'Kirim Ulang (' + countdown + ')' : 'Kirim Ulang' }}
               </Button>
             </form>
@@ -257,10 +259,10 @@ export const ResetPassword: Story = {
             </div>
 
             <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleReset">
-              <Input v-model="newPass" type="password" label="Password Baru" placeholder="Masukan Password Baru" :error="newPassErr" @update:modelValue="newPassErr = ''">
+              <Input v-model="newPass" type="password" label="Password Baru" required placeholder="Masukan Password Baru" :error="newPassErr" @update:modelValue="newPassErr = ''">
                 <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
               </Input>
-              <Input v-model="confirmPass" type="password" label="Konfirmasi Password" placeholder="Masukan Konfirmasi Password" :error="confirmErr" @update:modelValue="confirmErr = ''">
+              <Input v-model="confirmPass" type="password" label="Konfirmasi Password" required placeholder="Masukan Konfirmasi Password" :error="confirmErr" @update:modelValue="confirmErr = ''">
                 <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
               </Input>
               <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:4px;">Simpan Password</Button>
@@ -330,7 +332,7 @@ export const SignUp: Story = {
 
             <template v-if="step === 'email'">
               <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleEmailNext">
-                <Input v-model="email" type="email" label="Email" placeholder="Masukan email kamu" :error="emailErr" @update:modelValue="emailErr = ''">
+                <Input v-model="email" type="email" label="Email" required placeholder="Masukan email kamu" :error="emailErr" @update:modelValue="emailErr = ''">
                   <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
                 </Input>
                 <p style="font-size:11px;color:var(--color-text-secondary);margin:0;line-height:1.55;text-align:center;">
@@ -351,17 +353,18 @@ export const SignUp: Story = {
             </template>
 
             <template v-else-if="step === 'form-email'">
+              <a href="#" style="font-size:20px;color:var(--color-text-heading);text-decoration:none;display:inline-block;margin-bottom:20px;" @click.prevent="step = 'email'">‹</a>
               <form style="display:flex;flex-direction:column;gap:12px;" @submit.prevent="handleRegister">
                 <Input :modelValue="email" label="Email" type="email" :disabled="true">
                   <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="password" type="password" label="Password" placeholder="Masukan Password" :error="passErr" @update:modelValue="passErr = ''">
+                <Input v-model="password" type="password" label="Password" required placeholder="Masukan Password" :error="passErr" @update:modelValue="passErr = ''">
                   <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="name" label="Nama Lengkap" placeholder="Masukan nama kamu" :error="nameErr" @update:modelValue="nameErr = ''">
+                <Input v-model="name" label="Nama Lengkap" required placeholder="Masukan nama kamu" :error="nameErr" @update:modelValue="nameErr = ''">
                   <template #leading><RiUser3Line style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="phone" type="tel" label="No Handphone" placeholder="Masukan no. handphone kamu" :error="phoneErr" @update:modelValue="phoneErr = ''">
+                <Input v-model="phone" type="tel" label="No Handphone" required placeholder="Masukan no. handphone kamu" :error="phoneErr" @update:modelValue="phoneErr = ''">
                   <template #leading><RiPhoneLine style="width:16px;height:16px;" /></template>
                 </Input>
                 <Input v-model="referral" label="Kode Referral" placeholder="Masukan kode referral (opsional)">
@@ -385,11 +388,12 @@ export const SignUp: Story = {
             </template>
 
             <template v-else-if="step === 'form-google'">
+              <a href="#" style="font-size:20px;color:var(--color-text-heading);text-decoration:none;display:inline-block;margin-bottom:20px;" @click.prevent="step = 'email'">‹</a>
               <form style="display:flex;flex-direction:column;gap:12px;" @submit.prevent="handleRegister">
-                <Input v-model="name" label="Nama Lengkap" placeholder="Masukan nama kamu" :error="nameErr" @update:modelValue="nameErr = ''">
+                <Input v-model="name" label="Nama Lengkap" required placeholder="Masukan nama kamu" :error="nameErr" @update:modelValue="nameErr = ''">
                   <template #leading><RiUser3Line style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="phone" type="tel" label="No Handphone" placeholder="Masukan no. handphone kamu" :error="phoneErr" @update:modelValue="phoneErr = ''">
+                <Input v-model="phone" type="tel" label="No Handphone" required placeholder="Masukan no. handphone kamu" :error="phoneErr" @update:modelValue="phoneErr = ''">
                   <template #leading><RiPhoneLine style="width:16px;height:16px;" /></template>
                 </Input>
                 <Input v-model="referral" label="Kode Referral" placeholder="Masukan kode referral (opsional)">
@@ -460,13 +464,14 @@ export const AuthFlow: Story = {
       }
 
       const forgotEmail = ref(''), forgotEmailErr = ref(''), countdown = ref(0)
+      const forgotSent = ref(false)
       let timer: ReturnType<typeof setInterval> | null = null
       function handleForgot() {
         forgotEmailErr.value = ''
         if (!forgotEmail.value) { forgotEmailErr.value = 'Email wajib diisi'; return }
         loading.value = true
         setTimeout(() => {
-          loading.value = false; showSuccess.value = true; countdown.value = 10
+          loading.value = false; showSuccess.value = true; forgotSent.value = true; countdown.value = 10
           timer = setInterval(() => {
             countdown.value--
             if (countdown.value <= 0 && timer) { clearInterval(timer); timer = null }
@@ -527,7 +532,7 @@ export const AuthFlow: Story = {
       return {
         page, tagline, loading, showSuccess,
         loginEmail, loginPass, loginEmailErr, loginPassErr, handleLogin,
-        forgotEmail, forgotEmailErr, countdown, handleForgot,
+        forgotEmail, forgotEmailErr, countdown, forgotSent, handleForgot,
         newPass, confirmPass, newPassErr, confirmErr, handleReset,
         signupEmail, signupEmailErr, signupPass, signupName, signupPhone, signupReferral,
         signupPassErr, signupNameErr, signupPhoneErr, handleSignupEmail, handleRegister,
@@ -557,11 +562,11 @@ export const AuthFlow: Story = {
                 <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Masuk dulu biar bisa lanjut atur undangan digital &amp; persiapan nikahmu dengan tenang.</p>
               </div>
               <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleLogin">
-                <Input v-model="loginEmail" type="email" label="Email" placeholder="kamu@contoh.com" :error="loginEmailErr" @update:modelValue="loginEmailErr = ''">
+                <Input v-model="loginEmail" type="email" label="Email" required placeholder="kamu@contoh.com" :error="loginEmailErr" @update:modelValue="loginEmailErr = ''">
                   <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
                 </Input>
                 <div style="display:flex;flex-direction:column;gap:2px;">
-                  <Input v-model="loginPass" type="password" label="Password" placeholder="••••••••" :error="loginPassErr" @update:modelValue="loginPassErr = ''">
+                  <Input v-model="loginPass" type="password" label="Password" required placeholder="••••••••" :error="loginPassErr" @update:modelValue="loginPassErr = ''">
                     <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
                   </Input>
                   <div style="text-align:right;margin-top:4px;">
@@ -588,11 +593,11 @@ export const AuthFlow: Story = {
                 <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Masukin email kamu, biar kita kirim link reset ke inbox.</p>
               </div>
               <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleForgot">
-                <Input v-model="forgotEmail" type="email" label="Email" placeholder="Masukkan email kamu" :error="forgotEmailErr" @update:modelValue="forgotEmailErr = ''">
+                <Input v-model="forgotEmail" type="email" label="Email" required placeholder="Masukkan email kamu" :error="forgotEmailErr" @update:modelValue="forgotEmailErr = ''">
                   <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
                 </Input>
                 <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}">Kirim Tautan</Button>
-                <Button type="button" variant="outline" full-width size="md" :disabled="countdown > 0" style="${BTN}">
+                <Button v-if="forgotSent" type="button" variant="outline" full-width size="md" :disabled="countdown > 0" style="${BTN}">
                   {{ countdown > 0 ? 'Kirim Ulang (' + countdown + ')' : 'Kirim Ulang' }}
                 </Button>
               </form>
@@ -608,10 +613,10 @@ export const AuthFlow: Story = {
                 <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Buat password baru untuk jaga akunmu tetap aman.</p>
               </div>
               <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleReset">
-                <Input v-model="newPass" type="password" label="Password Baru" placeholder="Masukan Password Baru" :error="newPassErr" @update:modelValue="newPassErr = ''">
+                <Input v-model="newPass" type="password" label="Password Baru" required placeholder="Masukan Password Baru" :error="newPassErr" @update:modelValue="newPassErr = ''">
                   <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="confirmPass" type="password" label="Konfirmasi Password" placeholder="Masukan Konfirmasi Password" :error="confirmErr" @update:modelValue="confirmErr = ''">
+                <Input v-model="confirmPass" type="password" label="Konfirmasi Password" required placeholder="Masukan Konfirmasi Password" :error="confirmErr" @update:modelValue="confirmErr = ''">
                   <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
                 </Input>
                 <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:4px;">Simpan Password</Button>
@@ -625,7 +630,7 @@ export const AuthFlow: Story = {
                 <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Daftar sekarang, biar momen ceritamu bisa diabadikan dengan indah.</p>
               </div>
               <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleSignupEmail">
-                <Input v-model="signupEmail" type="email" label="Email" placeholder="Masukan email kamu" :error="signupEmailErr" @update:modelValue="signupEmailErr = ''">
+                <Input v-model="signupEmail" type="email" label="Email" required placeholder="Masukan email kamu" :error="signupEmailErr" @update:modelValue="signupEmailErr = ''">
                   <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
                 </Input>
                 <p style="font-size:11px;color:var(--color-text-secondary);margin:0;line-height:1.55;text-align:center;">
@@ -647,6 +652,7 @@ export const AuthFlow: Story = {
 
             <!-- SIGNUP Step 1a: Email -->
             <template v-else-if="page === 'signup-email'">
+              <a href="#" style="font-size:20px;color:var(--color-text-heading);text-decoration:none;display:inline-block;margin-bottom:20px;" @click.prevent="go('signup')">‹</a>
               <div style="text-align:center;margin-bottom:24px;">
                 <h1 style="font-size:22px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 8px;">Mulai Ceritamu di Abadikan</h1>
                 <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Daftar sekarang, biar momen ceritamu bisa diabadikan dengan indah.</p>
@@ -655,13 +661,13 @@ export const AuthFlow: Story = {
                 <Input :modelValue="signupEmail" label="Email" type="email" :disabled="true">
                   <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="signupPass" type="password" label="Password" placeholder="Masukan Password" :error="signupPassErr" @update:modelValue="signupPassErr = ''">
+                <Input v-model="signupPass" type="password" label="Password" required placeholder="Masukan Password" :error="signupPassErr" @update:modelValue="signupPassErr = ''">
                   <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="signupName" label="Nama Lengkap" placeholder="Masukan nama kamu" :error="signupNameErr" @update:modelValue="signupNameErr = ''">
+                <Input v-model="signupName" label="Nama Lengkap" required placeholder="Masukan nama kamu" :error="signupNameErr" @update:modelValue="signupNameErr = ''">
                   <template #leading><RiUser3Line style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="signupPhone" type="tel" label="No Handphone" placeholder="Masukan no. handphone kamu" :error="signupPhoneErr" @update:modelValue="signupPhoneErr = ''">
+                <Input v-model="signupPhone" type="tel" label="No Handphone" required placeholder="Masukan no. handphone kamu" :error="signupPhoneErr" @update:modelValue="signupPhoneErr = ''">
                   <template #leading><RiPhoneLine style="width:16px;height:16px;" /></template>
                 </Input>
                 <Input v-model="signupReferral" label="Kode Referral" placeholder="Masukan kode referral (opsional)">
@@ -686,15 +692,16 @@ export const AuthFlow: Story = {
 
             <!-- SIGNUP Step 1b: Google -->
             <template v-else-if="page === 'signup-google'">
+              <a href="#" style="font-size:20px;color:var(--color-text-heading);text-decoration:none;display:inline-block;margin-bottom:20px;" @click.prevent="go('signup')">‹</a>
               <div style="text-align:center;margin-bottom:24px;">
                 <h1 style="font-size:22px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 8px;">Mulai Ceritamu di Abadikan</h1>
                 <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Daftar sekarang, biar momen ceritamu bisa diabadikan dengan indah.</p>
               </div>
               <form style="display:flex;flex-direction:column;gap:12px;" @submit.prevent="handleRegister">
-                <Input v-model="signupName" label="Nama Lengkap" placeholder="Masukan nama kamu" :error="signupNameErr" @update:modelValue="signupNameErr = ''">
+                <Input v-model="signupName" label="Nama Lengkap" required placeholder="Masukan nama kamu" :error="signupNameErr" @update:modelValue="signupNameErr = ''">
                   <template #leading><RiUser3Line style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="signupPhone" type="tel" label="No Handphone" placeholder="Masukan no. handphone kamu" :error="signupPhoneErr" @update:modelValue="signupPhoneErr = ''">
+                <Input v-model="signupPhone" type="tel" label="No Handphone" required placeholder="Masukan no. handphone kamu" :error="signupPhoneErr" @update:modelValue="signupPhoneErr = ''">
                   <template #leading><RiPhoneLine style="width:16px;height:16px;" /></template>
                 </Input>
                 <Input v-model="signupReferral" label="Kode Referral" placeholder="Masukan kode referral (opsional)">
