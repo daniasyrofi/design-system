@@ -537,7 +537,7 @@ function cellClass(cell: CalCell) {
   top: calc(100% + 6px);
   left: 0;
   z-index: 50;
-  padding: 16px;
+  padding: 1rem;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
@@ -666,7 +666,7 @@ function cellClass(cell: CalCell) {
 }
 
 .ds-drp-clear-btn {
-  padding: 4px 10px;
+  padding: 0.25rem 0.75rem;
   border-radius: var(--radius-md);
   color: var(--color-text-secondary);
   transition: background-color 150ms ease;

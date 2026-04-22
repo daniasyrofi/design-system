@@ -416,7 +416,7 @@ defineExpose({
 /* ── AM/PM button ── */
 .ds-timepicker-period {
   color: var(--color-text-secondary);
-  padding: 0 4px;
+  padding: 0 0.25rem;
 }
 
 .ds-timepicker-period:hover:not(:disabled) {

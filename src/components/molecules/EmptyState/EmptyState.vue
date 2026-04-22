@@ -28,22 +28,22 @@ const sizeMap: Record<
     iconSize: '32px',
     titleClass: 'text-sm font-semibold',
     descClass: 'text-xs',
-    padding: '24px 16px',
-    gap: '8px',
+    padding: '1.5rem 1rem',
+    gap: '0.5rem',
   },
   md: {
     iconSize: '48px',
     titleClass: 'text-base font-semibold',
     descClass: 'text-sm',
-    padding: '40px 24px',
-    gap: '12px',
+    padding: '2.5rem 1.5rem',
+    gap: '0.75rem',
   },
   lg: {
     iconSize: '64px',
     titleClass: 'text-lg font-semibold',
     descClass: 'text-base',
-    padding: '56px 32px',
-    gap: '16px',
+    padding: '3.5rem 2rem',
+    gap: '1rem',
   },
 }
 </script>

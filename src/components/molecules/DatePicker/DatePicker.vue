@@ -445,7 +445,7 @@ const triggerClasses = computed(() =>
   left: 0;
   z-index: 50;
   width: 308px;
-  padding: 16px;
+  padding: 1rem;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);

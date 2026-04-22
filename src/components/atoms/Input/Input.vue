@@ -162,22 +162,24 @@ defineExpose({
 
 <template>
   <div class="flex flex-col gap-1.5 w-full text-left">
-    <!-- Label -->
-    <label
-      v-if="label"
-      :for="inputId"
-      :class="cn('text-sm font-medium select-none flex items-center', disabled && 'opacity-50')"
-      :style="{ color: 'var(--color-text-heading)' }"
-    >
-      {{ label }}
-      <span
-        v-if="required"
-        class="ml-1 font-bold inline-block"
-        :style="{ color: 'var(--color-danger)' }"
-        aria-hidden="true"
-        >*</span
+    <!-- Label row -->
+    <div v-if="label" class="flex items-center justify-between">
+      <label
+        :for="inputId"
+        :class="cn('text-sm font-medium select-none flex items-center', disabled && 'opacity-50')"
+        :style="{ color: 'var(--color-text-heading)' }"
       >
-    </label>
+        {{ label }}
+        <span
+          v-if="required"
+          class="ml-1 font-bold inline-block"
+          :style="{ color: 'var(--color-danger)' }"
+          aria-hidden="true"
+          >*</span
+        >
+      </label>
+      <slot name="label-trailing" />
+    </div>
 
     <!-- Interactive Input Container -->
     <div :class="wrapperClasses">
@@ -309,15 +311,16 @@ defineExpose({
     </div>
 
     <!-- Feedback Area (Helper text, Error, Counter) -->
+    <Transition name="ds-input-feedback">
     <div
       v-if="helperText || error || (counter && maxlength)"
-      class="flex items-start justify-between gap-4 mt-1"
+      class="flex items-start justify-between gap-4"
     >
       <!-- Message -->
       <p
         v-if="error"
         :id="`${inputId}-hint`"
-        class="text-[13px] leading-snug font-medium animate-in fade-in slide-in-from-top-1"
+        class="text-[13px] leading-snug font-medium"
         :style="{ color: 'var(--color-danger)' }"
       >
         {{ error }}
@@ -343,6 +346,7 @@ defineExpose({
         {{ charCount }}/{{ maxlength }}
       </span>
     </div>
+    </Transition>
   </div>
 </template>
 
@@ -428,6 +432,19 @@ defineExpose({
 
 .ds-input-wrapper--disabled .ds-input-native {
   color: var(--color-text-disabled);
+}
+
+/* ── Feedback area transition (enter & leave) ── */
+.ds-input-feedback-enter-active {
+  transition: opacity 220ms ease-out, transform 220ms ease-out;
+}
+.ds-input-feedback-leave-active {
+  transition: opacity 160ms ease-in, transform 160ms ease-in;
+}
+.ds-input-feedback-enter-from,
+.ds-input-feedback-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
 }
 
 /* ── Action buttons (clear, password toggle) ── */

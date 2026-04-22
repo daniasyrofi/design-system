@@ -124,6 +124,6 @@ function handleToggle() {
 
 .ds-accordion-content {
   color: var(--color-text-secondary);
-  line-height: 1.6;
+  line-height: 1.5rem;
 }
 </style>

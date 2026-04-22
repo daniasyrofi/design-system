@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, useAttrs, ref } from 'vue'
+import { computed, useAttrs, ref, type Component } from 'vue'
 import { cn } from '@/lib/utils'
 import Spinner from '@/components/atoms/Spinner/Spinner.vue'
 
-type Variant = 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'link'
+type Variant = 'default' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'link' | 'link-neutral'
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 interface Props {
@@ -16,6 +16,8 @@ interface Props {
   as?: string
   href?: string
   type?: 'button' | 'submit' | 'reset'
+  leadingIcon?: Component
+  trailingIcon?: Component
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -108,6 +110,14 @@ const variantTokens: Record<Variant, VariantTokenSet> = {
     hoverBg: 'transparent',
     hoverBorder: 'transparent',
   },
+  'link-neutral': {
+    bg: 'transparent',
+    text: 'var(--color-text-heading)',
+    border: 'transparent',
+    hoverBg: 'transparent',
+    hoverBorder: 'transparent',
+    hoverText: 'var(--color-text-secondary)',
+  },
 }
 
 const textBaseSizes: Record<Size, string> = {
@@ -150,7 +160,7 @@ const spinnerSizes: Record<Size, 'xs' | 'sm' | 'md'> = {
   xl: 'md',
 }
 
-const hasTrailingContent = computed(() => !!slots.trailing && !props.loading)
+const hasTrailingContent = computed(() => !!(props.trailingIcon || slots.trailing) && !props.loading)
 
 const textSpacingClasses = computed(() =>
   hasTrailingContent.value ? textTrailingSpacing[props.size] : textSymmetricSpacing[props.size]
@@ -163,10 +173,10 @@ const classes = computed(() => {
       ? iconSizes[props.size]
       : cn(textBaseSizes[props.size], textSpacingClasses.value),
     props.fullWidth && 'w-full',
-    props.variant === 'link' ? 'p-0! h-auto!' : '',
+    props.variant === 'link' || props.variant === 'link-neutral' ? 'p-0! h-auto!' : '',
     'ds-btn--variant', // Add the stable logic class
     props.variant === 'danger' ? 'ds-btn--is-danger' : '',
-    props.variant === 'link' ? 'ds-btn--is-link' : ''
+    props.variant === 'link' || props.variant === 'link-neutral' ? 'ds-btn--is-link' : ''
   )
   return baseAndSize
 })
@@ -211,9 +221,10 @@ const rootAttrs = computed(() => {
     v-bind="rootAttrs"
     @click="!disabled && !loading && emit('click', $event)"
   >
-    <!-- Leading slot -->
-    <span v-if="$slots.leading && !loading" class="shrink-0 flex items-center justify-center">
-      <slot name="leading" />
+    <!-- Leading: prop icon or slot -->
+    <span v-if="(leadingIcon || $slots.leading) && !loading" class="shrink-0 flex items-center justify-center">
+      <component v-if="leadingIcon" :is="leadingIcon" style="width:1em;height:1em;" />
+      <slot v-else name="leading" />
     </span>
 
     <!-- Loading spinner -->
@@ -248,6 +259,10 @@ const rootAttrs = computed(() => {
   background-color: var(--btn-hover-bg);
   border-color: var(--btn-hover-border);
   color: var(--btn-hover-text);
+}
+
+.ds-btn--is-link {
+  overflow: visible;
 }
 
 .ds-btn--is-link:hover:not(:disabled) {

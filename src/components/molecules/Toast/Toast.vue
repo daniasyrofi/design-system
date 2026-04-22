@@ -55,8 +55,8 @@ const wrapperStyle = {
   width: '340px',
   display: 'flex',
   alignItems: 'flex-start',
-  gap: '12px',
-  padding: '14px 16px',
+  gap: '0.75rem',
+  padding: '1rem',
   borderRadius: 'var(--radius-lg)',
   backgroundColor: 'var(--color-surface)',
   boxShadow:
@@ -96,7 +96,7 @@ const wrapperStyle = {
         style="
           font-size: 14px;
           font-weight: 600;
-          line-height: 1.3;
+          line-height: 1.25rem;
           letter-spacing: -0.01em;
           color: var(--color-text-primary);
         "
@@ -105,7 +105,7 @@ const wrapperStyle = {
       </p>
       <p
         v-if="description"
-        style="font-size: 13px; line-height: 1.55; color: var(--color-text-secondary)"
+        style="font-size: 13px; line-height: 1.25rem; color: var(--color-text-secondary)"
       >
         {{ description }}
       </p>

@@ -11,11 +11,12 @@ import {
   RiPhoneLine,
   RiGiftLine,
   RiCheckboxCircleFill,
+  RiArrowLeftSLine,
 } from '@remixicon/vue'
 
 const canvas = () => ({
   template: `
-    <div style="min-height:100vh;display:flex;background-color:#ffffff;">
+    <div style="min-height:100vh;display:flex;background-color:var(--color-bg);">
       <story />
     </div>
   `,
@@ -42,18 +43,17 @@ type Story = StoryObj
 
 const RED = '#D0003E'
 
-// Layout constants
 const GRID = 'display:grid;grid-template-columns:320px 1fr;min-height:100vh;width:100%;align-items:start;'
-const LEFT = `background-color:${RED};display:flex;flex-direction:column;height:100vh;padding:32px 28px;position:sticky;top:0;overflow:hidden;box-sizing:border-box;`
+const LEFT = `background-color:${RED};display:flex;flex-direction:column;height:100vh;padding:2rem 1.75rem;position:sticky;top:0;overflow:hidden;box-sizing:border-box;`
 const DECOR = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-44%);width:140%;pointer-events:none;z-index:1;'
-const TAGLINE = 'font-size:18px;font-weight:700;line-height:1.4;color:white;position:relative;z-index:2;margin:auto 0 0;text-align:center;padding-bottom:8px;'
-// Right panel uses white background
-const RIGHT = 'display:flex;align-items:center;justify-content:center;padding:56px 40px;background-color:#ffffff;min-height:100vh;box-sizing:border-box;'
-// --radius-2xl:20px mirrors Input.stories.ts decorator so inputs get calc(20-9)=11px radius
+const TAGLINE = 'font-size:20px;font-weight:700;line-height:1.75rem;color:white;position:relative;z-index:2;margin:auto 0 0;text-align:center;padding-bottom:0.5rem;'
+const RIGHT = 'display:flex;align-items:center;justify-content:center;padding:2.75rem 2.5rem;background-color:var(--color-surface);min-height:100vh;box-sizing:border-box;'
 const FORM = 'width:100%;max-width:400px;--radius-2xl:20px;'
-// Button styles mirror getButtonStyle() from Button.stories.ts
-const BTN = 'border-radius:999px;gap:4px;padding-inline-start:20px;padding-inline-end:20px;'
-const BTN_ICON = 'border-radius:999px;gap:4px;padding-inline-start:12px;padding-inline-end:16px;'
+const BTN = 'border-radius:999px;gap:0.25rem;padding-inline-start:1.25rem;padding-inline-end:1.25rem;'
+const BTN_ICON = 'border-radius:999px;gap:0.25rem;padding-inline-start:0.75rem;padding-inline-end:1rem;'
+const BACK = 'display:inline-flex;align-items:center;gap:4px;padding:0;background:none;border:none;cursor:pointer;color:var(--color-text-heading);font-size:0.875rem;font-weight:500;margin-bottom:6px;transition:color 0.15s;'
+const HELPER = 'font-size:12px;color:var(--color-text-secondary);margin:0;line-height:1rem;'
+const DISCLAIMER = 'font-size:12px;color:var(--color-text-secondary);margin:0;line-height:1rem;text-align:center;'
 
 const GoogleSVG = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>`
 
@@ -82,8 +82,8 @@ export const Default: Story = {
 
       function handleLogin() {
         emailErr.value = passErr.value = ''
-        if (!email.value) emailErr.value = 'Email tidak boleh kosong'
-        if (!password.value) passErr.value = 'Password tidak boleh kosong'
+        if (!email.value) emailErr.value = 'Emailnya belum diisi'
+        if (!password.value) passErr.value = 'Passwordnya belum diisi'
         if (emailErr.value || passErr.value) return
         loading.value = true
         setTimeout(() => { loading.value = false; showSuccess.value = true }, 1500)
@@ -96,51 +96,49 @@ export const Default: Story = {
 
         <div style="${RIGHT}">
           <div style="${FORM}">
-            <div style="text-align:center;margin-bottom:28px;">
-              <h1 style="font-size:22px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 8px;">Selamat Datang di Abadikan</h1>
-              <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Masuk dulu biar bisa lanjut atur undangan digital &amp; persiapan nikahmu dengan tenang.</p>
+            <div style="text-align:center;margin-bottom:1.25rem;">
+              <h1 style="font-size:24px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 6px;">Lanjut ngurus undanganmu, yuk</h1>
+              <p style="font-size:16px;color:var(--color-text-secondary);line-height:1.5rem;margin:0;">Masuk dulu, banyak yang mau disiapkan.</p>
             </div>
 
-            <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleLogin">
-              <Input v-model="email" type="email" label="Email" required placeholder="kamu@contoh.com" :error="emailErr" @update:modelValue="emailErr = ''">
+            <form novalidate style="display:flex;flex-direction:column;gap:0.75rem;" @submit.prevent="handleLogin">
+              <Input v-model="email" type="email" label="Email" required placeholder="emailkamu@gmail.com" :error="emailErr" @update:modelValue="emailErr = ''">
                 <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
               </Input>
-              <div style="display:flex;flex-direction:column;gap:2px;">
-                <Input v-model="password" type="password" label="Password" required placeholder="••••••••" :error="passErr" @update:modelValue="passErr = ''">
-                  <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
-                </Input>
-                <div style="text-align:right;margin-top:4px;">
-                  <a href="#" style="font-size:12px;color:var(--color-text-secondary);text-decoration:none;">Lupa kata sandi?</a>
-                </div>
-              </div>
-              <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:4px;">Login</Button>
+              <Input v-model="password" type="password" label="Password" required placeholder="••••••••" :error="passErr" @update:modelValue="passErr = ''">
+                <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
+                <template #label-trailing>
+                  <a href="#" style="font-size:12px;color:var(--color-text-secondary);text-decoration:none;">Lupa password?</a>
+                </template>
+              </Input>
+              <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:0.25rem;">Masuk</Button>
             </form>
 
-            <div style="margin:20px 0;"><Divider label="atau" /></div>
+            <div style="margin:1rem 0;"><Divider label="atau" /></div>
 
             <Button variant="outline" full-width size="md" style="${BTN_ICON}">
               <template #leading><span v-html="GoogleSVG" style="display:flex;align-items:center;" /></template>
-              Login dengan Google
+              Masuk dengan Google
             </Button>
 
-            <p style="text-align:center;font-size:13px;color:var(--color-text-secondary);margin-top:20px;">
-              Belum punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;">Daftar Sekarang</a>
+            <p style="text-align:center;font-size:14px;color:var(--color-text-secondary);margin-top:1rem;">
+              Belum punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;">Daftar sekarang</a>
             </p>
           </div>
         </div>
 
         <Modal v-model="showSuccess" size="sm" :closable="false" :close-on-overlay="false">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:8px 0 4px;text-align:center;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;padding:0.5rem 0 0.25rem;text-align:center;">
             <div style="width:64px;height:64px;border-radius:50%;background:rgba(208,0,62,0.08);display:flex;align-items:center;justify-content:center;">
               <div style="width:46px;height:46px;border-radius:50%;background:rgba(208,0,62,0.13);display:flex;align-items:center;justify-content:center;">
                 <RiCheckboxCircleFill style="color:#D0003E;" :size="28" />
               </div>
             </div>
             <div>
-              <h2 style="font-size:18px;font-weight:700;color:var(--color-text-heading);margin:0 0 6px;letter-spacing:-0.3px;">Berhasil Masuk!</h2>
-              <p style="font-size:13px;color:var(--color-text-secondary);margin:0;line-height:1.55;">Selamat datang kembali. Kamu sudah bisa lanjut atur undangan digitalmu.</p>
+              <h2 style="font-size:20px;font-weight:700;color:var(--color-text-heading);margin:0 0 6px;letter-spacing:-0.3px;">Berhasil masuk!</h2>
+              <p style="font-size:14px;color:var(--color-text-secondary);margin:0;line-height:1.25rem;">Selamat datang kembali. Undanganmu udah nunggu.</p>
             </div>
-            <Button variant="default" full-width size="md" style="${BTN}margin-top:4px;" @click="showSuccess = false">Lanjut ke Dashboard</Button>
+            <Button variant="default" full-width size="md" style="${BTN}margin-top:0.25rem;" @click="showSuccess = false">Lanjut atur undangan</Button>
           </div>
         </Modal>
       </div>
@@ -161,7 +159,9 @@ export const ForgotPassword: Story = {
 
       function handleSend() {
         emailErr.value = ''
-        if (!email.value) { emailErr.value = 'Email wajib diisi'; return }
+        if (!email.value) { emailErr.value = 'Emailnya belum diisi'; return }
+        if (sent.value && countdown.value > 0) return
+        if (timer) { clearInterval(timer); timer = null }
         loading.value = true
         setTimeout(() => {
           loading.value = false
@@ -174,50 +174,49 @@ export const ForgotPassword: Story = {
           }, 1000)
         }, 1500)
       }
-      return { email, emailErr, loading, countdown, sent, showSuccess, handleSend }
+      return { email, emailErr, loading, countdown, sent, showSuccess, handleSend, RiArrowLeftSLine }
     },
     template: `
       <div style="${GRID}">
-        ${leftPanel('Tenang, akunmu tetap aman.<br/>Kamu hanya perlu mengatur<br/>ulang dan bisa melanjutkan<br/>menyiapkan undangan.')}
+        ${leftPanel('Tenang, akunmu aman.<br/>Kita beresin passwordnya<br/>biar undanganmu bisa lanjut.')}
 
         <div style="${RIGHT}">
           <div style="${FORM}">
-            <a href="#" style="font-size:20px;color:var(--color-text-heading);text-decoration:none;display:inline-block;margin-bottom:20px;">‹</a>
-            <div style="margin-bottom:28px;">
-              <h1 style="font-size:22px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 8px;">Lupa Password?</h1>
-              <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Masukin email kamu, biar kita kirim link reset ke inbox.</p>
+            <Button variant="link-neutral" size="sm" style="${BACK}" @click.prevent :leading-icon="RiArrowLeftSLine">Balik</Button>
+            <div style="margin-bottom:1.25rem;">
+              <h1 style="font-size:24px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 6px;">Tenang, kita beresin bareng</h1>
+              <p style="font-size:16px;color:var(--color-text-secondary);line-height:1.5rem;margin:0;">Masukin emailmu. Kita kirimin link resetnya ke sana.</p>
             </div>
 
-            <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleSend">
-              <Input v-model="email" type="email" label="Email" required placeholder="Masukkan email kamu" :error="emailErr" @update:modelValue="emailErr = ''">
+            <form novalidate style="display:flex;flex-direction:column;gap:0.75rem;" @submit.prevent="handleSend">
+              <Input v-model="email" type="email" label="Email" required placeholder="emailkamu@gmail.com" :error="emailErr" @update:modelValue="emailErr = ''">
                 <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
               </Input>
-              <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}">Kirim Tautan</Button>
-              <Button v-if="sent" type="button" variant="outline" full-width size="md" :disabled="countdown > 0" style="${BTN}">
-                {{ countdown > 0 ? 'Kirim Ulang (' + countdown + ')' : 'Kirim Ulang' }}
+              <Button type="submit" variant="default" full-width size="md" :loading="loading" :disabled="sent && countdown > 0" style="${BTN}">
+                {{ !sent ? 'Kirim link reset' : countdown > 0 ? 'Kirim ulang (' + countdown + ')' : 'Kirim ulang' }}
               </Button>
             </form>
 
-            <p style="text-align:center;font-size:13px;color:var(--color-text-secondary);margin-top:20px;">
-              Sudah punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;">Masuk</a>
+            <p style="text-align:center;font-size:14px;color:var(--color-text-secondary);margin-top:1rem;">
+              Udah ingat passwordnya? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;">Masuk</a>
             </p>
           </div>
         </div>
 
         <Modal v-model="showSuccess" size="sm" :closable="false" :close-on-overlay="true">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:8px 0 4px;text-align:center;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;padding:0.5rem 0 0.25rem;text-align:center;">
             <div style="width:64px;height:64px;border-radius:50%;background:rgba(208,0,62,0.08);display:flex;align-items:center;justify-content:center;">
               <div style="width:46px;height:46px;border-radius:50%;background:rgba(208,0,62,0.13);display:flex;align-items:center;justify-content:center;">
                 <RiCheckboxCircleFill style="color:#D0003E;" :size="28" />
               </div>
             </div>
             <div>
-              <h2 style="font-size:18px;font-weight:700;color:var(--color-text-heading);margin:0 0 6px;letter-spacing:-0.3px;">Email Terkirim!</h2>
-              <p style="font-size:13px;color:var(--color-text-secondary);margin:0;line-height:1.55;">
-                Cek inbox kamu. Link reset password sudah dikirim ke <strong style="color:var(--color-text-heading);font-weight:600;">{{ email }}</strong>.
+              <h2 style="font-size:20px;font-weight:700;color:var(--color-text-heading);margin:0 0 6px;letter-spacing:-0.3px;">Udah kita kirim!</h2>
+              <p style="font-size:14px;color:var(--color-text-secondary);margin:0;line-height:1.25rem;">
+                Cek emailmu ya. Udah kita kirim ke <strong style="color:var(--color-text-heading);font-weight:600;">{{ email }}</strong>. Belum masuk? Cek folder Spam juga.
               </p>
             </div>
-            <Button variant="default" full-width size="md" style="${BTN}margin-top:4px;" @click="showSuccess = false">Oke, Mengerti</Button>
+            <Button variant="default" full-width size="md" style="${BTN}margin-top:0.25rem;" @click="showSuccess = false">Oke, siap!</Button>
           </div>
         </Modal>
       </div>
@@ -237,10 +236,10 @@ export const ResetPassword: Story = {
 
       function handleReset() {
         newPassErr.value = confirmErr.value = ''
-        if (!newPass.value) newPassErr.value = 'Password wajib diisi'
-        else if (newPass.value.length < 8) newPassErr.value = 'Minimal 8 karakter'
-        if (!confirmPass.value) confirmErr.value = 'Konfirmasi wajib diisi'
-        else if (newPass.value && confirmPass.value !== newPass.value) confirmErr.value = 'Password tidak cocok'
+        if (!newPass.value) newPassErr.value = 'Passwordnya belum diisi'
+        else if (newPass.value.length < 8) newPassErr.value = 'Password minimal 8 karakter ya'
+        if (!confirmPass.value) confirmErr.value = 'Password ulangnya belum diisi'
+        else if (newPass.value && confirmPass.value !== newPass.value) confirmErr.value = 'Passwordnya belum sama nih'
         if (newPassErr.value || confirmErr.value) return
         loading.value = true
         setTimeout(() => { loading.value = false; showSuccess.value = true }, 1500)
@@ -249,39 +248,39 @@ export const ResetPassword: Story = {
     },
     template: `
       <div style="${GRID}">
-        ${leftPanel('Buat password baru<br/>sekarang, biar akunmu tetap<br/>aman dan lanjutin undangan')}
+        ${leftPanel('Hampir selesai nih.<br/>Bikin password baru,<br/>terus siapkan undanganmu.')}
 
         <div style="${RIGHT}">
           <div style="${FORM}">
-            <div style="margin-bottom:28px;">
-              <h1 style="font-size:22px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 8px;">Atur Ulang Password</h1>
-              <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Buat password baru untuk jaga akunmu tetap aman dan lanjut atur undangan dengan tenang.</p>
+            <div style="margin-bottom:1.25rem;">
+              <h1 style="font-size:24px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 6px;">Bikin password baru, yuk</h1>
+              <p style="font-size:16px;color:var(--color-text-secondary);line-height:1.5rem;margin:0;">Tinggal ini, terus bisa lanjut atur undanganmu.</p>
             </div>
 
-            <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleReset">
-              <Input v-model="newPass" type="password" label="Password Baru" required placeholder="Masukan Password Baru" :error="newPassErr" @update:modelValue="newPassErr = ''">
+            <form novalidate style="display:flex;flex-direction:column;gap:0.75rem;" @submit.prevent="handleReset">
+              <Input v-model="newPass" type="password" label="Password baru" required placeholder="Masukan password baru" :error="newPassErr" @update:modelValue="newPassErr = ''">
                 <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
               </Input>
-              <Input v-model="confirmPass" type="password" label="Konfirmasi Password" required placeholder="Masukan Konfirmasi Password" :error="confirmErr" @update:modelValue="confirmErr = ''">
+              <Input v-model="confirmPass" type="password" label="Ulangi password" required placeholder="Ulangi password" :error="confirmErr" @update:modelValue="confirmErr = ''">
                 <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
               </Input>
-              <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:4px;">Simpan Password</Button>
+              <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:0.25rem;">Simpan</Button>
             </form>
           </div>
         </div>
 
         <Modal v-model="showSuccess" size="sm" :closable="false" :close-on-overlay="false">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:8px 0 4px;text-align:center;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;padding:0.5rem 0 0.25rem;text-align:center;">
             <div style="width:64px;height:64px;border-radius:50%;background:rgba(208,0,62,0.08);display:flex;align-items:center;justify-content:center;">
               <div style="width:46px;height:46px;border-radius:50%;background:rgba(208,0,62,0.13);display:flex;align-items:center;justify-content:center;">
                 <RiCheckboxCircleFill style="color:#D0003E;" :size="28" />
               </div>
             </div>
             <div>
-              <h2 style="font-size:18px;font-weight:700;color:var(--color-text-heading);margin:0 0 6px;letter-spacing:-0.3px;">Password Berhasil Diubah!</h2>
-              <p style="font-size:13px;color:var(--color-text-secondary);margin:0;line-height:1.55;">Password barumu sudah aktif. Sekarang kamu bisa masuk dan lanjut atur undanganmu.</p>
+              <h2 style="font-size:20px;font-weight:700;color:var(--color-text-heading);margin:0 0 6px;letter-spacing:-0.3px;">Beres!</h2>
+              <p style="font-size:14px;color:var(--color-text-secondary);margin:0;line-height:1.25rem;">Password barumu udah aktif. Sekarang tinggal masuk dan lanjut atur undanganmu.</p>
             </div>
-            <Button variant="default" full-width size="md" style="${BTN}margin-top:4px;" @click="showSuccess = false">Masuk Sekarang</Button>
+            <Button variant="default" full-width size="md" style="${BTN}margin-top:0.25rem;" @click="showSuccess = false">Masuk sekarang</Button>
           </div>
         </Modal>
       </div>
@@ -304,20 +303,23 @@ export const SignUp: Story = {
 
       function handleEmailNext() {
         emailErr.value = ''
-        if (!email.value) { emailErr.value = 'Email wajib diisi'; return }
-        if (!email.value.includes('@')) { emailErr.value = 'Format email tidak valid'; return }
+        if (!email.value) { emailErr.value = 'Emailnya belum diisi'; return }
+        if (!email.value.includes('@')) { emailErr.value = 'Emailnya belum benar, contohnya: nama@gmail.com'; return }
         step.value = 'form-email'
       }
       function handleRegister() {
         passErr.value = nameErr.value = phoneErr.value = ''
-        if (step.value === 'form-email' && !password.value) passErr.value = 'Password wajib diisi'
-        if (!name.value) nameErr.value = 'Nama lengkap wajib diisi'
-        if (!phone.value) phoneErr.value = 'No. handphone wajib diisi'
+        if (step.value === 'form-email') {
+          if (!password.value) passErr.value = 'Passwordnya belum diisi'
+          else if (password.value.length < 8) passErr.value = 'Password minimal 8 karakter ya'
+        }
+        if (!name.value) nameErr.value = 'Nama lengkapnya belum diisi'
+        if (!phone.value) phoneErr.value = 'Nomor HP-nya belum diisi'
         if (passErr.value || nameErr.value || phoneErr.value) return
         loading.value = true
         setTimeout(() => { loading.value = false; showSuccess.value = true }, 1500)
       }
-      return { step, email, emailErr, password, name, phone, referral, passErr, nameErr, phoneErr, loading, showSuccess, handleEmailNext, handleRegister, GoogleSVG }
+      return { step, email, emailErr, password, name, phone, referral, passErr, nameErr, phoneErr, loading, showSuccess, handleEmailNext, handleRegister, GoogleSVG, RiArrowLeftSLine }
     },
     template: `
       <div style="${GRID}">
@@ -325,106 +327,112 @@ export const SignUp: Story = {
 
         <div style="${RIGHT}">
           <div style="${FORM}">
-            <div style="text-align:center;margin-bottom:28px;">
-              <h1 style="font-size:22px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 8px;">Mulai Ceritamu di Abadikan</h1>
-              <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Daftar sekarang, biar momen ceritamu bisa diabadikan dengan indah.</p>
-            </div>
 
             <template v-if="step === 'email'">
-              <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleEmailNext">
-                <Input v-model="email" type="email" label="Email" required placeholder="Masukan email kamu" :error="emailErr" @update:modelValue="emailErr = ''">
+              <div style="text-align:center;margin-bottom:1.25rem;">
+                <h1 style="font-size:24px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 6px;">Mulai dari sini, yuk</h1>
+                <p style="font-size:16px;color:var(--color-text-secondary);line-height:1.5rem;margin:0;">Daftar dulu biar momenmu bisa kita abadikan bareng.</p>
+              </div>
+              <form novalidate style="display:flex;flex-direction:column;gap:0.75rem;" @submit.prevent="handleEmailNext">
+                <Input v-model="email" type="email" label="Email" required placeholder="emailkamu@gmail.com" :error="emailErr" @update:modelValue="emailErr = ''">
                   <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <p style="font-size:11px;color:var(--color-text-secondary);margin:0;line-height:1.55;text-align:center;">
-                  Dengan melanjutkan, Anda menyetujui
-                  <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Ketentuan Layanan</a>
-                  dan <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Kebijakan Privasi</a> Abadikan
+                <p style="${DISCLAIMER}">
+                  Dengan daftar, kamu setuju sama <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Ketentuan Layanan</a> dan <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Kebijakan Privasi</a> kita. Data kamu aman, gak akan kita bagikan ke siapapun.
                 </p>
-                <Button type="submit" variant="default" full-width size="md" style="${BTN}">Selanjutnya</Button>
+                <Button type="submit" variant="default" full-width size="md" style="${BTN}">Lanjut</Button>
               </form>
-              <div style="margin:20px 0;"><Divider label="atau" /></div>
+              <div style="margin:1rem 0;"><Divider label="atau" /></div>
               <Button variant="outline" full-width size="md" style="${BTN_ICON}" @click="step = 'form-google'">
                 <template #leading><span v-html="GoogleSVG" style="display:flex;align-items:center;" /></template>
                 Daftar dengan Google
               </Button>
-              <p style="text-align:center;font-size:13px;color:var(--color-text-secondary);margin-top:20px;">
-                Sudah punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;">Masuk</a>
+              <p style="text-align:center;font-size:14px;color:var(--color-text-secondary);margin-top:1rem;">
+                Udah punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;">Masuk</a>
               </p>
             </template>
 
             <template v-else-if="step === 'form-email'">
-              <a href="#" style="font-size:20px;color:var(--color-text-heading);text-decoration:none;display:inline-block;margin-bottom:20px;" @click.prevent="step = 'email'">‹</a>
-              <form style="display:flex;flex-direction:column;gap:12px;" @submit.prevent="handleRegister">
+              <Button variant="link-neutral" size="sm" style="${BACK}" @click.prevent="step = 'email'" :leading-icon="RiArrowLeftSLine">Balik</Button>
+              <div style="text-align:center;margin-bottom:1.25rem;">
+                <h1 style="font-size:24px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 6px;">Hampir jadi nih</h1>
+                <p style="font-size:16px;color:var(--color-text-secondary);line-height:1.5rem;margin:0;">Isi beberapa info dulu, bentar lagi selesai.</p>
+              </div>
+              <form novalidate style="display:flex;flex-direction:column;gap:0.75rem;" @submit.prevent="handleRegister">
                 <Input :modelValue="email" label="Email" type="email" :disabled="true">
                   <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="password" type="password" label="Password" required placeholder="Masukan Password" :error="passErr" @update:modelValue="passErr = ''">
-                  <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
-                </Input>
-                <Input v-model="name" label="Nama Lengkap" required placeholder="Masukan nama kamu" :error="nameErr" @update:modelValue="nameErr = ''">
+                <div style="display:flex;flex-direction:column;gap:0.25rem;">
+                  <Input v-model="password" type="password" label="Buat password" required placeholder="Masukan password" :error="passErr" @update:modelValue="passErr = ''">
+                    <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
+                  </Input>
+                  <p style="${HELPER}">Minimal 8 karakter</p>
+                </div>
+                <Input v-model="name" label="Nama lengkap" required placeholder="Masukan nama kamu" :error="nameErr" @update:modelValue="nameErr = ''">
                   <template #leading><RiUser3Line style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="phone" type="tel" label="No Handphone" required placeholder="Masukan no. handphone kamu" :error="phoneErr" @update:modelValue="phoneErr = ''">
+                <Input v-model="phone" type="tel" label="Nomor HP" required placeholder="Masukan no. HP kamu" :error="phoneErr" @update:modelValue="phoneErr = ''">
                   <template #leading><RiPhoneLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="referral" label="Kode Referral" placeholder="Masukan kode referral (opsional)">
+                <Input v-model="referral" label="Ada kode dari teman? (Opsional)" placeholder="Masukan kode referral">
                   <template #leading><RiGiftLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <p style="font-size:11px;color:var(--color-text-secondary);margin:4px 0 0;line-height:1.55;text-align:center;">
-                  Dengan mendaftar, Anda menyetujui
-                  <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Ketentuan Layanan</a>
-                  dan <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Kebijakan Privasi</a> Abadikan
+                <p style="${DISCLAIMER}margin-top:0.25rem;">
+                  Dengan daftar, kamu setuju sama <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Ketentuan Layanan</a> dan <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Kebijakan Privasi</a> kita. Data kamu aman, gak akan kita bagikan ke siapapun.
                 </p>
-                <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:2px;">Daftar Sekarang</Button>
+                <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:2px;">Buat akun</Button>
               </form>
-              <div style="margin:16px 0;"><Divider label="atau" /></div>
+              <div style="margin:0.75rem 0;"><Divider label="atau" /></div>
               <Button variant="outline" full-width size="md" style="${BTN_ICON}" @click="step = 'form-google'">
                 <template #leading><span v-html="GoogleSVG" style="display:flex;align-items:center;" /></template>
                 Daftar dengan Google
               </Button>
-              <p style="text-align:center;font-size:13px;color:var(--color-text-secondary);margin-top:16px;">
-                Sudah punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;">Masuk</a>
+              <p style="text-align:center;font-size:14px;color:var(--color-text-secondary);margin-top:1rem;">
+                Udah punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;">Masuk</a>
               </p>
             </template>
 
             <template v-else-if="step === 'form-google'">
-              <a href="#" style="font-size:20px;color:var(--color-text-heading);text-decoration:none;display:inline-block;margin-bottom:20px;" @click.prevent="step = 'email'">‹</a>
-              <form style="display:flex;flex-direction:column;gap:12px;" @submit.prevent="handleRegister">
-                <Input v-model="name" label="Nama Lengkap" required placeholder="Masukan nama kamu" :error="nameErr" @update:modelValue="nameErr = ''">
+              <Button variant="link-neutral" size="sm" style="${BACK}" @click.prevent="step = 'email'" :leading-icon="RiArrowLeftSLine">Balik</Button>
+              <div style="text-align:center;margin-bottom:1.25rem;">
+                <h1 style="font-size:24px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 6px;">Hampir jadi nih</h1>
+                <p style="font-size:16px;color:var(--color-text-secondary);line-height:1.5rem;margin:0;">Isi beberapa info dulu, bentar lagi selesai.</p>
+              </div>
+              <form novalidate style="display:flex;flex-direction:column;gap:0.75rem;" @submit.prevent="handleRegister">
+                <Input v-model="name" label="Nama lengkap" required placeholder="Masukan nama kamu" :error="nameErr" @update:modelValue="nameErr = ''">
                   <template #leading><RiUser3Line style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="phone" type="tel" label="No Handphone" required placeholder="Masukan no. handphone kamu" :error="phoneErr" @update:modelValue="phoneErr = ''">
+                <Input v-model="phone" type="tel" label="Nomor HP" required placeholder="Masukan no. HP kamu" :error="phoneErr" @update:modelValue="phoneErr = ''">
                   <template #leading><RiPhoneLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="referral" label="Kode Referral" placeholder="Masukan kode referral (opsional)">
+                <Input v-model="referral" label="Ada kode dari teman? (Opsional)" placeholder="Masukan kode referral">
                   <template #leading><RiGiftLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <p style="font-size:11px;color:var(--color-text-secondary);margin:4px 0 0;line-height:1.55;text-align:center;">
-                  Dengan mendaftar, Anda menyetujui
-                  <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Ketentuan Layanan</a>
-                  dan <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Kebijakan Privasi</a> Abadikan
+                <p style="${DISCLAIMER}margin-top:0.25rem;">
+                  Dengan daftar, kamu setuju sama <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Ketentuan Layanan</a> dan <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Kebijakan Privasi</a> kita. Data kamu aman, gak akan kita bagikan ke siapapun.
                 </p>
-                <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:2px;">Daftar Sekarang</Button>
+                <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:2px;">Buat akun</Button>
               </form>
-              <p style="text-align:center;font-size:13px;color:var(--color-text-secondary);margin-top:16px;">
-                Sudah punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;">Masuk</a>
+              <p style="text-align:center;font-size:14px;color:var(--color-text-secondary);margin-top:1rem;">
+                Udah punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;">Masuk</a>
               </p>
             </template>
+
           </div>
         </div>
 
         <Modal v-model="showSuccess" size="sm" :closable="false" :close-on-overlay="false">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:8px 0 4px;text-align:center;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;padding:0.5rem 0 0.25rem;text-align:center;">
             <div style="width:64px;height:64px;border-radius:50%;background:rgba(208,0,62,0.08);display:flex;align-items:center;justify-content:center;">
               <div style="width:46px;height:46px;border-radius:50%;background:rgba(208,0,62,0.13);display:flex;align-items:center;justify-content:center;">
                 <RiCheckboxCircleFill style="color:#D0003E;" :size="28" />
               </div>
             </div>
             <div>
-              <h2 style="font-size:18px;font-weight:700;color:var(--color-text-heading);margin:0 0 6px;letter-spacing:-0.3px;">Akun Berhasil Dibuat!</h2>
-              <p style="font-size:13px;color:var(--color-text-secondary);margin:0;line-height:1.55;">Selamat datang di Abadikan! Yuk mulai atur undangan digitalmu sekarang.</p>
+              <h2 style="font-size:20px;font-weight:700;color:var(--color-text-heading);margin:0 0 6px;letter-spacing:-0.3px;">Hore, akunmu jadi!</h2>
+              <p style="font-size:14px;color:var(--color-text-secondary);margin:0;line-height:1.25rem;">Selamat datang di Abadikan. Yuk mulai bikin undangan yang bikin tamu terkesan.</p>
             </div>
-            <Button variant="default" full-width size="md" style="${BTN}margin-top:4px;" @click="showSuccess = false">Mulai Sekarang</Button>
+            <Button variant="default" full-width size="md" style="${BTN}margin-top:0.25rem;" @click="showSuccess = false">Mulai sekarang</Button>
           </div>
         </Modal>
       </div>
@@ -443,8 +451,8 @@ export const AuthFlow: Story = {
 
       const taglines: Record<Page, string> = {
         login: 'Mulai dari RSVP sampai kado<br/>digital, semua bisa kamu atur<br/>di Abadikan.',
-        forgot: 'Tenang, akunmu tetap aman.<br/>Kamu hanya perlu mengatur<br/>ulang dan bisa melanjutkan<br/>menyiapkan undangan.',
-        reset: 'Buat password baru<br/>sekarang, biar akunmu tetap<br/>aman dan lanjutin undangan',
+        forgot: 'Tenang, akunmu aman.<br/>Kita beresin passwordnya<br/>biar undanganmu bisa lanjut.',
+        reset: 'Hampir selesai nih.<br/>Bikin password baru,<br/>terus siapkan undanganmu.',
         signup: 'Mulai ceritamu di Abadikan.<br/>Undangan digital yang bikin<br/>kisah cintamu berkesan',
         'signup-email': 'Mulai ceritamu di Abadikan.<br/>Undangan digital yang bikin<br/>kisah cintamu berkesan',
         'signup-google': 'Mulai ceritamu di Abadikan.<br/>Undangan digital yang bikin<br/>kisah cintamu berkesan',
@@ -456,8 +464,8 @@ export const AuthFlow: Story = {
       const loginEmail = ref(''), loginPass = ref(''), loginEmailErr = ref(''), loginPassErr = ref('')
       function handleLogin() {
         loginEmailErr.value = loginPassErr.value = ''
-        if (!loginEmail.value) loginEmailErr.value = 'Email tidak boleh kosong'
-        if (!loginPass.value) loginPassErr.value = 'Password tidak boleh kosong'
+        if (!loginEmail.value) loginEmailErr.value = 'Emailnya belum diisi'
+        if (!loginPass.value) loginPassErr.value = 'Passwordnya belum diisi'
         if (loginEmailErr.value || loginPassErr.value) return
         loading.value = true
         setTimeout(() => { loading.value = false; showSuccess.value = true }, 1500)
@@ -468,7 +476,9 @@ export const AuthFlow: Story = {
       let timer: ReturnType<typeof setInterval> | null = null
       function handleForgot() {
         forgotEmailErr.value = ''
-        if (!forgotEmail.value) { forgotEmailErr.value = 'Email wajib diisi'; return }
+        if (!forgotEmail.value) { forgotEmailErr.value = 'Emailnya belum diisi'; return }
+        if (forgotSent.value && countdown.value > 0) return
+        if (timer) { clearInterval(timer); timer = null }
         loading.value = true
         setTimeout(() => {
           loading.value = false; showSuccess.value = true; forgotSent.value = true; countdown.value = 10
@@ -482,10 +492,10 @@ export const AuthFlow: Story = {
       const newPass = ref(''), confirmPass = ref(''), newPassErr = ref(''), confirmErr = ref('')
       function handleReset() {
         newPassErr.value = confirmErr.value = ''
-        if (!newPass.value) newPassErr.value = 'Password wajib diisi'
-        else if (newPass.value.length < 8) newPassErr.value = 'Minimal 8 karakter'
-        if (!confirmPass.value) confirmErr.value = 'Konfirmasi wajib diisi'
-        else if (newPass.value && confirmPass.value !== newPass.value) confirmErr.value = 'Password tidak cocok'
+        if (!newPass.value) newPassErr.value = 'Passwordnya belum diisi'
+        else if (newPass.value.length < 8) newPassErr.value = 'Password minimal 8 karakter ya'
+        if (!confirmPass.value) confirmErr.value = 'Password ulangnya belum diisi'
+        else if (newPass.value && confirmPass.value !== newPass.value) confirmErr.value = 'Passwordnya belum sama nih'
         if (newPassErr.value || confirmErr.value) return
         loading.value = true
         setTimeout(() => { loading.value = false; showSuccess.value = true }, 1500)
@@ -496,15 +506,18 @@ export const AuthFlow: Story = {
       const signupPassErr = ref(''), signupNameErr = ref(''), signupPhoneErr = ref('')
       function handleSignupEmail() {
         signupEmailErr.value = ''
-        if (!signupEmail.value) { signupEmailErr.value = 'Email wajib diisi'; return }
-        if (!signupEmail.value.includes('@')) { signupEmailErr.value = 'Format email tidak valid'; return }
+        if (!signupEmail.value) { signupEmailErr.value = 'Emailnya belum diisi'; return }
+        if (!signupEmail.value.includes('@')) { signupEmailErr.value = 'Emailnya belum benar, contohnya: nama@gmail.com'; return }
         page.value = 'signup-email'
       }
       function handleRegister() {
         signupPassErr.value = signupNameErr.value = signupPhoneErr.value = ''
-        if (page.value === 'signup-email' && !signupPass.value) signupPassErr.value = 'Password wajib diisi'
-        if (!signupName.value) signupNameErr.value = 'Nama lengkap wajib diisi'
-        if (!signupPhone.value) signupPhoneErr.value = 'No. handphone wajib diisi'
+        if (page.value === 'signup-email') {
+          if (!signupPass.value) signupPassErr.value = 'Passwordnya belum diisi'
+          else if (signupPass.value.length < 8) signupPassErr.value = 'Password minimal 8 karakter ya'
+        }
+        if (!signupName.value) signupNameErr.value = 'Nama lengkapnya belum diisi'
+        if (!signupPhone.value) signupPhoneErr.value = 'Nomor HP-nya belum diisi'
         if (signupPassErr.value || signupNameErr.value || signupPhoneErr.value) return
         loading.value = true
         setTimeout(() => { loading.value = false; showSuccess.value = true }, 1500)
@@ -513,20 +526,20 @@ export const AuthFlow: Story = {
       function go(p: Page) { page.value = p; showSuccess.value = false; loading.value = false }
 
       const successTitle = computed(() => ({
-        login: 'Berhasil Masuk!',
-        forgot: 'Email Terkirim!',
-        reset: 'Password Berhasil Diubah!',
-        signup: 'Akun Berhasil Dibuat!',
-        'signup-email': 'Akun Berhasil Dibuat!',
-        'signup-google': 'Akun Berhasil Dibuat!',
+        login: 'Berhasil masuk!',
+        forgot: 'Udah kita kirim!',
+        reset: 'Beres!',
+        signup: 'Hore, akunmu jadi!',
+        'signup-email': 'Hore, akunmu jadi!',
+        'signup-google': 'Hore, akunmu jadi!',
       })[page.value])
       const successBtn = computed(() => ({
-        login: 'Lanjut ke Dashboard',
-        forgot: 'Oke, Mengerti',
-        reset: 'Masuk Sekarang',
-        signup: 'Mulai Sekarang',
-        'signup-email': 'Mulai Sekarang',
-        'signup-google': 'Mulai Sekarang',
+        login: 'Lanjut atur undangan',
+        forgot: 'Oke, siap!',
+        reset: 'Masuk sekarang',
+        signup: 'Mulai sekarang',
+        'signup-email': 'Mulai sekarang',
+        'signup-google': 'Mulai sekarang',
       })[page.value])
 
       return {
@@ -536,7 +549,7 @@ export const AuthFlow: Story = {
         newPass, confirmPass, newPassErr, confirmErr, handleReset,
         signupEmail, signupEmailErr, signupPass, signupName, signupPhone, signupReferral,
         signupPassErr, signupNameErr, signupPhoneErr, handleSignupEmail, handleRegister,
-        successTitle, successBtn, go, GoogleSVG,
+        successTitle, successBtn, go, GoogleSVG, RiArrowLeftSLine,
       }
     },
     template: `
@@ -557,165 +570,160 @@ export const AuthFlow: Story = {
 
             <!-- LOGIN -->
             <template v-if="page === 'login'">
-              <div style="text-align:center;margin-bottom:28px;">
-                <h1 style="font-size:22px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 8px;">Selamat Datang di Abadikan</h1>
-                <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Masuk dulu biar bisa lanjut atur undangan digital &amp; persiapan nikahmu dengan tenang.</p>
+              <div style="text-align:center;margin-bottom:1.25rem;">
+                <h1 style="font-size:24px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 6px;">Lanjut ngurus undanganmu, yuk</h1>
+                <p style="font-size:16px;color:var(--color-text-secondary);line-height:1.5rem;margin:0;">Masuk dulu, banyak yang mau disiapkan.</p>
               </div>
-              <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleLogin">
-                <Input v-model="loginEmail" type="email" label="Email" required placeholder="kamu@contoh.com" :error="loginEmailErr" @update:modelValue="loginEmailErr = ''">
+              <form novalidate style="display:flex;flex-direction:column;gap:0.75rem;" @submit.prevent="handleLogin">
+                <Input v-model="loginEmail" type="email" label="Email" required placeholder="emailkamu@gmail.com" :error="loginEmailErr" @update:modelValue="loginEmailErr = ''">
                   <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <div style="display:flex;flex-direction:column;gap:2px;">
-                  <Input v-model="loginPass" type="password" label="Password" required placeholder="••••••••" :error="loginPassErr" @update:modelValue="loginPassErr = ''">
-                    <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
-                  </Input>
-                  <div style="text-align:right;margin-top:4px;">
-                    <a href="#" style="font-size:12px;color:var(--color-text-secondary);text-decoration:none;" @click.prevent="go('forgot')">Lupa kata sandi?</a>
-                  </div>
-                </div>
-                <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:4px;">Login</Button>
+                <Input v-model="loginPass" type="password" label="Password" required placeholder="••••••••" :error="loginPassErr" @update:modelValue="loginPassErr = ''">
+                  <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
+                  <template #label-trailing>
+                    <a href="#" style="font-size:12px;color:var(--color-text-secondary);text-decoration:none;" @click.prevent="go('forgot')">Lupa password?</a>
+                  </template>
+                </Input>
+                <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:0.25rem;">Masuk</Button>
               </form>
-              <div style="margin:20px 0;"><Divider label="atau" /></div>
+              <div style="margin:1rem 0;"><Divider label="atau" /></div>
               <Button variant="outline" full-width size="md" style="${BTN_ICON}">
                 <template #leading><span v-html="GoogleSVG" style="display:flex;align-items:center;" /></template>
-                Login dengan Google
+                Masuk dengan Google
               </Button>
-              <p style="text-align:center;font-size:13px;color:var(--color-text-secondary);margin-top:20px;">
-                Belum punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;" @click.prevent="go('signup')">Daftar Sekarang</a>
+              <p style="text-align:center;font-size:14px;color:var(--color-text-secondary);margin-top:1rem;">
+                Belum punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;" @click.prevent="go('signup')">Daftar sekarang</a>
               </p>
             </template>
 
             <!-- FORGOT PASSWORD -->
             <template v-else-if="page === 'forgot'">
-              <a href="#" style="font-size:20px;color:var(--color-text-heading);text-decoration:none;display:inline-block;margin-bottom:20px;" @click.prevent="go('login')">‹</a>
-              <div style="margin-bottom:28px;">
-                <h1 style="font-size:22px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 8px;">Lupa Password?</h1>
-                <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Masukin email kamu, biar kita kirim link reset ke inbox.</p>
+              <Button variant="link-neutral" size="sm" style="${BACK}" @click.prevent="go('login')" :leading-icon="RiArrowLeftSLine">Balik</Button>
+              <div style="margin-bottom:1.25rem;">
+                <h1 style="font-size:24px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 6px;">Tenang, kita beresin bareng</h1>
+                <p style="font-size:16px;color:var(--color-text-secondary);line-height:1.5rem;margin:0;">Masukin emailmu. Kita kirimin link resetnya ke sana.</p>
               </div>
-              <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleForgot">
-                <Input v-model="forgotEmail" type="email" label="Email" required placeholder="Masukkan email kamu" :error="forgotEmailErr" @update:modelValue="forgotEmailErr = ''">
+              <form novalidate style="display:flex;flex-direction:column;gap:0.75rem;" @submit.prevent="handleForgot">
+                <Input v-model="forgotEmail" type="email" label="Email" required placeholder="emailkamu@gmail.com" :error="forgotEmailErr" @update:modelValue="forgotEmailErr = ''">
                   <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}">Kirim Tautan</Button>
-                <Button v-if="forgotSent" type="button" variant="outline" full-width size="md" :disabled="countdown > 0" style="${BTN}">
-                  {{ countdown > 0 ? 'Kirim Ulang (' + countdown + ')' : 'Kirim Ulang' }}
+                <Button type="submit" variant="default" full-width size="md" :loading="loading" :disabled="forgotSent && countdown > 0" style="${BTN}">
+                  {{ !forgotSent ? 'Kirim link reset' : countdown > 0 ? 'Kirim ulang (' + countdown + ')' : 'Kirim ulang' }}
                 </Button>
               </form>
-              <p style="text-align:center;font-size:13px;color:var(--color-text-secondary);margin-top:20px;">
-                Sudah punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;" @click.prevent="go('login')">Masuk</a>
+              <p style="text-align:center;font-size:14px;color:var(--color-text-secondary);margin-top:1rem;">
+                Udah ingat passwordnya? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;" @click.prevent="go('login')">Masuk</a>
               </p>
             </template>
 
             <!-- RESET PASSWORD -->
             <template v-else-if="page === 'reset'">
-              <div style="margin-bottom:28px;">
-                <h1 style="font-size:22px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 8px;">Atur Ulang Password</h1>
-                <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Buat password baru untuk jaga akunmu tetap aman.</p>
+              <div style="margin-bottom:1.25rem;">
+                <h1 style="font-size:24px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 6px;">Bikin password baru, yuk</h1>
+                <p style="font-size:16px;color:var(--color-text-secondary);line-height:1.5rem;margin:0;">Tinggal ini, terus bisa lanjut atur undanganmu.</p>
               </div>
-              <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleReset">
-                <Input v-model="newPass" type="password" label="Password Baru" required placeholder="Masukan Password Baru" :error="newPassErr" @update:modelValue="newPassErr = ''">
+              <form novalidate style="display:flex;flex-direction:column;gap:0.75rem;" @submit.prevent="handleReset">
+                <Input v-model="newPass" type="password" label="Password baru" required placeholder="Masukan password baru" :error="newPassErr" @update:modelValue="newPassErr = ''">
                   <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="confirmPass" type="password" label="Konfirmasi Password" required placeholder="Masukan Konfirmasi Password" :error="confirmErr" @update:modelValue="confirmErr = ''">
+                <Input v-model="confirmPass" type="password" label="Ulangi password" required placeholder="Ulangi password" :error="confirmErr" @update:modelValue="confirmErr = ''">
                   <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:4px;">Simpan Password</Button>
+                <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:0.25rem;">Simpan</Button>
               </form>
             </template>
 
             <!-- SIGNUP Step 0 -->
             <template v-else-if="page === 'signup'">
-              <div style="text-align:center;margin-bottom:28px;">
-                <h1 style="font-size:22px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 8px;">Mulai Ceritamu di Abadikan</h1>
-                <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Daftar sekarang, biar momen ceritamu bisa diabadikan dengan indah.</p>
+              <div style="text-align:center;margin-bottom:1.25rem;">
+                <h1 style="font-size:24px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 6px;">Mulai dari sini, yuk</h1>
+                <p style="font-size:16px;color:var(--color-text-secondary);line-height:1.5rem;margin:0;">Daftar dulu biar momenmu bisa kita abadikan bareng.</p>
               </div>
-              <form style="display:flex;flex-direction:column;gap:14px;" @submit.prevent="handleSignupEmail">
-                <Input v-model="signupEmail" type="email" label="Email" required placeholder="Masukan email kamu" :error="signupEmailErr" @update:modelValue="signupEmailErr = ''">
+              <form novalidate style="display:flex;flex-direction:column;gap:0.75rem;" @submit.prevent="handleSignupEmail">
+                <Input v-model="signupEmail" type="email" label="Email" required placeholder="emailkamu@gmail.com" :error="signupEmailErr" @update:modelValue="signupEmailErr = ''">
                   <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <p style="font-size:11px;color:var(--color-text-secondary);margin:0;line-height:1.55;text-align:center;">
-                  Dengan melanjutkan, Anda menyetujui
-                  <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Ketentuan Layanan</a>
-                  dan <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Kebijakan Privasi</a> Abadikan
+                <p style="${DISCLAIMER}">
+                  Dengan daftar, kamu setuju sama <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Ketentuan Layanan</a> dan <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Kebijakan Privasi</a> kita. Data kamu aman, gak akan kita bagikan ke siapapun.
                 </p>
-                <Button type="submit" variant="default" full-width size="md" style="${BTN}">Selanjutnya</Button>
+                <Button type="submit" variant="default" full-width size="md" style="${BTN}">Lanjut</Button>
               </form>
-              <div style="margin:20px 0;"><Divider label="atau" /></div>
+              <div style="margin:1rem 0;"><Divider label="atau" /></div>
               <Button variant="outline" full-width size="md" style="${BTN_ICON}" @click="go('signup-google')">
                 <template #leading><span v-html="GoogleSVG" style="display:flex;align-items:center;" /></template>
                 Daftar dengan Google
               </Button>
-              <p style="text-align:center;font-size:13px;color:var(--color-text-secondary);margin-top:20px;">
-                Sudah punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;" @click.prevent="go('login')">Masuk</a>
+              <p style="text-align:center;font-size:14px;color:var(--color-text-secondary);margin-top:1rem;">
+                Udah punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;" @click.prevent="go('login')">Masuk</a>
               </p>
             </template>
 
             <!-- SIGNUP Step 1a: Email -->
             <template v-else-if="page === 'signup-email'">
-              <a href="#" style="font-size:20px;color:var(--color-text-heading);text-decoration:none;display:inline-block;margin-bottom:20px;" @click.prevent="go('signup')">‹</a>
-              <div style="text-align:center;margin-bottom:24px;">
-                <h1 style="font-size:22px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 8px;">Mulai Ceritamu di Abadikan</h1>
-                <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Daftar sekarang, biar momen ceritamu bisa diabadikan dengan indah.</p>
+              <Button variant="link-neutral" size="sm" style="${BACK}" @click.prevent="go('signup')" :leading-icon="RiArrowLeftSLine">Balik</Button>
+              <div style="text-align:center;margin-bottom:1.25rem;">
+                <h1 style="font-size:24px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 6px;">Hampir jadi nih</h1>
+                <p style="font-size:16px;color:var(--color-text-secondary);line-height:1.5rem;margin:0;">Isi beberapa info dulu, bentar lagi selesai.</p>
               </div>
-              <form style="display:flex;flex-direction:column;gap:12px;" @submit.prevent="handleRegister">
+              <form novalidate style="display:flex;flex-direction:column;gap:0.75rem;" @submit.prevent="handleRegister">
                 <Input :modelValue="signupEmail" label="Email" type="email" :disabled="true">
                   <template #leading><RiMailLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="signupPass" type="password" label="Password" required placeholder="Masukan Password" :error="signupPassErr" @update:modelValue="signupPassErr = ''">
-                  <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
-                </Input>
-                <Input v-model="signupName" label="Nama Lengkap" required placeholder="Masukan nama kamu" :error="signupNameErr" @update:modelValue="signupNameErr = ''">
+                <div style="display:flex;flex-direction:column;gap:0.25rem;">
+                  <Input v-model="signupPass" type="password" label="Buat password" required placeholder="Masukan password" :error="signupPassErr" @update:modelValue="signupPassErr = ''">
+                    <template #leading><RiLockLine style="width:16px;height:16px;" /></template>
+                  </Input>
+                  <p style="${HELPER}">Minimal 8 karakter</p>
+                </div>
+                <Input v-model="signupName" label="Nama lengkap" required placeholder="Masukan nama kamu" :error="signupNameErr" @update:modelValue="signupNameErr = ''">
                   <template #leading><RiUser3Line style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="signupPhone" type="tel" label="No Handphone" required placeholder="Masukan no. handphone kamu" :error="signupPhoneErr" @update:modelValue="signupPhoneErr = ''">
+                <Input v-model="signupPhone" type="tel" label="Nomor HP" required placeholder="Masukan no. HP kamu" :error="signupPhoneErr" @update:modelValue="signupPhoneErr = ''">
                   <template #leading><RiPhoneLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="signupReferral" label="Kode Referral" placeholder="Masukan kode referral (opsional)">
+                <Input v-model="signupReferral" label="Ada kode dari teman? (Opsional)" placeholder="Masukan kode referral">
                   <template #leading><RiGiftLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <p style="font-size:11px;color:var(--color-text-secondary);margin:4px 0 0;line-height:1.55;text-align:center;">
-                  Dengan mendaftar, Anda menyetujui
-                  <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Ketentuan Layanan</a>
-                  dan <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Kebijakan Privasi</a> Abadikan
+                <p style="${DISCLAIMER}margin-top:0.25rem;">
+                  Dengan daftar, kamu setuju sama <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Ketentuan Layanan</a> dan <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Kebijakan Privasi</a> kita. Data kamu aman, gak akan kita bagikan ke siapapun.
                 </p>
-                <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:2px;">Daftar Sekarang</Button>
+                <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:2px;">Buat akun</Button>
               </form>
-              <div style="margin:16px 0;"><Divider label="atau" /></div>
+              <div style="margin:0.75rem 0;"><Divider label="atau" /></div>
               <Button variant="outline" full-width size="md" style="${BTN_ICON}" @click="go('signup-google')">
                 <template #leading><span v-html="GoogleSVG" style="display:flex;align-items:center;" /></template>
                 Daftar dengan Google
               </Button>
-              <p style="text-align:center;font-size:13px;color:var(--color-text-secondary);margin-top:16px;">
-                Sudah punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;" @click.prevent="go('login')">Masuk</a>
+              <p style="text-align:center;font-size:14px;color:var(--color-text-secondary);margin-top:1rem;">
+                Udah punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;" @click.prevent="go('login')">Masuk</a>
               </p>
             </template>
 
             <!-- SIGNUP Step 1b: Google -->
             <template v-else-if="page === 'signup-google'">
-              <a href="#" style="font-size:20px;color:var(--color-text-heading);text-decoration:none;display:inline-block;margin-bottom:20px;" @click.prevent="go('signup')">‹</a>
-              <div style="text-align:center;margin-bottom:24px;">
-                <h1 style="font-size:22px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 8px;">Mulai Ceritamu di Abadikan</h1>
-                <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.55;margin:0;">Daftar sekarang, biar momen ceritamu bisa diabadikan dengan indah.</p>
+              <Button variant="link-neutral" size="sm" style="${BACK}" @click.prevent="go('signup')" :leading-icon="RiArrowLeftSLine">Balik</Button>
+
+              <div style="text-align:center;margin-bottom:1.25rem;">
+                <h1 style="font-size:24px;font-weight:700;color:var(--color-text-heading);letter-spacing:-0.4px;margin:0 0 6px;">Hampir jadi nih</h1>
+                <p style="font-size:16px;color:var(--color-text-secondary);line-height:1.5rem;margin:0;">Isi beberapa info dulu, bentar lagi selesai.</p>
               </div>
-              <form style="display:flex;flex-direction:column;gap:12px;" @submit.prevent="handleRegister">
-                <Input v-model="signupName" label="Nama Lengkap" required placeholder="Masukan nama kamu" :error="signupNameErr" @update:modelValue="signupNameErr = ''">
+              <form novalidate style="display:flex;flex-direction:column;gap:0.75rem;" @submit.prevent="handleRegister">
+                <Input v-model="signupName" label="Nama lengkap" required placeholder="Masukan nama kamu" :error="signupNameErr" @update:modelValue="signupNameErr = ''">
                   <template #leading><RiUser3Line style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="signupPhone" type="tel" label="No Handphone" required placeholder="Masukan no. handphone kamu" :error="signupPhoneErr" @update:modelValue="signupPhoneErr = ''">
+                <Input v-model="signupPhone" type="tel" label="Nomor HP" required placeholder="Masukan no. HP kamu" :error="signupPhoneErr" @update:modelValue="signupPhoneErr = ''">
                   <template #leading><RiPhoneLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <Input v-model="signupReferral" label="Kode Referral" placeholder="Masukan kode referral (opsional)">
+                <Input v-model="signupReferral" label="Ada kode dari teman? (Opsional)" placeholder="Masukan kode referral">
                   <template #leading><RiGiftLine style="width:16px;height:16px;" /></template>
                 </Input>
-                <p style="font-size:11px;color:var(--color-text-secondary);margin:4px 0 0;line-height:1.55;text-align:center;">
-                  Dengan mendaftar, Anda menyetujui
-                  <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Ketentuan Layanan</a>
-                  dan <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Kebijakan Privasi</a> Abadikan
+                <p style="${DISCLAIMER}margin-top:0.25rem;">
+                  Dengan daftar, kamu setuju sama <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Ketentuan Layanan</a> dan <a href="#" style="color:${RED};text-decoration:none;font-weight:500;">Kebijakan Privasi</a> kita. Data kamu aman, gak akan kita bagikan ke siapapun.
                 </p>
-                <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:2px;">Daftar Sekarang</Button>
+                <Button type="submit" variant="default" full-width size="md" :loading="loading" style="${BTN}margin-top:2px;">Buat akun</Button>
               </form>
-              <p style="text-align:center;font-size:13px;color:var(--color-text-secondary);margin-top:16px;">
-                Sudah punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;" @click.prevent="go('login')">Masuk</a>
+              <p style="text-align:center;font-size:14px;color:var(--color-text-secondary);margin-top:1rem;">
+                Udah punya akun? <a href="#" style="color:${RED};font-weight:600;text-decoration:none;" @click.prevent="go('login')">Masuk</a>
               </p>
             </template>
 
@@ -724,22 +732,22 @@ export const AuthFlow: Story = {
 
         <!-- SUCCESS MODAL -->
         <Modal v-model="showSuccess" size="sm" :closable="false" :close-on-overlay="false">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:8px 0 4px;text-align:center;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;padding:0.5rem 0 0.25rem;text-align:center;">
             <div style="width:64px;height:64px;border-radius:50%;background:rgba(208,0,62,0.08);display:flex;align-items:center;justify-content:center;">
               <div style="width:46px;height:46px;border-radius:50%;background:rgba(208,0,62,0.13);display:flex;align-items:center;justify-content:center;">
                 <RiCheckboxCircleFill style="color:#D0003E;" :size="28" />
               </div>
             </div>
             <div>
-              <h2 style="font-size:18px;font-weight:700;color:var(--color-text-heading);margin:0 0 6px;letter-spacing:-0.3px;">{{ successTitle }}</h2>
-              <p style="font-size:13px;color:var(--color-text-secondary);margin:0;line-height:1.55;">
-                <template v-if="page === 'login'">Selamat datang kembali. Kamu sudah bisa lanjut atur undangan digitalmu.</template>
-                <template v-else-if="page === 'forgot'">Cek inbox kamu. Link reset sudah dikirim ke <strong style="color:var(--color-text-heading);font-weight:600;">{{ forgotEmail }}</strong>.</template>
-                <template v-else-if="page === 'reset'">Password barumu sudah aktif. Kamu bisa masuk dan lanjut atur undanganmu.</template>
-                <template v-else>Selamat datang di Abadikan! Yuk mulai atur undangan digitalmu sekarang.</template>
+              <h2 style="font-size:20px;font-weight:700;color:var(--color-text-heading);margin:0 0 6px;letter-spacing:-0.3px;">{{ successTitle }}</h2>
+              <p style="font-size:14px;color:var(--color-text-secondary);margin:0;line-height:1.25rem;">
+                <template v-if="page === 'login'">Selamat datang kembali. Undanganmu udah nunggu.</template>
+                <template v-else-if="page === 'forgot'">Cek emailmu ya. Udah kita kirim ke <strong style="color:var(--color-text-heading);font-weight:600;">{{ forgotEmail }}</strong>. Belum masuk? Cek folder Spam juga.</template>
+                <template v-else-if="page === 'reset'">Password barumu udah aktif. Sekarang tinggal masuk dan lanjut atur undanganmu.</template>
+                <template v-else>Selamat datang di Abadikan. Yuk mulai bikin undangan yang bikin tamu terkesan.</template>
               </p>
             </div>
-            <Button variant="default" full-width size="md" style="${BTN}margin-top:4px;"
+            <Button variant="default" full-width size="md" style="${BTN}margin-top:0.25rem;"
               @click="page === 'reset' ? go('login') : (showSuccess = false)">
               {{ successBtn }}
             </Button>
