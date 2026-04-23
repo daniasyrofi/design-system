@@ -517,7 +517,6 @@ export const SignUp: Story = {
           </div>
           <div style="${TOPBAR_SPACER}"></div>
           </div>
-        </div>
 
         <Modal v-model="showSuccess" size="sm" :closable="false" :close-on-overlay="false">
           <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;padding:0.5rem 0 0.25rem;text-align:center;">
@@ -834,7 +833,6 @@ export const AuthFlow: Story = {
           </div>
           <div style="${TOPBAR_SPACER}"></div>
           </div>
-        </div>
 
         <!-- SUCCESS MODAL -->
         <Modal v-model="showSuccess" size="sm" :closable="false" :close-on-overlay="false">
